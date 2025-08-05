@@ -1,12 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run dev:*)",
-      "Bash(rm:*)",
-      "Bash(npm run lint)",
-      "Bash(npm run build:*)",
-      "mcp__ide__getDiagnostics"
-    ],
-    "deny": []
-  }
+      "Bash(npm:*)",
+      "Bash(git:*)",
+      "Bash(cargo:*)",
+      "Read(**)",
+      "Edit(~/projects/**)",
+      "WebFetch(domain:*)"
+    ]
+  },
+  "cleanupPeriodDays": 60
 }
