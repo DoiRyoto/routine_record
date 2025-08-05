@@ -2,16 +2,16 @@
 
 import React, { useState } from 'react';
 import { Routine } from '@/types/routine';
-import { useRoutine } from '@/context/RoutineContext';
+// RoutineContext is no longer needed
 import Button from '../Common/Button';
 
 interface RoutineFormProps {
   routine?: Routine;
+  onSubmit: (routine: Omit<Routine, 'id' | 'userId' | 'createdAt' | 'updatedAt'>) => void;
   onCancel: () => void;
 }
 
-export default function RoutineForm({ routine, onCancel }: RoutineFormProps) {
-  const { addRoutine, updateRoutine } = useRoutine();
+export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
   const [formData, setFormData] = useState({
     name: routine?.name || '',
     description: routine?.description || '',
@@ -26,15 +26,7 @@ export default function RoutineForm({ routine, onCancel }: RoutineFormProps) {
     
     console.log('フォーム送信:', { isEdit: !!routine, formData });
     
-    if (routine) {
-      updateRoutine(routine.id, formData);
-      console.log('ルーチンを更新しました');
-    } else {
-      addRoutine(formData);
-      console.log('新しいルーチンを追加しました');
-    }
-    
-    onCancel();
+    onSubmit(formData);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

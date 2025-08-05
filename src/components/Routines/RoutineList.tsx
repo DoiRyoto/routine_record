@@ -2,13 +2,18 @@
 
 import React, { useState, useEffect } from 'react';
 import { Routine } from '@/types/routine';
-import { useRoutine } from '@/context/RoutineContext';
 import Button from '../Common/Button';
 import Modal from '../Common/Modal';
 import RoutineForm from './RoutineForm';
 
-export default function RoutineList() {
-  const { routines, deleteRoutine } = useRoutine();
+interface RoutineListProps {
+  routines: Routine[];
+  onEdit: (routine: Routine) => void;
+  onDelete: (id: string) => void;
+  onAdd: (routine: Omit<Routine, 'id' | 'userId' | 'createdAt' | 'updatedAt'>) => void;
+}
+
+export default function RoutineList({ routines, onEdit, onDelete, onAdd }: RoutineListProps) {
   const [editingRoutine, setEditingRoutine] = useState<Routine | null>(null);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [filter, setFilter] = useState<string>('all');
@@ -36,7 +41,7 @@ export default function RoutineList() {
 
   const handleDelete = (routine: Routine) => {
     if (confirm(`「${routine.name}」を削除しますか？`)) {
-      deleteRoutine(routine.id);
+      onDelete(routine.id);
     }
   };
 
@@ -44,6 +49,15 @@ export default function RoutineList() {
     console.log('モーダルを閉じます');
     setIsFormModalOpen(false);
     setEditingRoutine(null);
+  };
+
+  const handleFormSubmit = (routineData: Omit<Routine, 'id' | 'userId' | 'createdAt' | 'updatedAt'>) => {
+    if (editingRoutine) {
+      onEdit({ ...editingRoutine, ...routineData });
+    } else {
+      onAdd(routineData);
+    }
+    handleCloseModal();
   };
 
   // マウント前は読み込み中を表示
@@ -202,6 +216,7 @@ export default function RoutineList() {
       >
         <RoutineForm
           routine={editingRoutine || undefined}
+          onSubmit={handleFormSubmit}
           onCancel={handleCloseModal}
         />
       </Modal>

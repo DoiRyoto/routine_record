@@ -1,13 +1,16 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { useRoutine } from '@/context/RoutineContext';
-import { CalendarData } from '@/types/routine';
+import { CalendarData, Routine, ExecutionRecord } from '@/types/routine';
 import Card from '../Common/Card';
 import Button from '../Common/Button';
 
-export default function Calendar() {
-  const { routines, executionRecords } = useRoutine();
+interface Props {
+  routines: Routine[];
+  executionRecords: ExecutionRecord[];
+}
+
+export default function Calendar({ routines, executionRecords }: Props) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isMounted, setIsMounted] = useState(false);
 

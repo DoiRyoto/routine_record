@@ -1,11 +1,13 @@
 export interface Routine {
   id: string;
+  userId: string;
   name: string;
   description: string;
   category: string;
   targetFrequency: 'daily' | 'weekly' | 'monthly';
-  targetCount?: number;
+  targetCount: number | null;
   createdAt: Date;
+  updatedAt: Date;
   isActive: boolean;
 }
 
@@ -13,22 +15,18 @@ export interface ExecutionRecord {
   id: string;
   routineId: string;
   executedAt: Date;
-  duration?: number;
-  memo?: string;
+  duration: number | null;
+  memo: string | null;
   isCompleted: boolean;
 }
 
 export interface UserSettings {
-  displaySettings: {
-    theme: 'light' | 'dark' | 'auto';
-    language: 'ja' | 'en';
-    timeFormat: '12h' | '24h';
-  };
-  goalSettings: {
-    dailyGoal: number;
-    weeklyGoal: number;
-    monthlyGoal: number;
-  };
+  theme: 'light' | 'dark' | 'auto';
+  language: 'ja' | 'en';
+  timeFormat: '12h' | '24h';
+  dailyGoal: number;
+  weeklyGoal: number;
+  monthlyGoal: number;
 }
 
 export interface DashboardData {

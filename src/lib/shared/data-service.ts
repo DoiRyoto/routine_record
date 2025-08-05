@@ -3,7 +3,8 @@ import type { Routine, ExecutionRecord, UserSettings } from '@/types/routine';
 export interface DataService {
   routines: {
     getAll(): Promise<Routine[]>;
-    create(routine: Omit<Routine, 'id' | 'createdAt'>): Promise<Routine>;
+    getById(id: string): Promise<Routine | null>;
+    create(routine: Omit<Routine, 'id' | 'userId' | 'createdAt' | 'updatedAt'>): Promise<Routine>;
     update(id: string, routine: Partial<Routine>): Promise<Routine | null>;
     delete(id: string): Promise<boolean>;
   };

@@ -1,53 +1,75 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRoutine } from '@/context/RoutineContext';
+import { useApiData, useApiActions } from '@/hooks/useApi';
 import Card from '../Common/Card';
 import Button from '../Common/Button';
 import { ThemeSelect } from '../Common/ThemeSelect';
 
 export default function Settings() {
-  const { userSettings, updateUserSettings } = useRoutine();
-  const [formData, setFormData] = useState(userSettings);
+  const { userSettings } = useApiActions();
+  const { data: settings, refresh } = useApiData(() => userSettings.get());
+  const [formData, setFormData] = useState(settings || {
+    theme: 'auto' as const,
+    language: 'ja' as const,
+    timeFormat: '24h' as const,
+    dailyGoal: 3,
+    weeklyGoal: 21,
+    monthlyGoal: 90,
+  });
   const [isSaved, setIsSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // settingsが取得されたらformDataを更新
+  React.useEffect(() => {
+    if (settings) {
+      setFormData(settings);
+    }
+  }, [settings]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    updateUserSettings(formData);
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 2000);
+    setSaving(true);
+    
+    try {
+      await userSettings.update(formData);
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 2000);
+      refresh(); // データを再取得
+    } catch (error) {
+      console.error('設定の更新に失敗しました:', error);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleChange = (
-    section: 'displaySettings' | 'goalSettings',
     field: string,
     value: string | number
   ) => {
     setFormData(prev => ({
       ...prev,
-      [section]: {
-        ...prev[section],
-        [field]: value,
-      },
+      [field]: value,
     }));
   };
 
-  const handleReset = () => {
+  const handleReset = async () => {
     if (confirm('設定をリセットしますか？')) {
       const defaultSettings = {
-        displaySettings: {
-          theme: 'auto' as const,
-          language: 'ja' as const,
-          timeFormat: '24h' as const,
-        },
-        goalSettings: {
-          dailyGoal: 3,
-          weeklyGoal: 21,
-          monthlyGoal: 90,
-        },
+        theme: 'auto' as const,
+        language: 'ja' as const,
+        timeFormat: '24h' as const,
+        dailyGoal: 3,
+        weeklyGoal: 21,
+        monthlyGoal: 90,
       };
       setFormData(defaultSettings);
-      updateUserSettings(defaultSettings);
+      try {
+        await userSettings.update(defaultSettings);
+        refresh();
+      } catch (error) {
+        console.error('設定のリセットに失敗しました:', error);
+      }
     }
   };
 
@@ -76,8 +98,8 @@ export default function Settings() {
                 言語
               </label>
               <select
-                value={formData.displaySettings.language}
-                onChange={(e) => handleChange('displaySettings', 'language', e.target.value)}
+                value={formData.language}
+                onChange={(e) => handleChange('language', e.target.value)}
                               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
                          bg-white border-gray-300 text-gray-900
                          dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -92,8 +114,8 @@ export default function Settings() {
                 時刻表示形式
               </label>
               <select
-                value={formData.displaySettings.timeFormat}
-                onChange={(e) => handleChange('displaySettings', 'timeFormat', e.target.value)}
+                value={formData.timeFormat}
+                onChange={(e) => handleChange('timeFormat', e.target.value)}
                               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
                          bg-white border-gray-300 text-gray-900
                          dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -119,8 +141,8 @@ export default function Settings() {
                 type="number"
                 min="1"
                 max="20"
-                value={formData.goalSettings.dailyGoal}
-                onChange={(e) => handleChange('goalSettings', 'dailyGoal', parseInt(e.target.value) || 1)}
+                value={formData.dailyGoal}
+                onChange={(e) => handleChange('dailyGoal', parseInt(e.target.value) || 1)}
                               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
                          bg-white border-gray-300 text-gray-900
                          dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -135,8 +157,8 @@ export default function Settings() {
                 type="number"
                 min="1"
                 max="100"
-                value={formData.goalSettings.weeklyGoal}
-                onChange={(e) => handleChange('goalSettings', 'weeklyGoal', parseInt(e.target.value) || 1)}
+                value={formData.weeklyGoal}
+                onChange={(e) => handleChange('weeklyGoal', parseInt(e.target.value) || 1)}
                               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
                          bg-white border-gray-300 text-gray-900
                          dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -151,8 +173,8 @@ export default function Settings() {
                 type="number"
                 min="1"
                 max="500"
-                value={formData.goalSettings.monthlyGoal}
-                onChange={(e) => handleChange('goalSettings', 'monthlyGoal', parseInt(e.target.value) || 1)}
+                value={formData.monthlyGoal}
+                onChange={(e) => handleChange('monthlyGoal', parseInt(e.target.value) || 1)}
                               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
                          bg-white border-gray-300 text-gray-900
                          dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -179,9 +201,9 @@ export default function Settings() {
             )}
             <Button
               type="submit"
-  
+              disabled={saving}
             >
-              設定を保存
+              {saving ? '保存中...' : '設定を保存'}
             </Button>
           </div>
         </div>

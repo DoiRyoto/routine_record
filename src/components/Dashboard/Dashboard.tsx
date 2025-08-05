@@ -1,145 +1,170 @@
 'use client';
 
-import React, { useMemo, useState, useEffect } from 'react';
-import { useRoutine } from '@/context/RoutineContext';
+import React, { useMemo, useState } from 'react';
+import { Routine, ExecutionRecord } from '@/types/routine';
+import { useApiActions } from '@/hooks/useApi';
 import ProgressCard from './ProgressCard';
 import TodayRoutineItem from './TodayRoutineItem';
 import Card from '../Common/Card';
 
-export default function Dashboard() {
-  const { routines, executionRecords } = useRoutine();
-  const [isMounted, setIsMounted] = useState(false);
+interface Props {
+  routines: Routine[];
+  executionRecords: ExecutionRecord[];
+}
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+export default function Dashboard({ routines, executionRecords }: Props) {
+  const { executionRecords: executionRecordsApi } = useApiActions();
+  const [localExecutionRecords, setLocalExecutionRecords] = useState(executionRecords);
 
-  const dashboardData = useMemo(() => {
-    if (!isMounted) return { 
-      todayRoutines: [], 
-      todayProgress: { completed: 0, total: 0 },
-      weeklyProgress: { completed: 0, total: 0 },
-      monthlyProgress: { completed: 0, total: 0 }
-    };
+  const addExecutionRecord = async (record: Omit<ExecutionRecord, 'id'>) => {
+    try {
+      const newRecord = await executionRecordsApi.create(record);
+      setLocalExecutionRecords(prev => [...prev, newRecord]);
+    } catch (error) {
+      console.error('実行記録の作成に失敗しました:', error);
+    }
+  };
+
+  // 今日のルーチンを取得
+  const todayRoutines = useMemo(() => {
     const today = new Date();
-    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000);
-
-    const weekStart = new Date(todayStart);
-    weekStart.setDate(todayStart.getDate() - todayStart.getDay());
-    const weekEnd = new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000);
-
-    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-    const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-
-    const activeRoutines = routines.filter(r => r.isActive);
+    today.setHours(0, 0, 0, 0);
     
-    const todayRecords = executionRecords.filter(record => 
-      record.executedAt >= todayStart && 
-      record.executedAt < todayEnd &&
-      record.isCompleted
-    );
-
-    const weekRecords = executionRecords.filter(record => 
-      record.executedAt >= weekStart && 
-      record.executedAt < weekEnd &&
-      record.isCompleted
-    );
-
-    const monthRecords = executionRecords.filter(record => 
-      record.executedAt >= monthStart && 
-      record.executedAt < monthEnd &&
-      record.isCompleted
-    );
-
-    const todayRoutines = activeRoutines.filter(routine => {
-      if (routine.targetFrequency === 'daily') return true;
-      if (routine.targetFrequency === 'weekly') {
-        const weeklyRecords = weekRecords.filter(r => r.routineId === routine.id);
-        return weeklyRecords.length < (routine.targetCount || 1);
+    return routines.filter(routine => {
+      if (!routine.isActive) return false;
+      
+      switch (routine.targetFrequency) {
+        case 'daily':
+          return true;
+        case 'weekly':
+          // 今週のルーチンかどうかを判定
+          const startOfWeek = new Date(today);
+          startOfWeek.setDate(today.getDate() - today.getDay());
+          
+          const weeklyCount = localExecutionRecords.filter(record => 
+            record.routineId === routine.id && 
+            new Date(record.executedAt) >= startOfWeek
+          ).length;
+          
+          return weeklyCount < (routine.targetCount || 1);
+        case 'monthly':
+          // 今月のルーチンかどうかを判定
+          const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+          
+          const monthlyCount = localExecutionRecords.filter(record => 
+            record.routineId === routine.id && 
+            new Date(record.executedAt) >= startOfMonth
+          ).length;
+          
+          return monthlyCount < (routine.targetCount || 1);
+        default:
+          return true;
       }
-      if (routine.targetFrequency === 'monthly') {
-        const monthlyRecords = monthRecords.filter(r => r.routineId === routine.id);
-        return monthlyRecords.length < (routine.targetCount || 1);
-      }
-      return true;
     });
+  }, [routines, localExecutionRecords]);
 
-    return {
-      todayRoutines,
-      todayProgress: {
-        completed: todayRecords.length,
-        total: todayRoutines.length,
-      },
-      weeklyProgress: {
-        completed: weekRecords.length,
-        total: activeRoutines.filter(r => r.targetFrequency === 'daily').length * 7 +
-               activeRoutines.filter(r => r.targetFrequency === 'weekly').reduce((sum, r) => sum + (r.targetCount || 1), 0),
-      },
-      monthlyProgress: {
-        completed: monthRecords.length,
-        total: activeRoutines.filter(r => r.targetFrequency === 'daily').length * 30 +
-               activeRoutines.filter(r => r.targetFrequency === 'weekly').reduce((sum, r) => sum + (r.targetCount || 1) * 4, 0) +
-               activeRoutines.filter(r => r.targetFrequency === 'monthly').reduce((sum, r) => sum + (r.targetCount || 1), 0),
-      },
-    };
-  }, [routines, executionRecords, isMounted]);
-
-  const getTodayCompletedRoutines = useMemo(() => {
-    if (!isMounted) return new Set();
+  // 今日完了したルーチンのID一覧
+  const todayCompletedRoutineIds = useMemo(() => {
     const today = new Date();
-    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000);
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    return localExecutionRecords
+      .filter(record => {
+        const recordDate = new Date(record.executedAt);
+        return recordDate >= today && recordDate < tomorrow && record.isCompleted;
+      })
+      .map(record => record.routineId);
+  }, [localExecutionRecords]);
 
-    const todayRecords = executionRecords.filter(record => 
-      record.executedAt >= todayStart && 
-      record.executedAt < todayEnd &&
-      record.isCompleted
-    );
+  // 今日の進捗
+  const todayProgress = useMemo(() => {
+    const completed = todayCompletedRoutineIds.length;
+    const total = todayRoutines.length;
+    return { completed, total };
+  }, [todayCompletedRoutineIds, todayRoutines]);
 
-    return new Set(todayRecords.map(r => r.routineId));
-  }, [executionRecords, isMounted]);
+  // 今週の進捗
+  const weeklyProgress = useMemo(() => {
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
+    
+    const weeklyRecords = localExecutionRecords.filter(record => {
+      const recordDate = new Date(record.executedAt);
+      return recordDate >= startOfWeek && record.isCompleted;
+    });
+    
+    const completed = weeklyRecords.length;
+    const total = routines.filter(r => r.isActive).length * 7; // 簡単な計算
+    
+    return { completed, total };
+  }, [localExecutionRecords, routines]);
+
+  // 今月の進捗
+  const monthlyProgress = useMemo(() => {
+    const today = new Date();
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    
+    const monthlyRecords = localExecutionRecords.filter(record => {
+      const recordDate = new Date(record.executedAt);
+      return recordDate >= startOfMonth && record.isCompleted;
+    });
+    
+    const completed = monthlyRecords.length;
+    const total = routines.filter(r => r.isActive).length * 30; // 簡単な計算
+    
+    return { completed, total };
+  }, [localExecutionRecords, routines]);
 
   return (
     <div className="space-y-6">
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+        ダッシュボード
+      </h1>
+
+      {/* 進捗カード */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <ProgressCard
           title="今日の進捗"
-          completed={dashboardData.todayProgress.completed}
-          total={dashboardData.todayProgress.total}
-
+          completed={todayProgress.completed}
+          total={todayProgress.total}
+          color="blue"
         />
         <ProgressCard
           title="今週の進捗"
-          completed={dashboardData.weeklyProgress.completed}
-          total={dashboardData.weeklyProgress.total}
-
+          completed={weeklyProgress.completed}
+          total={weeklyProgress.total}
+          color="green"
         />
         <ProgressCard
           title="今月の進捗"
-          completed={dashboardData.monthlyProgress.completed}
-          total={dashboardData.monthlyProgress.total}
-
+          completed={monthlyProgress.completed}
+          total={monthlyProgress.total}
+          color="purple"
         />
       </div>
 
-              <Card>
-        <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+      {/* 今日のルーチン */}
+      <Card>
+        <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">
           今日のルーチン
         </h2>
         
-        {dashboardData.todayRoutines.length === 0 ? (
-          <p className="text-center py-8 text-gray-500 dark:text-gray-400">
-            今日のルーチンはありません
+        {todayRoutines.length === 0 ? (
+          <p className="text-gray-500 dark:text-gray-400 text-center py-8">
+            今日実行するルーチンはありません
           </p>
         ) : (
           <div className="space-y-3">
-            {dashboardData.todayRoutines.map(routine => (
+            {todayRoutines.map(routine => (
               <TodayRoutineItem
                 key={routine.id}
                 routine={routine}
-                isCompleted={getTodayCompletedRoutines.has(routine.id)}
-      
+                isCompleted={todayCompletedRoutineIds.includes(routine.id)}
+                onComplete={addExecutionRecord}
               />
             ))}
           </div>

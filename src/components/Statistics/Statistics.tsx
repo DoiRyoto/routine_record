@@ -1,12 +1,15 @@
 'use client';
 
 import React, { useMemo, useState, useEffect } from 'react';
-import { useRoutine } from '@/context/RoutineContext';
-import { StatisticsData } from '@/types/routine';
+import { StatisticsData, Routine, ExecutionRecord } from '@/types/routine';
 import Card from '../Common/Card';
 
-export default function Statistics() {
-  const { routines, executionRecords } = useRoutine();
+interface Props {
+  routines: Routine[];
+  executionRecords: ExecutionRecord[];
+}
+
+export default function Statistics({ routines, executionRecords }: Props) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {

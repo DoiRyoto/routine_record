@@ -7,10 +7,22 @@ interface ProgressCardProps {
   title: string;
   completed: number;
   total: number;
+  color?: string;
 }
 
-export default function ProgressCard({ title, completed, total }: ProgressCardProps) {
+export default function ProgressCard({ title, completed, total, color = 'blue' }: ProgressCardProps) {
   const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+  
+  const getColorClass = (color: string) => {
+    switch (color) {
+      case 'green':
+        return 'bg-green-600';
+      case 'purple':
+        return 'bg-purple-600';
+      default:
+        return 'bg-blue-600';
+    }
+  };
   
   return (
     <Card>
@@ -30,7 +42,7 @@ export default function ProgressCard({ title, completed, total }: ProgressCardPr
         
         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
           <div 
-            className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
+            className={`${getColorClass(color)} h-2.5 rounded-full transition-all duration-300`}
             style={{ width: `${percentage}%` }}
           />
         </div>

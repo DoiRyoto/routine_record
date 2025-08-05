@@ -3,8 +3,12 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
+import Button from '../Common/Button';
+
 export default function Header() {
   const pathname = usePathname();
+  const { user, signOut } = useAuth();
 
   const navigationItems = [
     { href: '/', label: 'ダッシュボード' },
@@ -39,10 +43,23 @@ export default function Header() {
               ))}
             </nav>
           </div>
+          
+          <div className="flex items-center space-x-4">
+            <span className="text-sm text-gray-600 dark:text-gray-400">
+              {user?.email}
+            </span>
+            <Button
+              onClick={signOut}
+              variant="secondary"
+              size="sm"
+            >
+              サインアウト
+            </Button>
+          </div>
         </div>
         
         <nav className="md:hidden pb-4">
-          <div className="flex space-x-2 overflow-x-auto">
+          <div className="flex space-x-2 overflow-x-auto mb-2">
             {navigationItems.map(item => (
               <Link
                 key={item.href}
@@ -56,6 +73,19 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-gray-600 dark:text-gray-400">
+              {user?.email}
+            </span>
+            <Button
+              onClick={signOut}
+              variant="secondary"
+              size="sm"
+            >
+              サインアウト
+            </Button>
           </div>
         </nav>
       </div>
