@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Routine, ExecutionRecord, UserSettings, ViewMode } from '@/types/routine';
+import { Routine, ExecutionRecord, UserSettings } from '@/types/routine';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { demoRoutines, demoExecutionRecords } from '@/utils/demoData';
 
@@ -9,8 +9,6 @@ interface RoutineContextType {
   routines: Routine[];
   executionRecords: ExecutionRecord[];
   userSettings: UserSettings;
-  currentView: ViewMode;
-  setCurrentView: (view: ViewMode) => void;
   addRoutine: (routine: Omit<Routine, 'id' | 'createdAt'>) => void;
   updateRoutine: (id: string, routine: Partial<Routine>) => void;
   deleteRoutine: (id: string) => void;
@@ -41,7 +39,6 @@ export function RoutineProvider({ children }: { children: React.ReactNode }) {
   const [routines, setRoutines] = useLocalStorage<Routine[]>('routines', demoRoutines);
   const [executionRecords, setExecutionRecords] = useLocalStorage<ExecutionRecord[]>('executionRecords', demoExecutionRecords);
   const [userSettings, setUserSettings] = useLocalStorage<UserSettings>('userSettings', defaultUserSettings);
-  const [currentView, setCurrentView] = useState<ViewMode>('dashboard');
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -113,8 +110,6 @@ export function RoutineProvider({ children }: { children: React.ReactNode }) {
         routines,
         executionRecords,
         userSettings,
-        currentView,
-        setCurrentView,
         addRoutine,
         updateRoutine,
         deleteRoutine,

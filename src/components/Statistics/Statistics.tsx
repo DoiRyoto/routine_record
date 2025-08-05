@@ -28,7 +28,7 @@ export default function Statistics() {
       let streak = 0;
       if (routine.targetFrequency === 'daily') {
         const today = new Date();
-        let checkDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const checkDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         
         while (true) {
           const dayStart = new Date(checkDate);

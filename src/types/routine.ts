@@ -57,7 +57,6 @@ export interface StatisticsData {
   lastExecuted?: Date;
 }
 
-export type ViewMode = 'dashboard' | 'routines' | 'calendar' | 'statistics' | 'settings';
 
 export interface CalendarData {
   date: string;

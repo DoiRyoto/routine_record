@@ -1,17 +1,20 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useRoutine } from '@/context/RoutineContext';
 
 export default function Header() {
-  const { currentView, setCurrentView, isDarkMode, toggleDarkMode } = useRoutine();
+  const { isDarkMode, toggleDarkMode } = useRoutine();
+  const pathname = usePathname();
 
   const navigationItems = [
-    { key: 'dashboard', label: 'ダッシュボード' },
-    { key: 'routines', label: 'ルーチン管理' },
-    { key: 'calendar', label: 'カレンダー' },
-    { key: 'statistics', label: '統計' },
-    { key: 'settings', label: '設定' },
+    { href: '/', label: 'ダッシュボード' },
+    { href: '/routines', label: 'ルーチン管理' },
+    { href: '/calendar', label: 'カレンダー' },
+    { href: '/statistics', label: '統計' },
+    { href: '/settings', label: '設定' },
   ] as const;
 
   return (
@@ -31,11 +34,11 @@ export default function Header() {
             
             <nav className="hidden md:flex space-x-6">
               {navigationItems.map(item => (
-                <button
-                  key={item.key}
-                  onClick={() => setCurrentView(item.key)}
+                <Link
+                  key={item.href}
+                  href={item.href}
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    currentView === item.key
+                    pathname === item.href
                       ? isDarkMode
                         ? 'bg-blue-900 text-blue-100'
                         : 'bg-blue-100 text-blue-900'
@@ -45,7 +48,7 @@ export default function Header() {
                   }`}
                 >
                   {item.label}
-                </button>
+                </Link>
               ))}
             </nav>
           </div>
@@ -66,11 +69,11 @@ export default function Header() {
         <nav className="md:hidden pb-4">
           <div className="flex space-x-2 overflow-x-auto">
             {navigationItems.map(item => (
-              <button
-                key={item.key}
-                onClick={() => setCurrentView(item.key)}
+              <Link
+                key={item.href}
+                href={item.href}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
-                  currentView === item.key
+                  pathname === item.href
                     ? isDarkMode
                       ? 'bg-blue-900 text-blue-100'
                       : 'bg-blue-100 text-blue-900'
@@ -80,7 +83,7 @@ export default function Header() {
                 }`}
               >
                 {item.label}
-              </button>
+              </Link>
             ))}
           </div>
         </nav>
