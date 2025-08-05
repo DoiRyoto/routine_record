@@ -60,6 +60,9 @@ export interface StatisticsData {
 
 export interface CalendarData {
   date: string;
+  dayNumber: number;
+  isCurrentMonth: boolean;
+  isToday: boolean;
   routines: {
     routineId: string;
     routineName: string;

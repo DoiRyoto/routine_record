@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/context/AuthContext";
-import { RoutineProvider } from "@/context/SupabaseRoutineContext";
+import { RoutineProvider } from "@/context/RoutineContext";
 import AppWrapper from "@/components/AppWrapper";
 
 const geistSans = Geist({
@@ -26,17 +25,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    <html lang="ja" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // On page load or when changing themes, best to add inline in head to avoid FOUC
+              document.documentElement.classList.toggle(
+                "dark",
+                localStorage.theme === "dark" ||
+                  (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),
+              );
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <RoutineProvider>
-            <AppWrapper>
-              {children}
-            </AppWrapper>
-          </RoutineProvider>
-        </AuthProvider>
+        <RoutineProvider>
+          <AppWrapper>
+            {children}
+          </AppWrapper>
+        </RoutineProvider>
       </body>
     </html>
   );

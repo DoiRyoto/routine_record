@@ -1,9 +1,10 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext } from 'react';
 import { Routine, ExecutionRecord, UserSettings } from '@/types/routine';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { demoRoutines, demoExecutionRecords } from '@/utils/demoData';
+import { generateUUID } from '@/utils/uuid';
 
 interface RoutineContextType {
   routines: Routine[];
@@ -16,8 +17,6 @@ interface RoutineContextType {
   updateExecutionRecord: (id: string, record: Partial<ExecutionRecord>) => void;
   deleteExecutionRecord: (id: string) => void;
   updateUserSettings: (settings: Partial<UserSettings>) => void;
-  isDarkMode: boolean;
-  toggleDarkMode: () => void;
 }
 
 const defaultUserSettings: UserSettings = {
@@ -39,24 +38,12 @@ export function RoutineProvider({ children }: { children: React.ReactNode }) {
   const [routines, setRoutines] = useLocalStorage<Routine[]>('routines', demoRoutines);
   const [executionRecords, setExecutionRecords] = useLocalStorage<ExecutionRecord[]>('executionRecords', demoExecutionRecords);
   const [userSettings, setUserSettings] = useLocalStorage<UserSettings>('userSettings', defaultUserSettings);
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  useEffect(() => {
-    const theme = userSettings.displaySettings.theme;
-    if (theme === 'dark') {
-      setIsDarkMode(true);
-    } else if (theme === 'light') {
-      setIsDarkMode(false);
-    } else {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setIsDarkMode(prefersDark);
-    }
-  }, [userSettings.displaySettings.theme]);
 
   const addRoutine = (routine: Omit<Routine, 'id' | 'createdAt'>) => {
     const newRoutine: Routine = {
       ...routine,
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       createdAt: new Date(),
     };
     setRoutines(prev => [...prev, newRoutine]);
@@ -74,7 +61,7 @@ export function RoutineProvider({ children }: { children: React.ReactNode }) {
   const addExecutionRecord = (record: Omit<ExecutionRecord, 'id'>) => {
     const newRecord: ExecutionRecord = {
       ...record,
-      id: crypto.randomUUID(),
+      id: generateUUID(),
     };
     setExecutionRecords(prev => [...prev, newRecord]);
   };
@@ -94,16 +81,6 @@ export function RoutineProvider({ children }: { children: React.ReactNode }) {
     }));
   };
 
-  const toggleDarkMode = () => {
-    const newTheme = isDarkMode ? 'light' : 'dark';
-    updateUserSettings({
-      displaySettings: {
-        ...userSettings.displaySettings,
-        theme: newTheme,
-      },
-    });
-  };
-
   return (
     <RoutineContext.Provider
       value={{
@@ -117,8 +94,6 @@ export function RoutineProvider({ children }: { children: React.ReactNode }) {
         updateExecutionRecord,
         deleteExecutionRecord,
         updateUserSettings,
-        isDarkMode,
-        toggleDarkMode,
       }}
     >
       {children}

@@ -1,15 +1,26 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useRoutine } from '@/context/RoutineContext';
 import ProgressCard from './ProgressCard';
 import TodayRoutineItem from './TodayRoutineItem';
 import Card from '../Common/Card';
 
 export default function Dashboard() {
-  const { routines, executionRecords, isDarkMode } = useRoutine();
+  const { routines, executionRecords } = useRoutine();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const dashboardData = useMemo(() => {
+    if (!isMounted) return { 
+      todayRoutines: [], 
+      todayProgress: { completed: 0, total: 0 },
+      weeklyProgress: { completed: 0, total: 0 },
+      monthlyProgress: { completed: 0, total: 0 }
+    };
     const today = new Date();
     const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000);
@@ -72,9 +83,10 @@ export default function Dashboard() {
                activeRoutines.filter(r => r.targetFrequency === 'monthly').reduce((sum, r) => sum + (r.targetCount || 1), 0),
       },
     };
-  }, [routines, executionRecords]);
+  }, [routines, executionRecords, isMounted]);
 
   const getTodayCompletedRoutines = useMemo(() => {
+    if (!isMounted) return new Set();
     const today = new Date();
     const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000);
@@ -86,7 +98,7 @@ export default function Dashboard() {
     );
 
     return new Set(todayRecords.map(r => r.routineId));
-  }, [executionRecords]);
+  }, [executionRecords, isMounted]);
 
   return (
     <div className="space-y-6">
@@ -95,33 +107,29 @@ export default function Dashboard() {
           title="今日の進捗"
           completed={dashboardData.todayProgress.completed}
           total={dashboardData.todayProgress.total}
-          isDarkMode={isDarkMode}
+
         />
         <ProgressCard
           title="今週の進捗"
           completed={dashboardData.weeklyProgress.completed}
           total={dashboardData.weeklyProgress.total}
-          isDarkMode={isDarkMode}
+
         />
         <ProgressCard
           title="今月の進捗"
           completed={dashboardData.monthlyProgress.completed}
           total={dashboardData.monthlyProgress.total}
-          isDarkMode={isDarkMode}
+
         />
       </div>
 
-      <Card isDarkMode={isDarkMode}>
-        <h2 className={`text-xl font-bold mb-4 ${
-          isDarkMode ? 'text-white' : 'text-gray-900'
-        }`}>
+              <Card>
+        <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
           今日のルーチン
         </h2>
         
         {dashboardData.todayRoutines.length === 0 ? (
-          <p className={`text-center py-8 ${
-            isDarkMode ? 'text-gray-400' : 'text-gray-500'
-          }`}>
+          <p className="text-center py-8 text-gray-500 dark:text-gray-400">
             今日のルーチンはありません
           </p>
         ) : (
@@ -131,7 +139,7 @@ export default function Dashboard() {
                 key={routine.id}
                 routine={routine}
                 isCompleted={getTodayCompletedRoutines.has(routine.id)}
-                isDarkMode={isDarkMode}
+      
               />
             ))}
           </div>

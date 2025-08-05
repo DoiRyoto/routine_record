@@ -1,5 +1,6 @@
 import type { DataService } from './data-service';
 import type { Routine, ExecutionRecord, UserSettings } from '@/types/routine';
+import { generateUUID } from '@/utils/uuid';
 
 const defaultUserSettings: UserSettings = {
   displaySettings: {
@@ -57,7 +58,7 @@ export function createLocalStorageDataService(): DataService {
         const routines = getFromStorage<Routine[]>('routines', []);
         const newRoutine: Routine = {
           ...routine,
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           createdAt: new Date(),
         };
         const updatedRoutines = [...routines, newRoutine];
@@ -121,7 +122,7 @@ export function createLocalStorageDataService(): DataService {
         const records = getFromStorage<ExecutionRecord[]>('executionRecords', []);
         const newRecord: ExecutionRecord = {
           ...record,
-          id: crypto.randomUUID(),
+          id: generateUUID(),
         };
         const updatedRecords = [...records, newRecord];
         setToStorage('executionRecords', updatedRecords);

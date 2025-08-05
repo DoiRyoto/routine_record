@@ -6,14 +6,12 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
-  isDarkMode?: boolean;
 }
 
 export default function Button({ 
   variant = 'primary', 
   size = 'md', 
   children, 
-  isDarkMode = false,
   className = '',
   ...props 
 }: ButtonProps) {
@@ -26,15 +24,9 @@ export default function Button({
   };
   
   const variantClasses = {
-    primary: isDarkMode
-      ? 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'
-      : 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
-    secondary: isDarkMode
-      ? 'bg-gray-700 text-gray-200 hover:bg-gray-600 focus:ring-gray-500'
-      : 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500',
-    danger: isDarkMode
-      ? 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500'
-      : 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
+    primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
+    secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-gray-500',
+    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
   };
 
   return (

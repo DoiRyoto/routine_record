@@ -5,16 +5,11 @@ import React from 'react';
 interface CardProps {
   children: React.ReactNode;
   className?: string;
-  isDarkMode?: boolean;
 }
 
-export default function Card({ children, className = '', isDarkMode = false }: CardProps) {
+export default function Card({ children, className = '' }: CardProps) {
   return (
-    <div className={`rounded-lg shadow-sm border p-6 ${
-      isDarkMode 
-        ? 'bg-gray-800 border-gray-700' 
-        : 'bg-white border-gray-200'
-    } ${className}`}>
+    <div className={`rounded-lg shadow-sm border p-6 bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 ${className}`}>
       {children}
     </div>
   );
