@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
 import Link from 'next/link';
+import React, { useState } from 'react';
+
 import { useAuth } from '@/context/AuthContext';
+
 import Button from '../Common/Button';
 import Card from '../Common/Card';
 
@@ -32,16 +34,16 @@ export default function SignUpForm() {
       return;
     }
 
-    const { error } = await signUp(email, password);
-    
-    if (error) {
-      setError(error.message);
+    const { error: signUpError } = await signUp(email, password);
+
+    if (signUpError) {
+      setError(signUpError.message);
     } else {
       // サインアップ成功時、自動サインインされるためダッシュボードにリダイレクト
       // AuthContextのonAuthStateChangeで自動リダイレクトされるため、ここでは何もしない
       setSuccess(true);
     }
-    
+
     setLoading(false);
   };
 
@@ -51,11 +53,10 @@ export default function SignUpForm() {
         <div className="max-w-md w-full space-y-8">
           <Card>
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                ✅ 登録完了
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">✅ 登録完了</h2>
               <p className="text-gray-600 dark:text-gray-400 mb-6">
-                確認メールを送信しました。<br />
+                確認メールを送信しました。
+                <br />
                 メール内のリンクをクリックしてアカウントを有効化してください。
               </p>
               <Link href="/auth/signin">
@@ -77,12 +78,15 @@ export default function SignUpForm() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
             すでにアカウントをお持ちの方は{' '}
-            <Link href="/auth/signin" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">
+            <Link
+              href="/auth/signin"
+              className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400"
+            >
               こちらからサインイン
             </Link>
           </p>
         </div>
-        
+
         <Card>
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
@@ -90,9 +94,12 @@ export default function SignUpForm() {
                 <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
               </div>
             )}
-            
+
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+              >
                 メールアドレス
               </label>
               <input
@@ -107,9 +114,12 @@ export default function SignUpForm() {
                 placeholder="メールアドレスを入力"
               />
             </div>
-            
+
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+              >
                 パスワード
               </label>
               <input
@@ -126,7 +136,10 @@ export default function SignUpForm() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+              >
                 パスワード確認
               </label>
               <input
@@ -143,11 +156,7 @@ export default function SignUpForm() {
             </div>
 
             <div>
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={loading}
-              >
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? '登録中...' : 'アカウント登録'}
               </Button>
             </div>

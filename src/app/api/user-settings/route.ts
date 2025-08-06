@@ -1,27 +1,42 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/server';
-import { updateUserSettings, getOrCreateUserSettings } from '@/lib/db/queries/user-settings';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import { NextResponse, type NextRequest } from 'next/server';
+
+import { getOrCreateUserSettings, updateUserSettings } from '@/lib/db/queries/user-settings';
 import { getServerErrorMessage } from '@/utils/errorHandler';
 
 // GET: ユーザー設定取得
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: '認証が必要です' },
-        { status: 401 }
-      );
-    }
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options)
+              );
+            } catch {
+              // The `setAll` method was called from a Server Component.
+            }
+          },
+        },
+      }
+    );
 
-    const token = authHeader.split(' ')[1];
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json(
-        { error: '認証に失敗しました' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '認証に失敗しました' }, { status: 401 });
     }
 
     const settings = await getOrCreateUserSettings(user.id);
@@ -30,47 +45,59 @@ export async function GET(request: NextRequest) {
       success: true,
       data: settings,
     });
-
-  } catch (error) {
-    console.error('API Error:', error);
-    return NextResponse.json(
-      { error: getServerErrorMessage() },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json({ error: getServerErrorMessage() }, { status: 500 });
   }
 }
 
 // PUT: ユーザー設定更新
 export async function PUT(request: NextRequest) {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: '認証が必要です' },
-        { status: 401 }
-      );
-    }
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options)
+              );
+            } catch {
+              // The `setAll` method was called from a Server Component.
+            }
+          },
+        },
+      }
+    );
 
-    const token = authHeader.split(' ')[1];
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json(
-        { error: '認証に失敗しました' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '認証に失敗しました' }, { status: 401 });
     }
 
     const updates = await request.json();
-    
+
     // バリデーション
     const allowedFields = [
-      'theme', 'language', 'timeFormat', 
-      'dailyGoal', 'weeklyGoal', 'monthlyGoal'
+      'theme',
+      'language',
+      'timeFormat',
+      'dailyGoal',
+      'weeklyGoal',
+      'monthlyGoal',
     ];
-    
+
     const filteredUpdates = Object.keys(updates)
-      .filter(key => allowedFields.includes(key))
+      .filter((key) => allowedFields.includes(key))
       .reduce((obj: Record<string, unknown>, key) => {
         obj[key] = updates[key as keyof typeof updates];
         return obj;
@@ -90,12 +117,7 @@ export async function PUT(request: NextRequest) {
       message: 'ユーザー設定が更新されました',
       data: updatedSettings,
     });
-
-  } catch (error) {
-    console.error('API Error:', error);
-    return NextResponse.json(
-      { error: getServerErrorMessage() },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json({ error: getServerErrorMessage() }, { status: 500 });
   }
 }

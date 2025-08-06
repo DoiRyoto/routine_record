@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Build**: `npm run build` - Build production version
 - **Production**: `npm start` - Start production server (after build)
 - **Lint**: `npm run lint` - Run ESLint with Next.js rules
-- **Database**: 
+- **Database**:
   - `npm run db:generate` - Generate migrations from schema
   - `npm run db:push` - Push schema changes to database
   - `npm run db:migrate` - Run migrations
@@ -52,9 +52,10 @@ This is a **routine tracking application** built with Next.js 15.4.5, TypeScript
 ### Routing System
 
 The app uses Next.js App Router with file-based routing:
+
 - `/` (Dashboard) - Today's routines and progress summary
 - `/routines` - Routine management (CRUD operations)
-- `/calendar` - Monthly execution calendar view  
+- `/calendar` - Monthly execution calendar view
 - `/statistics` - Progress analytics and reports
 - `/settings` - User preferences and goals
 
@@ -80,13 +81,13 @@ src/
 ├── app/                 # Next.js App Router
 ├── components/          # Feature-based components
 │   ├── Auth/           # Authentication components
-│   ├── Calendar/       
+│   ├── Calendar/
 │   ├── Common/         # Shared UI components
-│   ├── Dashboard/      
-│   ├── Layout/         
-│   ├── Routines/       
-│   ├── Settings/       
-│   └── Statistics/     
+│   ├── Dashboard/
+│   ├── Layout/
+│   ├── Routines/
+│   ├── Settings/
+│   └── Statistics/
 ├── context/            # React Context providers
 ├── hooks/              # Custom React hooks
 ├── lib/                # Core libraries and services

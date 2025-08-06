@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Routine, ExecutionRecord } from '@/types/routine';
+
+import type { Routine, ExecutionRecord } from '@/types/routine';
+
 import Dashboard from './Dashboard';
 
 interface Props {
@@ -9,10 +11,7 @@ interface Props {
   initialExecutionRecords: ExecutionRecord[];
 }
 
-export default function DashboardClientPage({ 
-  initialRoutines, 
-  initialExecutionRecords 
-}: Props) {
+export default function DashboardClientPage({ initialRoutines, initialExecutionRecords }: Props) {
   const [routines] = useState(initialRoutines);
   const [executionRecords] = useState(initialExecutionRecords);
 

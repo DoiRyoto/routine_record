@@ -2,13 +2,14 @@ export interface Routine {
   id: string;
   userId: string;
   name: string;
-  description: string;
+  description: string | null;
   category: string;
   targetFrequency: 'daily' | 'weekly' | 'monthly';
   targetCount: number | null;
   createdAt: Date;
   updatedAt: Date;
   isActive: boolean;
+  deletedAt?: Date | null; // オプショナルにして互換性を保つ
 }
 
 export interface ExecutionRecord {
@@ -54,7 +55,6 @@ export interface StatisticsData {
   completionRate: number;
   lastExecuted?: Date;
 }
-
 
 export interface CalendarData {
   date: string;

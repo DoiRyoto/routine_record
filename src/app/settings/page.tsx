@@ -1,6 +1,6 @@
+import SettingsClientPage from '@/components/Settings/SettingsClientPage';
 import { requireAuth } from '@/lib/auth/server';
 import { getOrCreateUserSettings } from '@/lib/db/queries/user-settings';
-import SettingsClientPage from '@/components/Settings/SettingsClientPage';
 
 export default async function SettingsPage() {
   const user = await requireAuth('/settings');

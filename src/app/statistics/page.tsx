@@ -1,7 +1,7 @@
-import { requireAuth } from '@/lib/auth/server';
-import { getRoutines } from '@/lib/db/queries/routines';
-import { getExecutionRecords } from '@/lib/db/queries/execution-records';
 import StatisticsClientPage from '@/components/Statistics/StatisticsClientPage';
+import { requireAuth } from '@/lib/auth/server';
+import { getExecutionRecords } from '@/lib/db/queries/execution-records';
+import { getRoutines } from '@/lib/db/queries/routines';
 
 export default async function StatisticsPage() {
   const user = await requireAuth('/statistics');
@@ -13,9 +13,6 @@ export default async function StatisticsPage() {
   ]);
 
   return (
-    <StatisticsClientPage 
-      initialRoutines={routines} 
-      initialExecutionRecords={executionRecords}
-    />
+    <StatisticsClientPage initialRoutines={routines} initialExecutionRecords={executionRecords} />
   );
 }

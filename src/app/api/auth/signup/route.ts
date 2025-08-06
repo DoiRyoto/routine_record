@@ -1,13 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { supabaseAdmin } from '@/lib/supabase/server';
+import { NextResponse, type NextRequest } from 'next/server';
+
 import { db } from '@/lib/db';
 import { users, userSettings } from '@/lib/db/schema';
+import { supabaseAdmin } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
-  
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -33,13 +34,10 @@ export async function POST(request: NextRequest) {
 
   try {
     const { email, password } = await request.json();
-    
+
     // バリデーション
     if (!email || !password) {
-      return NextResponse.json(
-        { error: 'メールアドレスとパスワードが必要です' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'メールアドレスとパスワードが必要です' }, { status: 400 });
     }
 
     if (password.length < 6) {
@@ -57,11 +55,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (error) {
-      console.error('Supabase Auth Error:', error);
-      
       // ユーザー向けには安全なエラーメッセージのみ返す
       let userMessage = 'ユーザー登録に失敗しました';
-      
+
       if (error.message?.includes('already registered')) {
         userMessage = 'このメールアドレスは既に登録されています';
       } else if (error.message?.includes('email')) {
@@ -69,18 +65,12 @@ export async function POST(request: NextRequest) {
       } else if (error.message?.includes('password')) {
         userMessage = 'パスワードの形式が正しくありません';
       }
-      
-      return NextResponse.json(
-        { error: userMessage },
-        { status: 400 }
-      );
+
+      return NextResponse.json({ error: userMessage }, { status: 400 });
     }
 
     if (!data.user) {
-      return NextResponse.json(
-        { error: 'ユーザー作成に失敗しました' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'ユーザー作成に失敗しました' }, { status: 500 });
     }
 
     // データベースにユーザー情報と設定の初期データを作成
@@ -90,11 +80,10 @@ export async function POST(request: NextRequest) {
         id: data.user.id,
         email: data.user.email!,
         emailVerified: data.user.email_confirmed_at ? true : false,
+        timezone: 'Asia/Tokyo', // デフォルトタイムゾーンを日本時間に設定
         createdAt: new Date(data.user.created_at),
         updatedAt: new Date(),
       });
-      
-      console.log('User record created for user:', data.user.id);
 
       // ユーザー設定テーブルに初期設定を挿入
       await db.insert(userSettings).values({
@@ -106,22 +95,15 @@ export async function POST(request: NextRequest) {
         weeklyGoal: 21,
         monthlyGoal: 90,
       });
-      
-      console.log('User settings created for user:', data.user.id);
-    } catch (dbError) {
-      console.error('Database error creating user data:', dbError);
+    } catch {
       // データベースエラーの場合、Supabaseのユーザーを削除
       try {
         await supabaseAdmin.auth.admin.deleteUser(data.user.id);
-        console.log('Cleaned up Supabase user due to database error');
-      } catch (cleanupError) {
-        console.error('Failed to cleanup Supabase user:', cleanupError);
+      } catch {
+        // クリーンアップに失敗
       }
-      
-      return NextResponse.json(
-        { error: 'ユーザー情報の作成に失敗しました' },
-        { status: 500 }
-      );
+
+      return NextResponse.json({ error: 'ユーザー情報の作成に失敗しました' }, { status: 500 });
     }
 
     // ユーザー作成成功後、自動的にサインインしてセッションを開始
@@ -131,7 +113,6 @@ export async function POST(request: NextRequest) {
     });
 
     if (signInError) {
-      console.error('Auto sign-in error:', signInError);
       // サインインに失敗してもユーザー作成は成功しているので、成功として返す
       return NextResponse.json({
         success: true,
@@ -139,7 +120,7 @@ export async function POST(request: NextRequest) {
         user: {
           id: data.user.id,
           email: data.user.email,
-        }
+        },
       });
     }
 
@@ -149,14 +130,9 @@ export async function POST(request: NextRequest) {
       user: {
         id: data.user.id,
         email: data.user.email,
-      }
+      },
     });
-
-  } catch (error) {
-    console.error('API Error:', error);
-    return NextResponse.json(
-      { error: 'サーバーエラーが発生しました' },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
   }
 }

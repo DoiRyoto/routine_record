@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Routine } from '@/types/routine';
+
+import type { Routine } from '@/types/routine';
+
 // RoutineContext is no longer needed
 import Button from '../Common/Button';
 
@@ -16,26 +18,28 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
     name: routine?.name || '',
     description: routine?.description || '',
     category: routine?.category || '',
-    targetFrequency: routine?.targetFrequency || 'daily' as const,
+    targetFrequency: routine?.targetFrequency || ('daily' as const),
     targetCount: routine?.targetCount || 1,
     isActive: routine?.isActive ?? true,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    console.log('フォーム送信:', { isEdit: !!routine, formData });
-    
     onSubmit(formData);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value, type } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'number' ? parseInt(value) || 1 : 
-              type === 'checkbox' ? (e.target as HTMLInputElement).checked : 
-              value,
+      [name]:
+        type === 'number'
+          ? parseInt(value) || 1
+          : type === 'checkbox'
+            ? (e.target as HTMLInputElement).checked
+            : value,
     }));
   };
 
@@ -112,14 +116,21 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
             <option value="weekly">週間</option>
             <option value="monthly">月間</option>
           </select>
-          
+
           {/* カスタム矢印アイコン */}
-          <div className="
+          <div
+            className="
             absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none
             text-gray-500 dark:text-slate-400
-          ">
+          "
+          >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </div>
         </div>
@@ -151,26 +162,14 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
           onChange={handleChange}
           className="mr-2"
         />
-        <label className="text-sm text-gray-700 dark:text-slate-200">
-          アクティブ
-        </label>
+        <label className="text-sm text-gray-700 dark:text-slate-200">アクティブ</label>
       </div>
 
       <div className="flex justify-end space-x-3 pt-4">
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={onCancel}
-
-        >
+        <Button type="button" variant="secondary" onClick={onCancel}>
           キャンセル
         </Button>
-        <Button
-          type="submit"
-
-        >
-          {routine ? '更新' : '作成'}
-        </Button>
+        <Button type="submit">{routine ? '更新' : '作成'}</Button>
       </div>
     </form>
   );

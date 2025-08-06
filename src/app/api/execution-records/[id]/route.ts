@@ -1,43 +1,56 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/server';
-import { getExecutionRecords, updateExecutionRecord, deleteExecutionRecord } from '@/lib/db/queries/execution-records';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import { NextResponse, type NextRequest } from 'next/server';
+
+import {
+  deleteExecutionRecord,
+  getExecutionRecords,
+  updateExecutionRecord,
+} from '@/lib/db/queries/execution-records';
 import { getServerErrorMessage } from '@/utils/errorHandler';
 
 // PUT: 実行記録更新
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: '認証が必要です' },
-        { status: 401 }
-      );
-    }
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options)
+              );
+            } catch {
+              // The `setAll` method was called from a Server Component.
+            }
+          },
+        },
+      }
+    );
 
-    const token = authHeader.split(' ')[1];
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json(
-        { error: '認証に失敗しました' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '認証に失敗しました' }, { status: 401 });
     }
 
     const resolvedParams = await params;
-    
+
     // 実行記録の存在確認とユーザー権限チェック
     const userRecords = await getExecutionRecords(user.id);
-    const record = userRecords.find(r => r.id === resolvedParams.id);
+    const record = userRecords.find((r) => r.id === resolvedParams.id);
 
     if (!record) {
-      return NextResponse.json(
-        { error: '実行記録が見つかりません' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: '実行記録が見つかりません' }, { status: 404 });
     }
 
     const updates = await request.json();
@@ -52,13 +65,8 @@ export async function PUT(
       message: '実行記録が更新されました',
       data: updatedRecord,
     });
-
-  } catch (error) {
-    console.error('API Error:', error);
-    return NextResponse.json(
-      { error: getServerErrorMessage() },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json({ error: getServerErrorMessage() }, { status: 500 });
   }
 }
 
@@ -68,35 +76,45 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: '認証が必要です' },
-        { status: 401 }
-      );
-    }
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options)
+              );
+            } catch {
+              // The `setAll` method was called from a Server Component.
+            }
+          },
+        },
+      }
+    );
 
-    const token = authHeader.split(' ')[1];
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json(
-        { error: '認証に失敗しました' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '認証に失敗しました' }, { status: 401 });
     }
 
     const resolvedParams = await params;
-    
+
     // 実行記録の存在確認とユーザー権限チェック
     const userRecords = await getExecutionRecords(user.id);
-    const record = userRecords.find(r => r.id === resolvedParams.id);
+    const record = userRecords.find((r) => r.id === resolvedParams.id);
 
     if (!record) {
-      return NextResponse.json(
-        { error: '実行記録が見つかりません' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: '実行記録が見つかりません' }, { status: 404 });
     }
 
     await deleteExecutionRecord(resolvedParams.id);
@@ -105,12 +123,7 @@ export async function DELETE(
       success: true,
       message: '実行記録が削除されました',
     });
-
-  } catch (error) {
-    console.error('API Error:', error);
-    return NextResponse.json(
-      { error: getServerErrorMessage() },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json({ error: getServerErrorMessage() }, { status: 500 });
   }
 }

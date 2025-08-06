@@ -1,7 +1,7 @@
-import { requireAuth } from '@/lib/auth/server';
-import { getRoutines } from '@/lib/db/queries/routines';
-import { getExecutionRecords } from '@/lib/db/queries/execution-records';
 import DashboardClientPage from '@/components/Dashboard/DashboardClientPage';
+import { requireAuth } from '@/lib/auth/server';
+import { getExecutionRecords } from '@/lib/db/queries/execution-records';
+import { getRoutines } from '@/lib/db/queries/routines';
 
 export default async function HomePage() {
   const user = await requireAuth('/');
@@ -13,9 +13,6 @@ export default async function HomePage() {
   ]);
 
   return (
-    <DashboardClientPage 
-      initialRoutines={routines} 
-      initialExecutionRecords={executionRecords}
-    />
+    <DashboardClientPage initialRoutines={routines} initialExecutionRecords={executionRecords} />
   );
 }

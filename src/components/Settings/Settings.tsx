@@ -1,24 +1,30 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useApiData, useApiActions } from '@/hooks/useApi';
-import Card from '../Common/Card';
+
+import { useApiActions, useApiData } from '@/hooks/useApi';
+
 import Button from '../Common/Button';
+import Card from '../Common/Card';
+import ConfirmDialog from '../Common/ConfirmDialog';
 import { ThemeSelect } from '../Common/ThemeSelect';
 
 export default function Settings() {
   const { userSettings } = useApiActions();
   const { data: settings, refresh } = useApiData(() => userSettings.get());
-  const [formData, setFormData] = useState(settings || {
-    theme: 'auto' as const,
-    language: 'ja' as const,
-    timeFormat: '24h' as const,
-    dailyGoal: 3,
-    weeklyGoal: 21,
-    monthlyGoal: 90,
-  });
+  const [formData, setFormData] = useState(
+    settings || {
+      theme: 'auto' as const,
+      language: 'ja' as const,
+      timeFormat: '24h' as const,
+      dailyGoal: 3,
+      weeklyGoal: 21,
+      monthlyGoal: 90,
+    }
+  );
   const [isSaved, setIsSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showResetDialog, setShowResetDialog] = useState(false);
 
   // settingsが取得されたらformDataを更新
   React.useEffect(() => {
@@ -30,60 +36,55 @@ export default function Settings() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    
+
     try {
       await userSettings.update(formData);
       setIsSaved(true);
       setTimeout(() => setIsSaved(false), 2000);
       refresh(); // データを再取得
-    } catch (error) {
-      console.error('設定の更新に失敗しました:', error);
+    } catch {
+      // 設定の更新に失敗
     } finally {
       setSaving(false);
     }
   };
 
-  const handleChange = (
-    field: string,
-    value: string | number
-  ) => {
-    setFormData(prev => ({
+  const handleChange = (field: string, value: string | number) => {
+    setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
-  const handleReset = async () => {
-    if (confirm('設定をリセットしますか？')) {
-      const defaultSettings = {
-        theme: 'auto' as const,
-        language: 'ja' as const,
-        timeFormat: '24h' as const,
-        dailyGoal: 3,
-        weeklyGoal: 21,
-        monthlyGoal: 90,
-      };
-      setFormData(defaultSettings);
-      try {
-        await userSettings.update(defaultSettings);
-        refresh();
-      } catch (error) {
-        console.error('設定のリセットに失敗しました:', error);
-      }
+  const handleResetRequest = () => {
+    setShowResetDialog(true);
+  };
+
+  const handleResetConfirm = async () => {
+    const defaultSettings = {
+      theme: 'auto' as const,
+      language: 'ja' as const,
+      timeFormat: '24h' as const,
+      dailyGoal: 3,
+      weeklyGoal: 21,
+      monthlyGoal: 90,
+    };
+    setFormData(defaultSettings);
+    try {
+      await userSettings.update(defaultSettings);
+      refresh();
+    } catch {
+      // 設定のリセットに失敗
     }
   };
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-        設定
-      </h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">設定</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
-          <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">
-            表示設定
-          </h2>
+          <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">表示設定</h2>
 
           <div className="space-y-4">
             <div>
@@ -100,7 +101,7 @@ export default function Settings() {
               <select
                 value={formData.language}
                 onChange={(e) => handleChange('language', e.target.value)}
-                              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
                          bg-white border-gray-300 text-gray-900
                          dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               >
@@ -116,7 +117,7 @@ export default function Settings() {
               <select
                 value={formData.timeFormat}
                 onChange={(e) => handleChange('timeFormat', e.target.value)}
-                              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
                          bg-white border-gray-300 text-gray-900
                          dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               >
@@ -128,9 +129,7 @@ export default function Settings() {
         </Card>
 
         <Card>
-          <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">
-            目標設定
-          </h2>
+          <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">目標設定</h2>
 
           <div className="space-y-4">
             <div>
@@ -143,7 +142,7 @@ export default function Settings() {
                 max="20"
                 value={formData.dailyGoal}
                 onChange={(e) => handleChange('dailyGoal', parseInt(e.target.value) || 1)}
-                              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
                          bg-white border-gray-300 text-gray-900
                          dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
@@ -159,7 +158,7 @@ export default function Settings() {
                 max="100"
                 value={formData.weeklyGoal}
                 onChange={(e) => handleChange('weeklyGoal', parseInt(e.target.value) || 1)}
-                              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
                          bg-white border-gray-300 text-gray-900
                          dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
@@ -175,7 +174,7 @@ export default function Settings() {
                 max="500"
                 value={formData.monthlyGoal}
                 onChange={(e) => handleChange('monthlyGoal', parseInt(e.target.value) || 1)}
-                              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
                          bg-white border-gray-300 text-gray-900
                          dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
@@ -184,25 +183,15 @@ export default function Settings() {
         </Card>
 
         <div className="flex justify-between items-center pt-4">
-          <Button
-            type="button"
-            variant="danger"
-            onClick={handleReset}
-
-          >
+          <Button type="button" variant="danger" onClick={handleResetRequest}>
             設定をリセット
           </Button>
 
           <div className="flex items-center space-x-4">
             {isSaved && (
-              <span             className="text-sm text-green-600 dark:text-green-400">
-                ✓ 保存しました
-              </span>
+              <span className="text-sm text-green-600 dark:text-green-400">✓ 保存しました</span>
             )}
-            <Button
-              type="submit"
-              disabled={saving}
-            >
+            <Button type="submit" disabled={saving}>
               {saving ? '保存中...' : '設定を保存'}
             </Button>
           </div>
@@ -210,15 +199,25 @@ export default function Settings() {
       </form>
 
       <Card>
-        <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">
-          アプリについて
-        </h2>
+        <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">アプリについて</h2>
         <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
           <p>ルーチン記録アプリ v1.0.0</p>
           <p>日々の習慣を記録し、継続をサポートするアプリケーションです。</p>
           <p>データはブラウザのローカルストレージに保存されます。</p>
         </div>
       </Card>
+
+      {/* リセット確認ダイアログ */}
+      <ConfirmDialog
+        isOpen={showResetDialog}
+        onClose={() => setShowResetDialog(false)}
+        onConfirm={handleResetConfirm}
+        title="設定をリセット"
+        message="すべての設定をデフォルト値に戻します。この操作は元に戻せません。"
+        confirmText="リセット"
+        cancelText="キャンセル"
+        variant="danger"
+      />
     </div>
   );
 }

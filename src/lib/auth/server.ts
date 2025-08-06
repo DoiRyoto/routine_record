@@ -1,7 +1,7 @@
-import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
-import { redirect } from 'next/navigation';
 import type { User } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 /**
  * サーバーサイドでSupabaseクライアントを作成
@@ -39,12 +39,15 @@ export async function createServerSupabaseClient() {
 export async function getCurrentUser(): Promise<User | null> {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user }, error } = await supabase.auth.getUser();
-    
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
     if (error || !user) {
       return null;
     }
-    
+
     return user;
   } catch {
     return null;
@@ -56,12 +59,12 @@ export async function getCurrentUser(): Promise<User | null> {
  */
 export async function requireAuth(redirectTo?: string): Promise<User> {
   const user = await getCurrentUser();
-  
+
   if (!user) {
     const params = redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : '';
     redirect(`/auth/signin${params}`);
   }
-  
+
   return user;
 }
 
@@ -71,12 +74,15 @@ export async function requireAuth(redirectTo?: string): Promise<User> {
 export async function getServerSession() {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { session }, error } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
+
     if (error || !session) {
       return { session: null, user: null };
     }
-    
+
     return { session, user: session.user };
   } catch {
     return { session: null, user: null };

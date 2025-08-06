@@ -1,13 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { NextResponse, type NextRequest } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
-  
+
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return NextResponse.json({ error: 'Supabase configuration is missing' }, { status: 500 });
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
       cookies: {
         getAll() {
@@ -30,13 +34,10 @@ export async function POST(request: NextRequest) {
 
   try {
     const { email, password } = await request.json();
-    
+
     // バリデーション
     if (!email || !password) {
-      return NextResponse.json(
-        { error: 'メールアドレスとパスワードが必要です' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'メールアドレスとパスワードが必要です' }, { status: 400 });
     }
 
     // Supabase Authでサインイン
@@ -46,7 +47,6 @@ export async function POST(request: NextRequest) {
     });
 
     if (error) {
-      console.error('Supabase Auth Error:', error);
       return NextResponse.json(
         { error: 'メールアドレスまたはパスワードが正しくありません' },
         { status: 401 }
@@ -54,10 +54,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!data.user || !data.session) {
-      return NextResponse.json(
-        { error: 'サインインに失敗しました' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'サインインに失敗しました' }, { status: 401 });
     }
 
     return NextResponse.json({
@@ -68,12 +65,7 @@ export async function POST(request: NextRequest) {
         email: data.user.email,
       },
     });
-
-  } catch (error) {
-    console.error('API Error:', error);
-    return NextResponse.json(
-      { error: 'サーバーエラーが発生しました' },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
   }
 }

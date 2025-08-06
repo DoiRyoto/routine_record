@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
 import Link from 'next/link';
+import React, { useState } from 'react';
+
 import { useAuth } from '@/context/AuthContext';
+
 import Button from '../Common/Button';
 import Card from '../Common/Card';
 
@@ -18,14 +20,14 @@ export default function SignInForm() {
     setLoading(true);
     setError(null);
 
-    const { error } = await signIn(email, password);
-    
-    if (error) {
-      setError(error.message);
+    const { error: signInError } = await signIn(email, password);
+
+    if (signInError) {
+      setError(signInError.message);
+      setLoading(false);
     }
-    // サインイン成功時、AuthContextのonAuthStateChangeで自動リダイレクトされる
-    
-    setLoading(false);
+    // サインイン成功時、AuthContextでリダイレクトされる
+    // エラーがない場合はローディング状態を維持してリダイレクトを待つ
   };
 
   return (
@@ -37,12 +39,15 @@ export default function SignInForm() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
             アカウントをお持ちでない方は{' '}
-            <Link href="/auth/signup" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">
+            <Link
+              href="/auth/signup"
+              className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400"
+            >
               こちらから登録
             </Link>
           </p>
         </div>
-        
+
         <Card>
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
@@ -50,9 +55,12 @@ export default function SignInForm() {
                 <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
               </div>
             )}
-            
+
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+              >
                 メールアドレス
               </label>
               <input
@@ -67,9 +75,12 @@ export default function SignInForm() {
                 placeholder="メールアドレスを入力"
               />
             </div>
-            
+
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+              >
                 パスワード
               </label>
               <input
@@ -86,11 +97,7 @@ export default function SignInForm() {
             </div>
 
             <div>
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={loading}
-              >
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'サインイン中...' : 'サインイン'}
               </Button>
             </div>

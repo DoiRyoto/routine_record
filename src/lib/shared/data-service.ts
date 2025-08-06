@@ -7,6 +7,7 @@ export interface DataService {
     create(routine: Omit<Routine, 'id' | 'userId' | 'createdAt' | 'updatedAt'>): Promise<Routine>;
     update(id: string, routine: Partial<Routine>): Promise<Routine | null>;
     delete(id: string): Promise<boolean>;
+    restore(id: string): Promise<Routine>;
   };
   executionRecords: {
     getAll(startDate?: Date, endDate?: Date): Promise<ExecutionRecord[]>;

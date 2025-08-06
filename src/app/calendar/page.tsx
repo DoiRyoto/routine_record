@@ -1,7 +1,7 @@
-import { requireAuth } from '@/lib/auth/server';
-import { getRoutines } from '@/lib/db/queries/routines';
-import { getExecutionRecords } from '@/lib/db/queries/execution-records';
 import CalendarClientPage from '@/components/Calendar/CalendarClientPage';
+import { requireAuth } from '@/lib/auth/server';
+import { getExecutionRecords } from '@/lib/db/queries/execution-records';
+import { getRoutines } from '@/lib/db/queries/routines';
 
 export default async function CalendarPage() {
   const user = await requireAuth('/calendar');
@@ -13,9 +13,6 @@ export default async function CalendarPage() {
   ]);
 
   return (
-    <CalendarClientPage 
-      initialRoutines={routines} 
-      initialExecutionRecords={executionRecords}
-    />
+    <CalendarClientPage initialRoutines={routines} initialExecutionRecords={executionRecords} />
   );
 }

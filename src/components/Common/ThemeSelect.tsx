@@ -1,7 +1,8 @@
 'use client';
 
-import { useTheme } from '@/hooks/useTheme';
 import React from 'react';
+
+import { useTheme } from '@/hooks/useTheme';
 
 export function ThemeSelect() {
   const { theme, setTheme } = useTheme();

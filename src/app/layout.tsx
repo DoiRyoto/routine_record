@@ -1,22 +1,23 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { AuthProvider } from "@/context/AuthContext";
-import AppWrapper from "@/components/AppWrapper";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+
+import './globals.css';
+import AppWrapper from '@/components/AppWrapper';
+import { AuthProvider } from '@/context/AuthContext';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "ルーチン記録",
-  description: "日々の習慣を記録し、継続をサポートするアプリケーション",
+  title: 'ルーチン記録',
+  description: '日々の習慣を記録し、継続をサポートするアプリケーション',
 };
 
 export default function RootLayout({
@@ -40,13 +41,9 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
-          <AppWrapper>
-            {children}
-          </AppWrapper>
+          <AppWrapper>{children}</AppWrapper>
         </AuthProvider>
       </body>
     </html>

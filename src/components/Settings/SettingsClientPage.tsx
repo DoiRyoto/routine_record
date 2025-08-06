@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { UserSettings } from '@/types/routine';
+
 import { useApiActions } from '@/hooks/useApi';
-import Card from '../Common/Card';
+import type { UserSettings } from '@/types/routine';
+
 import Button from '../Common/Button';
+import Card from '../Common/Card';
 import { ThemeSelect } from '../Common/ThemeSelect';
 
 interface Props {
@@ -20,29 +22,27 @@ export default function SettingsClientPage({ initialSettings }: Props) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    
+
     try {
       await userSettings.update(formData);
       setIsSaved(true);
       setTimeout(() => setIsSaved(false), 2000);
-    } catch (error) {
-      console.error('設定の更新に失敗しました:', error);
+    } catch {
+      // 設定の更新に失敗
     } finally {
       setSaving(false);
     }
   };
 
-  const handleChange = (
-    field: string,
-    value: string | number
-  ) => {
-    setFormData(prev => ({
+  const handleChange = (field: string, value: string | number) => {
+    setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
   const handleReset = async () => {
+    // eslint-disable-next-line no-alert
     if (confirm('設定をリセットしますか？')) {
       const defaultSettings = {
         theme: 'auto' as const,
@@ -55,23 +55,19 @@ export default function SettingsClientPage({ initialSettings }: Props) {
       setFormData(defaultSettings);
       try {
         await userSettings.update(defaultSettings);
-      } catch (error) {
-        console.error('設定のリセットに失敗しました:', error);
+      } catch {
+        // 設定のリセットに失敗
       }
     }
   };
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-        設定
-      </h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">設定</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
-          <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">
-            表示設定
-          </h2>
+          <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">表示設定</h2>
 
           <div className="space-y-4">
             <div>
@@ -116,9 +112,7 @@ export default function SettingsClientPage({ initialSettings }: Props) {
         </Card>
 
         <Card>
-          <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">
-            目標設定
-          </h2>
+          <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">目標設定</h2>
 
           <div className="space-y-4">
             <div>
@@ -172,25 +166,15 @@ export default function SettingsClientPage({ initialSettings }: Props) {
         </Card>
 
         <div className="flex justify-between items-center pt-4">
-          <Button
-            type="button"
-            variant="danger"
-            onClick={handleReset}
-            disabled={saving}
-          >
+          <Button type="button" variant="danger" onClick={handleReset} disabled={saving}>
             設定をリセット
           </Button>
 
           <div className="flex items-center space-x-4">
             {isSaved && (
-              <span className="text-sm text-green-600 dark:text-green-400">
-                ✓ 保存しました
-              </span>
+              <span className="text-sm text-green-600 dark:text-green-400">✓ 保存しました</span>
             )}
-            <Button
-              type="submit"
-              disabled={saving}
-            >
+            <Button type="submit" disabled={saving}>
               {saving ? '保存中...' : '設定を保存'}
             </Button>
           </div>
@@ -198,9 +182,7 @@ export default function SettingsClientPage({ initialSettings }: Props) {
       </form>
 
       <Card>
-        <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">
-          アプリについて
-        </h2>
+        <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">アプリについて</h2>
         <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
           <p>ルーチン記録アプリ v2.0.0</p>
           <p>日々の習慣を記録し、継続をサポートするアプリケーションです。</p>

@@ -1,20 +1,19 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
-  
+
   // セキュリティ設定
   poweredByHeader: false, // X-Powered-By ヘッダーを無効化
-  
-  // 本番環境でのエラー処理
-  ...(process.env.NODE_ENV === 'production' && {
-    compiler: {
-      removeConsole: {
-        exclude: ['error'], // エラーログのみ残す
-      },
-    },
-  }),
-  
+
+  // エラー処理とコンソール設定
+  compiler: {
+    removeConsole: true, // 全てのコンソールログを削除
+  },
+
+  // Next.jsのエラーページを無効化して詳細情報を隠す
+  productionBrowserSourceMaps: false,
+
   // レスポンスヘッダーのセキュリティ設定
   async headers() {
     return [

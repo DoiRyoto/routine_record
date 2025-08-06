@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean, integer, uuid, pgEnum } from 'drizzle-orm/pg-core';
+import { boolean, integer, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 // Enums
 export const targetFrequencyEnum = pgEnum('target_frequency', ['daily', 'weekly', 'monthly']);
@@ -19,50 +19,60 @@ export const users = pgTable('users', {
   timezone: text('timezone').default('Asia/Tokyo'),
   status: userStatusEnum('status').default('active').notNull(),
   emailVerified: boolean('email_verified').default(false).notNull(),
-  lastLoginAt: timestamp('last_login_at'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  lastLoginAt: timestamp('last_login_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
 // Routines テーブル
 export const routines = pgTable('routines', {
   id: uuid('id').primaryKey().defaultRandom(),
-  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  userId: uuid('user_id')
+    .references(() => users.id, { onDelete: 'cascade' })
+    .notNull(),
   name: text('name').notNull(),
-  description: text('description').notNull(),
+  description: text('description'),
   category: text('category').notNull(),
   targetFrequency: targetFrequencyEnum('target_frequency').notNull(),
   targetCount: integer('target_count'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
   isActive: boolean('is_active').default(true).notNull(),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }), // ソフトデリート用
 });
 
 // Execution Records テーブル
 export const executionRecords = pgTable('execution_records', {
   id: uuid('id').primaryKey().defaultRandom(),
-  routineId: uuid('routine_id').references(() => routines.id, { onDelete: 'cascade' }).notNull(),
-  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
-  executedAt: timestamp('executed_at').defaultNow().notNull(),
+  routineId: uuid('routine_id')
+    .references(() => routines.id, { onDelete: 'cascade' })
+    .notNull(),
+  userId: uuid('user_id')
+    .references(() => users.id, { onDelete: 'cascade' })
+    .notNull(),
+  executedAt: timestamp('executed_at', { withTimezone: true }).defaultNow().notNull(),
   duration: integer('duration'), // 分単位
   memo: text('memo'),
   isCompleted: boolean('is_completed').default(false).notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
 // User Settings テーブル
 export const userSettings = pgTable('user_settings', {
   id: uuid('id').primaryKey().defaultRandom(),
-  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull().unique(),
+  userId: uuid('user_id')
+    .references(() => users.id, { onDelete: 'cascade' })
+    .notNull()
+    .unique(),
   theme: themeEnum('theme').default('auto').notNull(),
   language: languageEnum('language').default('ja').notNull(),
   timeFormat: timeFormatEnum('time_format').default('24h').notNull(),
   dailyGoal: integer('daily_goal').default(3).notNull(),
   weeklyGoal: integer('weekly_goal').default(21).notNull(),
   monthlyGoal: integer('monthly_goal').default(90).notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
 // 型のエクスポート

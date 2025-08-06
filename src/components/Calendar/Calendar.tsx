@@ -1,9 +1,13 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
-import { CalendarData, Routine, ExecutionRecord } from '@/types/routine';
-import Card from '../Common/Card';
+import { useEffect, useMemo, useState } from 'react';
+
+import { useUserSettings } from '@/hooks/useUserSettings';
+import type { CalendarData, ExecutionRecord, Routine } from '@/types/routine';
+import { getUserTimezone, isSameDayInUserTimezone } from '@/utils/timezone';
+
 import Button from '../Common/Button';
+import Card from '../Common/Card';
 
 interface Props {
   routines: Routine[];
@@ -13,34 +17,45 @@ interface Props {
 export default function Calendar({ routines, executionRecords }: Props) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isMounted, setIsMounted] = useState(false);
+  const { userSettings } = useUserSettings();
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
   const calendarData = useMemo(() => {
-    if (!isMounted) return []; // マウント前は空配列を返す
+    if (!isMounted) {
+      return [];
+    } // マウント前は空配列を返す
+
+    const timezone = getUserTimezone(userSettings?.timezone);
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     const firstDay = new Date(year, month, 1);
     const startDate = new Date(firstDay);
     startDate.setDate(startDate.getDate() - firstDay.getDay());
-    
+
     const calendar: CalendarData[] = [];
     const current = new Date(startDate);
-    
+
+    // 今日の日付をユーザーのタイムゾーンで取得
+    const todayInTz = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(new Date());
+
     for (let i = 0; i < 42; i++) {
-      const dateStr = current.toISOString().split('T')[0];
-      const dayStart = new Date(current);
-      const dayEnd = new Date(current.getTime() + 24 * 60 * 60 * 1000);
-      
-      const dayRecords = executionRecords.filter(record => 
-        record.executedAt >= dayStart && record.executedAt < dayEnd
+      const [dateStr] = current.toISOString().split('T');
+
+      const dayRecords = executionRecords.filter((record) =>
+        isSameDayInUserTimezone(record.executedAt, current, timezone)
       );
-      
-      const dayRoutines = routines.map(routine => {
-        const isCompleted = dayRecords.some(record => 
-          record.routineId === routine.id && record.isCompleted
+
+      const dayRoutines = routines.map((routine) => {
+        const isCompleted = dayRecords.some(
+          (record) => record.routineId === routine.id && record.isCompleted
         );
         return {
           routineId: routine.id,
@@ -48,23 +63,31 @@ export default function Calendar({ routines, executionRecords }: Props) {
           isCompleted,
         };
       });
-      
+
+      // ユーザーのタイムゾーンでの今日の日付と比較
+      const currentDateInTz = new Intl.DateTimeFormat('en-CA', {
+        timeZone: timezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(current);
+
       calendar.push({
-        date: current.toISOString().split('T')[0],
+        date: dateStr,
         dayNumber: current.getDate(),
         isCurrentMonth: current.getMonth() === month,
-        isToday: dateStr === new Date().toISOString().split('T')[0],
+        isToday: currentDateInTz === todayInTz,
         routines: dayRoutines,
       });
-      
+
       current.setDate(current.getDate() + 1);
     }
-    
+
     return calendar;
-  }, [currentDate, routines, executionRecords, isMounted]);
+  }, [currentDate, routines, executionRecords, isMounted, userSettings?.timezone]);
 
   const navigateMonth = (direction: 'prev' | 'next') => {
-    setCurrentDate(prev => {
+    setCurrentDate((prev) => {
       const newDate = new Date(prev);
       if (direction === 'prev') {
         newDate.setMonth(newDate.getMonth() - 1);
@@ -76,8 +99,18 @@ export default function Calendar({ routines, executionRecords }: Props) {
   };
 
   const monthNames = [
-    '1月', '2月', '3月', '4月', '5月', '6月',
-    '7月', '8月', '9月', '10月', '11月', '12月'
+    '1月',
+    '2月',
+    '3月',
+    '4月',
+    '5月',
+    '6月',
+    '7月',
+    '8月',
+    '9月',
+    '10月',
+    '11月',
+    '12月',
   ];
 
   const weekDays = ['日', '月', '火', '水', '木', '金', '土'];
@@ -85,9 +118,7 @@ export default function Calendar({ routines, executionRecords }: Props) {
   if (!isMounted) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          カレンダー
-        </h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">カレンダー</h1>
         <div className="text-center py-8">
           <p className="text-gray-500">読み込み中...</p>
         </div>
@@ -98,28 +129,18 @@ export default function Calendar({ routines, executionRecords }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          カレンダー
-        </h1>
-        
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">カレンダー</h1>
+
         <div className="flex items-center space-x-4">
-          <Button
-            onClick={() => navigateMonth('prev')}
-            variant="secondary"
-            size="sm"
-          >
+          <Button onClick={() => navigateMonth('prev')} variant="secondary" size="sm">
             ←
           </Button>
-          
+
           <h2 className="text-lg font-medium text-gray-900 dark:text-white">
             {currentDate.getFullYear()}年 {monthNames[currentDate.getMonth()]}
           </h2>
-          
-          <Button
-            onClick={() => navigateMonth('next')}
-            variant="secondary"
-            size="sm"
-          >
+
+          <Button onClick={() => navigateMonth('next')} variant="secondary" size="sm">
             →
           </Button>
         </div>
@@ -127,7 +148,7 @@ export default function Calendar({ routines, executionRecords }: Props) {
 
       <Card>
         <div className="grid grid-cols-7 gap-1">
-          {weekDays.map(day => (
+          {weekDays.map((day) => (
             <div
               key={day}
               className="p-2 text-center text-sm font-medium text-gray-600 dark:text-gray-300"
@@ -135,31 +156,31 @@ export default function Calendar({ routines, executionRecords }: Props) {
               {day}
             </div>
           ))}
-          
+
           {calendarData.map((day, index) => (
             <div
               key={index}
               className={`min-h-[80px] p-1 border rounded ${
-                day.isCurrentMonth
-                  ? 'border-gray-200 dark:border-gray-700' 
-                  : 'opacity-50'
+                day.isCurrentMonth ? 'border-gray-200 dark:border-gray-700' : 'opacity-50'
               } ${
                 day.isToday
                   ? 'bg-blue-50 border-blue-300 dark:bg-blue-900 dark:border-blue-600'
                   : 'hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
-              <div className={`text-sm font-medium mb-1 ${
-                day.isToday
-                  ? 'text-blue-600 dark:text-blue-200'
-                  : 'text-gray-700 dark:text-gray-300'
-              }`}>
+              <div
+                className={`text-sm font-medium mb-1 ${
+                  day.isToday
+                    ? 'text-blue-600 dark:text-blue-200'
+                    : 'text-gray-700 dark:text-gray-300'
+                }`}
+              >
                 {day.dayNumber}
               </div>
-              
+
               <div className="space-y-1">
                 {day.routines
-                  .filter(routine => routine.isCompleted)
+                  .filter((routine) => routine.isCompleted)
                   .slice(0, 3)
                   .map((routine, routineIndex) => (
                     <div
@@ -170,10 +191,10 @@ export default function Calendar({ routines, executionRecords }: Props) {
                       {routine.routineName}
                     </div>
                   ))}
-                
-                {day.routines.filter(routine => routine.isCompleted).length > 3 && (
+
+                {day.routines.filter((routine) => routine.isCompleted).length > 3 && (
                   <div className="text-xs text-gray-500 dark:text-gray-400">
-                    +{day.routines.filter(routine => routine.isCompleted).length - 3}件
+                    +{day.routines.filter((routine) => routine.isCompleted).length - 3}件
                   </div>
                 )}
               </div>

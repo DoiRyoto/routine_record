@@ -1,9 +1,10 @@
 'use client';
 
+import type { AuthError, User } from '@supabase/supabase-js';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, AuthError } from '@supabase/supabase-js';
+
 import { supabase } from '@/lib/supabase/client';
-import { sanitizeApiError, getNetworkErrorMessage } from '@/utils/errorHandler';
+import { getNetworkErrorMessage, sanitizeApiError } from '@/utils/errorHandler';
 
 interface AuthContextType {
   user: User | null;
@@ -22,7 +23,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // 初期認証状態の取得
     const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
       setLoading(false);
     };
@@ -30,12 +33,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     getSession();
 
     // 認証状態の変更を監視
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
 
     return () => subscription.unsubscribe();
   }, []);
@@ -57,15 +60,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { error: { message: safeMessage } as AuthError };
       }
 
-      // サーバーサイドでcookieが設定されるため、クライアントサイドでのセッション設定は不要
-      // Supabaseクライアントが自動的にcookieからセッションを復元する
-      
+      // サインイン成功後、middlewareが適切にリダイレクト処理を行う
+      // 少し待機してからページを再読み込みして、サーバーサイドの認証状態を反映
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 100);
+
       return { error: null };
     } catch {
-      return { 
-        error: { 
-          message: getNetworkErrorMessage() 
-        } as AuthError 
+      return {
+        error: {
+          message: getNetworkErrorMessage(),
+        } as AuthError,
       };
     }
   };
@@ -89,16 +95,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       return { error: null };
     } catch {
-      return { 
-        error: { 
-          message: getNetworkErrorMessage() 
-        } as AuthError 
+      return {
+        error: {
+          message: getNetworkErrorMessage(),
+        } as AuthError,
       };
     }
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      // クライアントサイドでのサインアウト
+      await supabase.auth.signOut();
+
+      // サーバーサイドのセッションもクリア
+      await fetch('/api/auth/signout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // サインインページにリダイレクト
+      window.location.href = '/auth/signin';
+    } catch {
+      // エラーが発生してもサインインページにリダイレクト
+      window.location.href = '/auth/signin';
+    }
   };
 
   const value = {

@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import React, { useEffect } from 'react';
+
 import Layout from '@/components/Layout/Layout';
-import AuthGuard from '@/components/Auth/AuthGuard';
+import { SnackbarProvider } from '@/context/SnackbarContext';
 
 interface AppWrapperProps {
   children: React.ReactNode;
@@ -26,12 +27,12 @@ export default function AppWrapper({ children }: AppWrapperProps) {
   const isPublicPage = publicPages.includes(pathname);
 
   if (isPublicPage) {
-    return <>{children}</>;
+    return <SnackbarProvider>{children}</SnackbarProvider>;
   }
 
   return (
-    <AuthGuard>
+    <SnackbarProvider>
       <Layout>{children}</Layout>
-    </AuthGuard>
+    </SnackbarProvider>
   );
 }

@@ -1,12 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import { createApiDataService } from '@/lib/shared/api-data-service';
+
 import { useAuth } from '@/context/AuthContext';
+import { createApiDataService } from '@/lib/shared/api-data-service';
 
 // APIデータを管理する汎用フック
-export function useApiData<T>(
-  apiCall: () => Promise<T>,
-  dependencies: unknown[] = []
-) {
+export function useApiData<T>(apiCall: () => Promise<T>, dependencies: unknown[] = []) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +41,7 @@ export function useApiData<T>(
 // 汎用的なAPI操作フック
 export function useApiActions() {
   const dataService = createApiDataService();
-  
+
   return {
     routines: dataService.routines,
     executionRecords: dataService.executionRecords,

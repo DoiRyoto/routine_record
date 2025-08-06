@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+
 import Button from '@/components/Common/Button';
 
 export default function Error({
@@ -11,10 +12,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // エラーをログに記録（開発環境のみ）
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Application error:', error);
-    }
+    // セキュリティのため詳細なエラー情報は記録しない
   }, [error]);
 
   return (
@@ -27,29 +25,15 @@ export default function Error({
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。
           </p>
-          {/* 開発環境でのみエラー詳細を表示 */}
-          {process.env.NODE_ENV === 'development' && (
-            <details className="mt-4 text-left">
-              <summary className="cursor-pointer text-sm text-gray-500">
-                開発者向け詳細情報
-              </summary>
-              <pre className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded overflow-auto">
-                {error.message}
-              </pre>
-            </details>
-          )}
         </div>
-        
+
         <div className="space-y-4">
-          <Button
-            onClick={reset}
-            className="w-full"
-          >
+          <Button onClick={reset} className="w-full">
             再試行
           </Button>
-          
+
           <Button
-            onClick={() => window.location.href = '/'}
+            onClick={() => (window.location.href = '/')}
             variant="secondary"
             className="w-full"
           >

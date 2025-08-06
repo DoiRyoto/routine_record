@@ -27,11 +27,13 @@ DATABASE_URL=your_supabase_database_url_here
 ## 3. データベーススキーマの適用
 
 ### 方法1: Drizzle Push (開発用)
+
 ```bash
 npm run db:push
 ```
 
 ### 方法2: マイグレーション生成 (本番用)
+
 ```bash
 # マイグレーションファイル生成
 npm run db:generate

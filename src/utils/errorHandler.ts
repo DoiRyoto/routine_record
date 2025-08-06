@@ -29,7 +29,7 @@ export function sanitizeApiError(errorMessage: string | undefined): string {
     'サインインに失敗しました',
   ];
 
-  if (safeMessages.some(safe => errorMessage.includes(safe))) {
+  if (safeMessages.some((safe) => errorMessage.includes(safe))) {
     return errorMessage;
   }
 
@@ -45,7 +45,7 @@ export function getNetworkErrorMessage(): string {
 }
 
 /**
- * 認証エラーのための安全なメッセージ  
+ * 認証エラーのための安全なメッセージ
  */
 export function getAuthErrorMessage(): string {
   return '認証に失敗しました。メールアドレスとパスワードを確認してください';

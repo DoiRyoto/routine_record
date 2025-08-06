@@ -1,27 +1,42 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/server';
-import { getRoutines, createRoutine } from '@/lib/db/queries/routines';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import { NextResponse, type NextRequest } from 'next/server';
+
+import { createRoutine, getRoutines } from '@/lib/db/queries/routines';
 import { getServerErrorMessage } from '@/utils/errorHandler';
 
 // GET: ルーチン一覧取得
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: '認証が必要です' },
-        { status: 401 }
-      );
-    }
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options)
+              );
+            } catch {
+              // The `setAll` method was called from a Server Component.
+            }
+          },
+        },
+      }
+    );
 
-    const token = authHeader.split(' ')[1];
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json(
-        { error: '認証に失敗しました' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '認証が必要です' }, { status: 401 });
     }
 
     const routines = await getRoutines(user.id);
@@ -30,51 +45,56 @@ export async function GET(request: NextRequest) {
       success: true,
       data: routines,
     });
-
-  } catch (error) {
-    console.error('API Error:', error);
-    return NextResponse.json(
-      { error: getServerErrorMessage() },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json({ error: getServerErrorMessage() }, { status: 500 });
   }
 }
 
 // POST: ルーチン作成
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: '認証が必要です' },
-        { status: 401 }
-      );
-    }
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options)
+              );
+            } catch {
+              // The `setAll` method was called from a Server Component.
+            }
+          },
+        },
+      }
+    );
 
-    const token = authHeader.split(' ')[1];
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json(
-        { error: '認証に失敗しました' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '認証が必要です' }, { status: 401 });
     }
 
     const { name, description, category, targetFrequency, targetCount } = await request.json();
 
     // バリデーション
-    if (!name || !description || !category || !targetFrequency) {
-      return NextResponse.json(
-        { error: '必須項目が不足しています' },
-        { status: 400 }
-      );
+    if (!name || !category || !targetFrequency) {
+      return NextResponse.json({ error: '必須項目が不足しています' }, { status: 400 });
     }
 
     const newRoutine = await createRoutine({
       userId: user.id,
       name,
-      description,
+      description: description || null,
       category,
       targetFrequency,
       targetCount: targetCount || null,
@@ -85,12 +105,7 @@ export async function POST(request: NextRequest) {
       message: 'ルーチンが作成されました',
       data: newRoutine,
     });
-
-  } catch (error) {
-    console.error('API Error:', error);
-    return NextResponse.json(
-      { error: getServerErrorMessage() },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json({ error: getServerErrorMessage() }, { status: 500 });
   }
 }

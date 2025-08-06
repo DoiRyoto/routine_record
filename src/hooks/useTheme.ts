@@ -19,7 +19,7 @@ export function useTheme() {
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
-    
+
     if (newTheme === 'light') {
       // Whenever the user explicitly chooses light mode
       localStorage.theme = 'light';
@@ -35,7 +35,7 @@ export function useTheme() {
     document.documentElement.classList.toggle(
       'dark',
       localStorage.theme === 'dark' ||
-        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
     );
   };
 
