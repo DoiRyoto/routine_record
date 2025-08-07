@@ -2,6 +2,14 @@ import { createServerClient } from '@supabase/ssr';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
+/**
+ * Next.js Middleware - 認証状態の管理とルート保護
+ *
+ * 主な機能：
+ * - 認証が必要なページへのアクセス制御
+ * - 認証済みユーザーの認証ページリダイレクト
+ * - Supabaseセッション管理
+ */
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
     request: {
