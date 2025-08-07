@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { useUserSettings } from '@/hooks/useUserSettings';
+import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
 import type { Routine } from '@/types/routine';
 import { formatDateInUserTimezone } from '@/utils/timezone';
 
@@ -13,17 +13,23 @@ import RoutineForm from './RoutineForm';
 
 interface RoutineListProps {
   routines: Routine[];
+  userSettings: UserSettingWithTimezone;
   onEdit: (routine: Routine) => void;
   onDelete: (id: string) => void;
   onAdd: (routine: Omit<Routine, 'id' | 'userId' | 'createdAt' | 'updatedAt'>) => void;
 }
 
-export default function RoutineList({ routines, onEdit, onDelete, onAdd }: RoutineListProps) {
+export default function RoutineList({
+  routines,
+  userSettings,
+  onEdit,
+  onDelete,
+  onAdd,
+}: RoutineListProps) {
   const [editingRoutine, setEditingRoutine] = useState<Routine | null>(null);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [filter, setFilter] = useState<string>('all');
   const [isMounted, setIsMounted] = useState(false);
-  const { userSettings } = useUserSettings();
 
   useEffect(() => {
     setIsMounted(true);
@@ -42,7 +48,8 @@ export default function RoutineList({ routines, onEdit, onDelete, onAdd }: Routi
     return routine.category.toLowerCase().includes(filter.toLowerCase());
   });
 
-  const categories = Array.from(new Set(routines.map((r) => r.category)));
+  // 現在のroutinesからカテゴリを抽出（フィルター用）
+  const existingCategories = Array.from(new Set(routines.map((r) => r.category))).sort();
 
   const handleEdit = (routine: Routine) => {
     if (!isMounted) {
@@ -77,7 +84,7 @@ export default function RoutineList({ routines, onEdit, onDelete, onAdd }: Routi
   if (!isMounted) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">ルーチン管理</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">ミッション管理</h1>
         <div className="text-center py-8">
           <p className="text-gray-500">読み込み中...</p>
         </div>
@@ -88,7 +95,7 @@ export default function RoutineList({ routines, onEdit, onDelete, onAdd }: Routi
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">ルーチン管理</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">ミッション管理</h1>
 
         <Button
           onClick={() => {
@@ -98,7 +105,7 @@ export default function RoutineList({ routines, onEdit, onDelete, onAdd }: Routi
             setIsFormModalOpen(true);
           }}
         >
-          + 新しいルーチン
+          + 新しいミッション
         </Button>
       </div>
 
@@ -133,7 +140,7 @@ export default function RoutineList({ routines, onEdit, onDelete, onAdd }: Routi
         >
           非アクティブ ({routines.filter((r) => !r.isActive).length})
         </button>
-        {categories.map((category) => (
+        {existingCategories.map((category) => (
           <button
             key={category}
             onClick={() => setFilter(category)}
@@ -150,7 +157,7 @@ export default function RoutineList({ routines, onEdit, onDelete, onAdd }: Routi
 
       {filteredRoutines.length === 0 ? (
         <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-          {filter === 'all' ? 'ルーチンがありません' : `${filter}のルーチンがありません`}
+          {filter === 'all' ? 'ミッションがありません' : `${filter}のミッションがありません`}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -215,7 +222,7 @@ export default function RoutineList({ routines, onEdit, onDelete, onAdd }: Routi
       <Modal
         isOpen={isFormModalOpen}
         onClose={handleCloseModal}
-        title={editingRoutine ? 'ルーチン編集' : '新しいルーチン'}
+        title={editingRoutine ? 'ミッション編集' : '新しいミッション'}
       >
         <RoutineForm
           routine={editingRoutine || undefined}

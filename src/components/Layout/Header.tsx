@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React from 'react';
 
 import { useAuth } from '@/context/AuthContext';
 
@@ -14,7 +13,7 @@ export default function Header() {
 
   const navigationItems = [
     { href: '/', label: 'ダッシュボード' },
-    { href: '/routines', label: 'ルーチン管理' },
+    { href: '/routines', label: 'ミッション管理' },
     { href: '/calendar', label: 'カレンダー' },
     { href: '/statistics', label: '統計' },
     { href: '/settings', label: '設定' },
@@ -25,7 +24,7 @@ export default function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-8">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">ルーチン記録</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">ミッション記録</h1>
 
             <nav className="hidden md:flex space-x-6">
               {navigationItems.map((item) => (

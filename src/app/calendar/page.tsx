@@ -2,17 +2,23 @@ import CalendarClientPage from '@/components/Calendar/CalendarClientPage';
 import { requireAuth } from '@/lib/auth/server';
 import { getExecutionRecords } from '@/lib/db/queries/execution-records';
 import { getRoutines } from '@/lib/db/queries/routines';
+import { getOrCreateUserSettings } from '@/lib/db/queries/user-settings';
 
 export default async function CalendarPage() {
   const user = await requireAuth('/calendar');
 
   // サーバーサイドでデータを並行取得
-  const [routines, executionRecords] = await Promise.all([
+  const [routines, executionRecords, userSettings] = await Promise.all([
     getRoutines(user.id),
     getExecutionRecords(user.id),
+    getOrCreateUserSettings(user.id),
   ]);
 
   return (
-    <CalendarClientPage initialRoutines={routines} initialExecutionRecords={executionRecords} />
+    <CalendarClientPage
+      initialRoutines={routines}
+      initialExecutionRecords={executionRecords}
+      userSettings={userSettings}
+    />
   );
 }

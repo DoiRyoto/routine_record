@@ -17,9 +17,6 @@ export async function getUserSettings(userId: string): Promise<UserSettingWithTi
       theme: userSettings.theme,
       language: userSettings.language,
       timeFormat: userSettings.timeFormat,
-      dailyGoal: userSettings.dailyGoal,
-      weeklyGoal: userSettings.weeklyGoal,
-      monthlyGoal: userSettings.monthlyGoal,
       createdAt: userSettings.createdAt,
       updatedAt: userSettings.updatedAt,
       timezone: users.timezone,
@@ -57,9 +54,6 @@ export async function getOrCreateUserSettings(userId: string): Promise<UserSetti
       theme: 'auto',
       language: 'ja',
       timeFormat: '24h',
-      dailyGoal: 3,
-      weeklyGoal: 21,
-      monthlyGoal: 90,
     });
 
     // 新規作成後、タイムゾーン情報も含めて再取得

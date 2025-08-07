@@ -91,11 +91,10 @@ export async function POST(request: NextRequest) {
         theme: 'auto',
         language: 'ja',
         timeFormat: '24h',
-        dailyGoal: 3,
-        weeklyGoal: 21,
-        monthlyGoal: 90,
       });
-    } catch {
+
+      // デフォルトカテゴリの自動作成は削除
+    } catch (error) {
       // データベースエラーの場合、Supabaseのユーザーを削除
       try {
         await supabaseAdmin.auth.admin.deleteUser(data.user.id);

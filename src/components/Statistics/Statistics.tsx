@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-import { useUserSettings } from '@/hooks/useUserSettings';
+import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
 import type { ExecutionRecord, Routine, StatisticsData } from '@/types/routine';
 import {
   formatDateInUserTimezone,
@@ -15,11 +15,11 @@ import Card from '../Common/Card';
 interface Props {
   routines: Routine[];
   executionRecords: ExecutionRecord[];
+  userSettings: UserSettingWithTimezone;
 }
 
-export default function Statistics({ routines, executionRecords }: Props) {
+export default function Statistics({ routines, executionRecords, userSettings }: Props) {
   const [isMounted, setIsMounted] = useState(false);
-  const { userSettings } = useUserSettings();
 
   useEffect(() => {
     setIsMounted(true);

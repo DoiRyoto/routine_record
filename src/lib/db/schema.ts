@@ -58,6 +58,22 @@ export const executionRecords = pgTable('execution_records', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
+// Categories テーブル
+export const categories = pgTable('categories', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id')
+    .references(() => users.id, { onDelete: 'cascade' })
+    .notNull(),
+  name: text('name').notNull(),
+  color: text('color')
+    .notNull()
+    .default('bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'),
+  isDefault: boolean('is_default').default(false).notNull(), // システムデフォルトカテゴリかどうか
+  isActive: boolean('is_active').default(true).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
 // User Settings テーブル
 export const userSettings = pgTable('user_settings', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -68,9 +84,6 @@ export const userSettings = pgTable('user_settings', {
   theme: themeEnum('theme').default('auto').notNull(),
   language: languageEnum('language').default('ja').notNull(),
   timeFormat: timeFormatEnum('time_format').default('24h').notNull(),
-  dailyGoal: integer('daily_goal').default(3).notNull(),
-  weeklyGoal: integer('weekly_goal').default(21).notNull(),
-  monthlyGoal: integer('monthly_goal').default(90).notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
@@ -79,9 +92,11 @@ export const userSettings = pgTable('user_settings', {
 export type User = typeof users.$inferSelect;
 export type Routine = typeof routines.$inferSelect;
 export type ExecutionRecord = typeof executionRecords.$inferSelect;
+export type Category = typeof categories.$inferSelect;
 export type UserSetting = typeof userSettings.$inferSelect;
 
 export type InsertUser = typeof users.$inferInsert;
 export type InsertRoutine = typeof routines.$inferInsert;
 export type InsertExecutionRecord = typeof executionRecords.$inferInsert;
+export type InsertCategory = typeof categories.$inferInsert;
 export type InsertUserSetting = typeof userSettings.$inferInsert;

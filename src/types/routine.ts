@@ -68,3 +68,6 @@ export interface CalendarData {
     duration?: number;
   }[];
 }
+
+// Category型をschemaから再エクスポート
+export type { Category } from '@/lib/db/schema';

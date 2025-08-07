@@ -2,22 +2,25 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-import { useUserSettings } from '@/hooks/useUserSettings';
+import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
 import type { CalendarData, ExecutionRecord, Routine } from '@/types/routine';
 import { getUserTimezone, isSameDayInUserTimezone } from '@/utils/timezone';
 
 import Button from '../Common/Button';
 import Card from '../Common/Card';
+import Modal from '../Common/Modal';
 
 interface Props {
   routines: Routine[];
   executionRecords: ExecutionRecord[];
+  userSettings: UserSettingWithTimezone;
 }
 
-export default function Calendar({ routines, executionRecords }: Props) {
+export default function Calendar({ routines, executionRecords, userSettings }: Props) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isMounted, setIsMounted] = useState(false);
-  const { userSettings } = useUserSettings();
+  const [selectedDay, setSelectedDay] = useState<CalendarData | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -98,6 +101,17 @@ export default function Calendar({ routines, executionRecords }: Props) {
     });
   };
 
+  const handleDayClick = (day: CalendarData) => {
+    if (!day.isCurrentMonth) return; // 現在の月の日付のみクリック可能
+    setSelectedDay(day);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedDay(null);
+  };
+
   const monthNames = [
     '1月',
     '2月',
@@ -160,13 +174,14 @@ export default function Calendar({ routines, executionRecords }: Props) {
           {calendarData.map((day, index) => (
             <div
               key={index}
-              className={`min-h-[80px] p-1 border rounded ${
+              onClick={() => handleDayClick(day)}
+              className={`min-h-[80px] p-1 border rounded cursor-pointer transition-colors ${
                 day.isCurrentMonth ? 'border-gray-200 dark:border-gray-700' : 'opacity-50'
               } ${
                 day.isToday
                   ? 'bg-blue-50 border-blue-300 dark:bg-blue-900 dark:border-blue-600'
                   : 'hover:bg-gray-50 dark:hover:bg-gray-700'
-              }`}
+              } ${day.isCurrentMonth ? 'hover:shadow-md' : ''}`}
             >
               <div
                 className={`text-sm font-medium mb-1 ${
@@ -202,6 +217,53 @@ export default function Calendar({ routines, executionRecords }: Props) {
           ))}
         </div>
       </Card>
+
+      {/* 日付詳細モーダル */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        title={selectedDay ? `${selectedDay.dayNumber}日の実行記録` : ''}
+      >
+        {selectedDay && (
+          <div className="space-y-4">
+            {selectedDay.routines.filter((routine) => routine.isCompleted).length === 0 ? (
+              <p className="text-gray-500 dark:text-gray-400 text-center py-4">
+                この日には実行されたミッションがありません
+              </p>
+            ) : (
+              <div className="space-y-3">
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                  実行されたミッション（
+                  {selectedDay.routines.filter((routine) => routine.isCompleted).length}件）
+                </p>
+                {selectedDay.routines
+                  .filter((routine) => routine.isCompleted)
+                  .map((routine, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
+                    >
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-3">
+                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-green-800 dark:text-green-200">
+                          {routine.routineName}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }

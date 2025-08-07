@@ -6,6 +6,8 @@ import type { Routine } from '@/types/routine';
 
 // RoutineContext is no longer needed
 import Button from '../Common/Button';
+import CategorySelector from '../Common/CategorySelector';
+import NumberInput from '../Common/NumberInput';
 
 interface RoutineFormProps {
   routine?: Routine;
@@ -43,11 +45,25 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
     }));
   };
 
+  const handleCategoryChange = (category: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      category,
+    }));
+  };
+
+  const handleTargetCountChange = (targetCount: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      targetCount,
+    }));
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
-          ルーチン名 *
+          ミッション名 *
         </label>
         <input
           type="text"
@@ -74,24 +90,18 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
           className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
                      bg-white border-gray-300 text-gray-900 placeholder-gray-500
                      dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:placeholder-slate-400"
-          placeholder="ルーチンの詳細説明..."
+          placeholder="ミッションの詳細説明..."
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
+        <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-slate-200">
           カテゴリー *
         </label>
-        <input
-          type="text"
-          name="category"
+        <CategorySelector
           value={formData.category}
-          onChange={handleChange}
-          required
-          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
-                     bg-white border-gray-300 text-gray-900 placeholder-gray-500
-                     dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:placeholder-slate-400"
-          placeholder="例: 健康, 学習, 仕事"
+          onChange={handleCategoryChange}
+          placeholder="カテゴリを選択または入力..."
         />
       </div>
 
@@ -137,21 +147,14 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
       </div>
 
       {formData.targetFrequency !== 'daily' && (
-        <div>
-          <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
-            目標回数
-          </label>
-          <input
-            type="number"
-            name="targetCount"
-            value={formData.targetCount}
-            onChange={handleChange}
-            min="1"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
-                       bg-white border-gray-300 text-gray-900
-                       dark:bg-slate-700 dark:border-slate-600 dark:text-white"
-          />
-        </div>
+        <NumberInput
+          label="目標回数"
+          value={formData.targetCount}
+          onChange={handleTargetCountChange}
+          min={1}
+          max={50}
+          step={1}
+        />
       )}
 
       <div className="flex items-center">

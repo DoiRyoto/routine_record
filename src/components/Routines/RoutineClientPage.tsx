@@ -3,27 +3,41 @@
 import { useCallback, useState } from 'react';
 
 import { useSnackbar } from '@/context/SnackbarContext';
-import { useApiActions } from '@/hooks/useApi';
+import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
 import type { Routine } from '@/types/routine';
 
 import RoutineList from './RoutineList';
 
 interface Props {
   initialRoutines: Routine[];
+  userSettings: UserSettingWithTimezone;
 }
 
-export default function RoutineClientPage({ initialRoutines }: Props) {
+export default function RoutineClientPage({ initialRoutines, userSettings }: Props) {
   const [routines, setRoutines] = useState<Routine[]>(initialRoutines);
-  const { routines: routineApi } = useApiActions();
   const { showSuccess, showError, showWithAction } = useSnackbar();
 
   const handleAddRoutine = async (
     routine: Omit<Routine, 'id' | 'userId' | 'createdAt' | 'updatedAt'>
   ) => {
     try {
-      const newRoutine = await routineApi.create(routine);
-      setRoutines((prev) => [...prev, newRoutine]);
-      showSuccess(`「${routine.name}」を作成しました`);
+      const response = await fetch('/api/routines', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(routine),
+      });
+
+      if (!response.ok) {
+        throw new Error('ルーチンの作成に失敗しました');
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        setRoutines((prev) => [...prev, result.data]);
+        showSuccess(`「${routine.name}」を作成しました`);
+      }
     } catch {
       showError('ルーチンの作成に失敗しました');
     }
@@ -31,10 +45,22 @@ export default function RoutineClientPage({ initialRoutines }: Props) {
 
   const handleUpdateRoutine = async (id: string, updates: Partial<Routine>) => {
     try {
-      const updatedRoutine = await routineApi.update(id, updates);
-      if (updatedRoutine) {
-        setRoutines((prev) => prev.map((r) => (r.id === id ? updatedRoutine : r)));
-        showSuccess(`「${updatedRoutine.name}」を更新しました`);
+      const response = await fetch(`/api/routines/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updates),
+      });
+
+      if (!response.ok) {
+        throw new Error('ルーチンの更新に失敗しました');
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        setRoutines((prev) => prev.map((r) => (r.id === id ? result.data : r)));
+        showSuccess(`「${result.data.name}」を更新しました`);
       }
     } catch {
       showError('ルーチンの更新に失敗しました');
@@ -49,7 +75,13 @@ export default function RoutineClientPage({ initialRoutines }: Props) {
 
     try {
       // 即座にAPIでソフトデリート実行
-      await routineApi.delete(id);
+      const response = await fetch(`/api/routines/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('ルーチンの削除に失敗しました');
+      }
 
       // UIから削除
       setRoutines((prev) => prev.filter((r) => r.id !== id));
@@ -71,7 +103,16 @@ export default function RoutineClientPage({ initialRoutines }: Props) {
     async (id: string, _routine: Routine) => {
       try {
         // APIで復元
-        const restoredRoutine = await routineApi.restore(id);
+        const response = await fetch(`/api/routines/${id}/restore`, {
+          method: 'POST',
+        });
+
+        if (!response.ok) {
+          throw new Error('ルーチンの復元に失敗しました');
+        }
+
+        const result = await response.json();
+        const restoredRoutine = result.data;
 
         // UIに復元
         setRoutines((prev) => {
@@ -90,13 +131,14 @@ export default function RoutineClientPage({ initialRoutines }: Props) {
         showError('ルーチンの復元に失敗しました');
       }
     },
-    [routineApi, showSuccess, showError]
+    [showSuccess, showError]
   );
 
   return (
     <div className="space-y-6">
       <RoutineList
         routines={routines}
+        userSettings={userSettings}
         onEdit={(routine) => {
           // 更新可能なフィールドのみを抽出
 
