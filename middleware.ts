@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 /**
  * Next.js Middleware - 認証状態の管理とルート保護
- * 
+ *
  * 主な機能：
  * - 認証が必要なページへのアクセス制御
  * - 認証済みユーザーの認証ページリダイレクト
