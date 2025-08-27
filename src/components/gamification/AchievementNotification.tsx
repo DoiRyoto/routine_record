@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 
 import type { GameNotification } from '@/types/gamification';
+
 import { cn } from '@/lib/ui-utils';
 
 interface AchievementNotificationProps {
@@ -128,12 +129,12 @@ export function AchievementNotification({
             {/* 追加データ（XP、レベル情報など） */}
             {notification.data && (
               <div className="mt-2 flex items-center gap-2">
-                {notification.data.xp && (
+                {typeof notification.data.xp === 'number' && (
                   <div className={cn('px-2 py-1 rounded-full text-xs font-medium bg-white/20', config.textColor)}>
                     +{notification.data.xp} XP
                   </div>
                 )}
-                {notification.data.level && (
+                {typeof notification.data.level === 'number' && (
                   <div className={cn('px-2 py-1 rounded-full text-xs font-medium bg-white/20', config.textColor)}>
                     レベル {notification.data.level}
                   </div>

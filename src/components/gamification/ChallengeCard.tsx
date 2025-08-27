@@ -2,10 +2,12 @@
 
 import React from 'react';
 
-import { Card } from '@/components/ui/Card';
-import { ProgressBar } from './ProgressBar';
 import type { Challenge, UserChallenge } from '@/types/gamification';
+
+import { Card } from '@/components/ui/Card';
 import { cn } from '@/lib/ui-utils';
+
+import { ProgressBar } from './ProgressBar';
 
 interface ChallengeCardProps {
   challenge: Challenge;
@@ -79,7 +81,7 @@ export function ChallengeCard({
               <h3 className="text-lg font-bold text-text-primary">{challenge.title}</h3>
               <span className={cn(
                 'px-2 py-1 rounded-full text-xs font-medium',
-                typeColors[challenge.type].replace('bg-', 'border-').replace('50', '200') + ' ' + typeColors[challenge.type].replace('50', '700').replace('bg-', 'text-')
+`${typeColors[challenge.type].replace('bg-', 'border-').replace('50', '200')} ${typeColors[challenge.type].replace('50', '700').replace('bg-', 'text-')}`
               )}>
                 {typeLabels[challenge.type]}
               </span>

@@ -2,8 +2,9 @@
 
 import React from 'react';
 
-import { ProgressBar } from './ProgressBar';
 import { cn } from '@/lib/ui-utils';
+
+import { ProgressBar } from './ProgressBar';
 
 interface LevelIndicatorProps {
   level: number;
@@ -24,7 +25,7 @@ export function LevelIndicator({
   size = 'md',
   className
 }: LevelIndicatorProps) {
-  const xpProgress = nextLevelXP > 0 ? (currentXP / nextLevelXP) * 100 : 100;
+  const _xpProgress = nextLevelXP > 0 ? (currentXP / nextLevelXP) * 100 : 100;
   const remainingXP = Math.max(nextLevelXP - currentXP, 0);
 
   const sizeConfig = {

@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import type { ExecutionRecord, Routine, UserProfile } from '@/types/routine';
 import type { UserSettings } from '@/types/user-settings';
+
 import { ProfileAvatar, LevelIndicator, XPCounter, StreakCounter } from '@/components/gamification';
 
 import Dashboard from './_components/Dashboard';

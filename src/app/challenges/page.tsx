@@ -1,3 +1,5 @@
+'use client';
+
 import { ChallengesPage } from './ChallengesPage';
 
 // モックデータ

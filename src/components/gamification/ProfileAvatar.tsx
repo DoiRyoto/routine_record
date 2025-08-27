@@ -3,6 +3,7 @@
 import React from 'react';
 
 import type { UserProfile } from '@/types/gamification';
+
 import { cn } from '@/lib/ui-utils';
 
 interface ProfileAvatarProps {

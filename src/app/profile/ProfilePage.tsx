@@ -8,7 +8,7 @@ import {
   BadgeGrid,
   StreakCounter,
   StatCard,
-  XPCounter
+  XPCounter as _XPCounter
 } from '@/components/gamification';
 import { Card } from '@/components/ui/Card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
@@ -26,10 +26,10 @@ export function ProfilePage({
   userProfile,
   streakData,
   onAvatarChange,
-  onTitleChange,
+  onTitleChange: _onTitleChange,
   onBadgeClick
 }: ProfilePageProps) {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, _setIsEditing] = useState(false);
 
   // バッジをレアリティ別に分類
   const badgesByRarity = userProfile.badges.reduce((acc, badge) => {
@@ -58,7 +58,7 @@ export function ProfilePage({
               userProfile={userProfile}
               size="xl"
               showLevel={true}
-              onClick={() => onAvatarChange && setIsEditing(true)}
+              onClick={() => onAvatarChange && _setIsEditing(true)}
             />
             {userProfile.title && (
               <div className="mt-2 px-3 py-1 bg-rarity-rare text-white rounded-full text-sm font-medium">

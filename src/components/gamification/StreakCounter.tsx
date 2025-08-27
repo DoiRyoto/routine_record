@@ -3,6 +3,7 @@
 import React from 'react';
 
 import type { StreakData } from '@/types/gamification';
+
 import { cn } from '@/lib/ui-utils';
 
 interface StreakCounterProps {
@@ -22,7 +23,7 @@ export function StreakCounter({
   onUseFreeze,
   className
 }: StreakCounterProps) {
-  const { current, longest, lastExecutionDate, freezesUsed, freezesAvailable } = streakData;
+  const { current, longest, lastExecutionDate, freezesUsed: _freezesUsed, freezesAvailable } = streakData;
 
   const sizeConfig = {
     sm: {

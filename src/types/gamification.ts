@@ -183,7 +183,7 @@ export interface GameNotification {
   type: 'level_up' | 'badge_unlocked' | 'mission_completed' | 'achievement_unlocked' | 'challenge_joined';
   title: string;
   message: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
   isRead: boolean;
   createdAt: Date;
   expiresAt?: Date;

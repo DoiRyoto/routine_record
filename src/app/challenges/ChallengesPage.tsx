@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 
-import { ChallengeCard, StatCard } from '@/components/gamification';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
-import { Card } from '@/components/ui/Card';
 import type { Challenge, UserChallenge, ChallengeType } from '@/types/gamification';
+
+import { ChallengeCard, StatCard } from '@/components/gamification';
+import { Card } from '@/components/ui/Card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { cn } from '@/lib/ui-utils';
 
 interface ChallengesPageProps {

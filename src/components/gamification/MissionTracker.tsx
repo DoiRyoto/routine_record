@@ -2,9 +2,11 @@
 
 import React from 'react';
 
-import { MissionCard } from './MissionCard';
 import type { Mission, UserMission } from '@/types/gamification';
+
 import { cn } from '@/lib/ui-utils';
+
+import { MissionCard } from './MissionCard';
 
 interface MissionTrackerProps {
   missions: Mission[];

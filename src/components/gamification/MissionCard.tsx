@@ -2,9 +2,10 @@
 
 import React from 'react';
 
+import type { Mission, UserMission } from '@/types/gamification';
+
 import { Card } from '@/components/ui/Card';
 import { Progress } from '@/components/ui/Progress';
-import type { Mission, UserMission } from '@/types/gamification';
 import { cn } from '@/lib/ui-utils';
 
 interface MissionCardProps {

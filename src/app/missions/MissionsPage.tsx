@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 
-import { MissionTracker, StatCard } from '@/components/gamification';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
-import { Card } from '@/components/ui/Card';
 import type { Mission, UserMission, MissionType, MissionDifficulty } from '@/types/gamification';
-import { cn } from '@/lib/ui-utils';
+
+import { MissionTracker, StatCard } from '@/components/gamification';
+import { Card } from '@/components/ui/Card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 
 interface MissionsPageProps {
   missions: Mission[];

@@ -2,10 +2,11 @@
 
 import { useMemo, useState } from 'react';
 
-import { Card } from '@/components/ui/Card';
-import { MissionTracker, StatCard } from '@/components/gamification';
 import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
 import type { ExecutionRecord, Routine, UserProfile, Mission, UserMission } from '@/types/routine';
+
+import { Card } from '@/components/ui/Card';
+import { MissionTracker, StatCard } from '@/components/gamification';
 import {
   getMonthStartInUserTimezone,
   getWeekStartInUserTimezone,
@@ -24,7 +25,7 @@ interface Props {
   userProfile?: UserProfile;
 }
 
-export default function Dashboard({ routines, executionRecords, userSettings, userProfile }: Props) {
+export default function Dashboard({ routines, executionRecords, userSettings, userProfile: _userProfile }: Props) {
   const [localExecutionRecords, setLocalExecutionRecords] = useState(executionRecords);
 
   const addExecutionRecord = async (record: Omit<ExecutionRecord, 'id'>) => {

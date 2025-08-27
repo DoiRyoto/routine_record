@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw';
+
 import type { 
   Mission, 
   UserMission, 
@@ -300,7 +301,7 @@ export const gamificationHandlers = [
       userId: 'user1',
       amount,
       reason,
-      sourceType: sourceType as any,
+      sourceType: sourceType as 'routine' | 'mission' | 'achievement' | 'challenge' | 'bonus',
       sourceId,
       createdAt: new Date()
     };

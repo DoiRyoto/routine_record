@@ -2,7 +2,8 @@
 
 import React from 'react';
 
-import type { UserBadge, BadgeRarity } from '@/types/gamification';
+import type { UserBadge } from '@/types/gamification';
+
 import { cn } from '@/lib/ui-utils';
 
 interface BadgeGridProps {
