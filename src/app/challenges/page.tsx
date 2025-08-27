@@ -126,11 +126,11 @@ const mockUserChallenges = [
 
 export default function Page() {
   const handleJoinChallenge = (challengeId: string) => {
-    console.log('Joining challenge:', challengeId);
+    console.warn('Joining challenge:', challengeId);
   };
 
   const handleLeaveChallenge = (challengeId: string) => {
-    console.log('Leaving challenge:', challengeId);
+    console.warn('Leaving challenge:', challengeId);
   };
 
   return (

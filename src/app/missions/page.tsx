@@ -62,11 +62,11 @@ const mockUserMissions = [
 
 export default function Page() {
   const handleClaimReward = (missionId: string) => {
-    console.log('Claiming reward for mission:', missionId);
+    console.warn('Claiming reward for mission:', missionId);
   };
 
-  const handleFilterChange = (filters: any) => {
-    console.log('Filter changed:', filters);
+  const handleFilterChange = (filters: { type?: string; difficulty?: string; category?: string }) => {
+    console.warn('Filter changed:', filters);
   };
 
   return (

@@ -113,7 +113,7 @@ export function ProfilePage({
           streakData={streakData}
           variant="card"
           showFreeze={true}
-          onUseFreeze={() => console.log('Use streak freeze')}
+          onUseFreeze={() => console.warn('Use streak freeze')}
         />
         
         <div className="grid grid-cols-2 gap-4">
@@ -127,7 +127,7 @@ export function ProfilePage({
           />
           <StatCard
             title="総XP"
-            value={<XPCounter value={userProfile.totalXP} variant="inline" size="sm" />}
+            value={userProfile.totalXP}
             icon={<span className="text-lg">⭐</span>}
             variant="success"
             size="sm"

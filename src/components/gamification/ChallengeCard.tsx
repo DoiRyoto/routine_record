@@ -178,7 +178,7 @@ export function ChallengeCard({
           {isActive && (
             <button
               onClick={handleAction}
-              disabled={!isActive || (challenge.maxParticipants && challenge.participants >= challenge.maxParticipants && !isJoined)}
+              disabled={!isActive || Boolean(challenge.maxParticipants && challenge.participants >= challenge.maxParticipants && !isJoined)}
               className={cn(
                 'px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200',
                 isCompleted

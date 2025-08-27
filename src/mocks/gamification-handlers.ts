@@ -1,4 +1,4 @@
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 import type { 
   Mission, 
   UserMission, 
@@ -166,25 +166,25 @@ const mockUserChallenges: UserChallenge[] = [
 
 export const gamificationHandlers = [
   // ミッション関連API
-  rest.get('/api/missions', (req, res, ctx) => {
-    return res(ctx.json({ missions: mockMissions }));
+  http.get('/api/missions', () => {
+    return HttpResponse.json({ missions: mockMissions });
   }),
 
-  rest.get('/api/missions/:id', (req, res, ctx) => {
-    const { id } = req.params;
+  http.get('/api/missions/:id', ({ params }) => {
+    const { id } = params;
     const mission = mockMissions.find(m => m.id === id);
     if (!mission) {
-      return res(ctx.status(404), ctx.json({ error: 'Mission not found' }));
+      return new HttpResponse(JSON.stringify({ error: 'Mission not found' }), { status: 404 });
     }
-    return res(ctx.json({ mission }));
+    return HttpResponse.json({ mission });
   }),
 
-  rest.post('/api/missions/complete', async (req, res, ctx) => {
-    const { missionId } = await req.json() as { missionId: string };
+  http.post('/api/missions/complete', async ({ request }) => {
+    const { missionId } = await request.json() as { missionId: string };
     const mission = mockMissions.find(m => m.id === missionId);
     
     if (!mission) {
-      return res(ctx.status(404), ctx.json({ error: 'Mission not found' }));
+      return new HttpResponse(JSON.stringify({ error: 'Mission not found' }), { status: 404 });
     }
 
     // ミッション完了処理のシミュレーション
@@ -198,64 +198,68 @@ export const gamificationHandlers = [
       completedAt: new Date()
     };
 
-    return res(ctx.json({ 
+    return HttpResponse.json({ 
       userMission: completedMission,
       xpGained: mission.xpReward,
       badgeUnlocked: mission.badgeId ? mockBadges.find(b => b.id === mission.badgeId) : null
-    }));
+    });
   }),
 
   // ユーザーミッション関連API
-  rest.get('/api/user-missions', (req, res, ctx) => {
-    const userId = req.url.searchParams.get('userId') || 'user1';
+  http.get('/api/user-missions', ({ request }) => {
+    const url = new URL(request.url);
+    const userId = url.searchParams.get('userId') || 'user1';
     const userMissions = mockUserMissions.filter(um => um.userId === userId);
-    return res(ctx.json({ userMissions }));
+    return HttpResponse.json({ userMissions });
   }),
 
   // プロフィール関連API
-  rest.get('/api/profile', (req, res, ctx) => {
-    const userId = req.url.searchParams.get('userId') || 'user1';
+  http.get('/api/profile', ({ request }) => {
+    const url = new URL(request.url);
+    const userId = url.searchParams.get('userId') || 'user1';
     if (userId !== mockUserProfile.userId) {
-      return res(ctx.status(404), ctx.json({ error: 'Profile not found' }));
+      return new HttpResponse(JSON.stringify({ error: 'Profile not found' }), { status: 404 });
     }
-    return res(ctx.json({ profile: mockUserProfile }));
+    return HttpResponse.json({ profile: mockUserProfile });
   }),
 
-  rest.put('/api/profile', async (req, res, ctx) => {
-    const updates = await req.json() as Partial<UserProfile>;
+  http.put('/api/profile', async ({ request }) => {
+    const updates = await request.json() as Partial<UserProfile>;
     const updatedProfile = { ...mockUserProfile, ...updates };
-    return res(ctx.json({ profile: updatedProfile }));
+    return HttpResponse.json({ profile: updatedProfile });
   }),
 
   // バッジ関連API
-  rest.get('/api/badges', (req, res, ctx) => {
-    return res(ctx.json({ badges: mockBadges }));
+  http.get('/api/badges', () => {
+    return HttpResponse.json({ badges: mockBadges });
   }),
 
-  rest.get('/api/user-badges', (req, res, ctx) => {
-    const userId = req.url.searchParams.get('userId') || 'user1';
+  http.get('/api/user-badges', ({ request }) => {
+    const url = new URL(request.url);
+    const userId = url.searchParams.get('userId') || 'user1';
     const userBadges = mockUserBadges.filter(ub => ub.userId === userId);
-    return res(ctx.json({ userBadges }));
+    return HttpResponse.json({ userBadges });
   }),
 
   // チャレンジ関連API
-  rest.get('/api/challenges', (req, res, ctx) => {
-    const type = req.url.searchParams.get('type');
+  http.get('/api/challenges', ({ request }) => {
+    const url = new URL(request.url);
+    const type = url.searchParams.get('type');
     let challenges = mockChallenges;
     
     if (type) {
       challenges = challenges.filter(c => c.type === type);
     }
     
-    return res(ctx.json({ challenges }));
+    return HttpResponse.json({ challenges });
   }),
 
-  rest.post('/api/challenges/join', async (req, res, ctx) => {
-    const { challengeId } = await req.json() as { challengeId: string };
+  http.post('/api/challenges/join', async ({ request }) => {
+    const { challengeId } = await request.json() as { challengeId: string };
     const challenge = mockChallenges.find(c => c.id === challengeId);
     
     if (!challenge) {
-      return res(ctx.status(404), ctx.json({ error: 'Challenge not found' }));
+      return new HttpResponse(JSON.stringify({ error: 'Challenge not found' }), { status: 404 });
     }
 
     const userChallenge: UserChallenge = {
@@ -267,23 +271,24 @@ export const gamificationHandlers = [
       isCompleted: false
     };
 
-    return res(ctx.json({ userChallenge }));
+    return HttpResponse.json({ userChallenge });
   }),
 
-  rest.post('/api/challenges/leave', async (req, res, ctx) => {
-    const { challengeId } = await req.json() as { challengeId: string };
-    return res(ctx.json({ success: true, challengeId }));
+  http.post('/api/challenges/leave', async ({ request }) => {
+    const { challengeId } = await request.json() as { challengeId: string };
+    return HttpResponse.json({ success: true, challengeId });
   }),
 
-  rest.get('/api/user-challenges', (req, res, ctx) => {
-    const userId = req.url.searchParams.get('userId') || 'user1';
+  http.get('/api/user-challenges', ({ request }) => {
+    const url = new URL(request.url);
+    const userId = url.searchParams.get('userId') || 'user1';
     const userChallenges = mockUserChallenges.filter(uc => uc.userId === userId);
-    return res(ctx.json({ userChallenges }));
+    return HttpResponse.json({ userChallenges });
   }),
 
   // XP関連API
-  rest.post('/api/xp/add', async (req, res, ctx) => {
-    const { amount, reason, sourceType, sourceId } = await req.json() as {
+  http.post('/api/xp/add', async ({ request }) => {
+    const { amount, reason, sourceType, sourceId } = await request.json() as {
       amount: number;
       reason: string;
       sourceType: string;
@@ -308,15 +313,15 @@ export const gamificationHandlers = [
       currentXP: mockUserProfile.currentXP + amount
     };
 
-    return res(ctx.json({ 
+    return HttpResponse.json({ 
       xpTransaction, 
       profile: updatedProfile,
       levelUp: newTotalXP >= mockUserProfile.totalXP + mockUserProfile.nextLevelXP - mockUserProfile.currentXP
-    }));
+    });
   }),
 
   // 通知関連API
-  rest.get('/api/notifications', (req, res, ctx) => {
+  http.get('/api/notifications', () => {
     const mockNotifications: GameNotification[] = [
       {
         id: '1',
@@ -340,11 +345,11 @@ export const gamificationHandlers = [
       }
     ];
 
-    return res(ctx.json({ notifications: mockNotifications }));
+    return HttpResponse.json({ notifications: mockNotifications });
   }),
 
-  rest.put('/api/notifications/:id/read', (req, res, ctx) => {
-    const { id } = req.params;
-    return res(ctx.json({ success: true, notificationId: id }));
+  http.put('/api/notifications/:id/read', ({ params }) => {
+    const { id } = params;
+    return HttpResponse.json({ success: true, notificationId: id });
   })
 ];

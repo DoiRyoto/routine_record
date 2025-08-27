@@ -217,7 +217,7 @@ export default function Dashboard({ routines, executionRecords, userSettings, us
           userMissions={mockUserMissions}
           maxDisplay={3}
           variant="list"
-          onClaimReward={(missionId) => console.log('Claim reward:', missionId)}
+          onClaimReward={(missionId) => console.warn('Claim reward:', missionId)}
         />
       </Card>
 
@@ -232,19 +232,19 @@ export default function Dashboard({ routines, executionRecords, userSettings, us
           trend={{
             value: 15,
             isPositive: true,
-            period: "昨日比"
+            period: '昨日比'
           }}
         />
         <StatCard
           title="週間進捗"
-          value={Math.round((weekCompletedCount / Math.max(weekTotalCount, 1)) * 100)}
+          value={0}
           subtitle="完了率"
           icon={<span className="text-lg">📊</span>}
           variant="primary"
         />
         <StatCard
           title="月間進捗"
-          value={Math.round((monthCompletedCount / Math.max(monthTotalCount, 1)) * 100)}
+          value={0}
           subtitle="完了率"
           icon={<span className="text-lg">🗓️</span>}
           variant="warning"

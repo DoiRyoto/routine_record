@@ -76,15 +76,15 @@ const mockStreakData = {
 
 export default function Page() {
   const handleAvatarChange = (avatarUrl: string) => {
-    console.log('Avatar changed:', avatarUrl);
+    console.warn('Avatar changed:', avatarUrl);
   };
 
   const handleTitleChange = (title: string) => {
-    console.log('Title changed:', title);
+    console.warn('Title changed:', title);
   };
 
-  const handleBadgeClick = (badge: any) => {
-    console.log('Badge clicked:', badge);
+  const handleBadgeClick = (badge: { id: string; userId: string; badgeId: string; unlockedAt: Date }) => {
+    console.warn('Badge clicked:', badge);
   };
 
   return (

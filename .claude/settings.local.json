@@ -17,7 +17,8 @@
       "Bash(powershell:*)",
       "Bash(npx eslint:*)",
       "WebSearch",
-      "Bash(npx playwright:*)"
+      "Bash(npx playwright:*)",
+      "Bash(timeout 30 npx playwright test --headed --project=chromium e2e/dashboard-gamification.spec.ts)"
     ],
     "defaultMode": "acceptEdits",
     "additionalDirectories": [

@@ -96,7 +96,7 @@ test.describe('Dashboard with Gamification', () => {
       
       // 提案アイテムの確認
       const suggestionItems = catchupSection.locator('[data-testid="suggestion-item"]');
-      await expect(suggestionItems).toHaveCountGreaterThan(0);
+      await expect(suggestionItems).toHaveCount(2); // キャッチアップ提案が表示されることを確認
     }
   });
 

@@ -1,4 +1,4 @@
-import { setupWorker } from 'msw';
+import { setupWorker } from 'msw/browser';
 import { gamificationHandlers } from './gamification-handlers';
 
 // MSW service worker setup

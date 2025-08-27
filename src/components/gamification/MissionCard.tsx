@@ -64,7 +64,6 @@ export function MissionCard({ mission, userMission, onClaim, className }: Missio
           <Progress 
             value={progressPercentage} 
             className="h-2"
-            indicatorClassName={isCompleted ? 'bg-xp-500' : 'bg-primary-500'}
           />
         </div>
 

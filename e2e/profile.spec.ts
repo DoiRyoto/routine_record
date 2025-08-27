@@ -65,7 +65,7 @@ test.describe('Profile Page', () => {
     await expect(page.locator('text=アチーブメント')).toBeVisible();
     
     // 進行中のアチーブメントの確認
-    await expect(page.locator('[data-testid="achievement-item"]')).toHaveCountGreaterThan(0);
+    await expect(page.locator('[data-testid="achievement-item"]')).toHaveCount(3); // アチーブメント項目が表示されることを確認
   });
 
   test('should show recent activities', async ({ page }) => {
@@ -77,7 +77,7 @@ test.describe('Profile Page', () => {
     await expect(activityList).toBeVisible();
     
     // XPアクティビティの確認
-    await expect(activityList.locator('text=/XP/')).toHaveCountGreaterThan(0);
+    await expect(activityList.locator('text=/XP/')).toHaveCount(5); // XP関連のアクティビティが表示されることを確認
   });
 
   test('should display streak counter with flame icon', async ({ page }) => {
