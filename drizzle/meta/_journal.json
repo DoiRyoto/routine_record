@@ -8,6 +8,27 @@
       "when": 1754499927794,
       "tag": "0000_init_with_categories",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1755180426848,
+      "tag": "0001_gigantic_scourge",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1756289776271,
+      "tag": "0002_secret_tyrannus",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1756290373561,
+      "tag": "0003_public_lester",
+      "breakpoints": true
     }
   ]
 }

@@ -12,8 +12,17 @@ function transformRoutine(rawRoutine: {
   name: string;
   description: string | null;
   category: string;
-  targetFrequency: 'daily' | 'weekly' | 'monthly';
+  goalType?: 'frequency_based' | 'schedule_based' | null;
   targetCount: number | null;
+  targetPeriod?: string | null;
+  recurrenceType?: 'daily' | 'weekly' | 'monthly' | 'custom' | null;
+  recurrenceInterval?: number | null;
+  monthlyType?: 'day_of_month' | 'day_of_week' | null;
+  dayOfMonth?: number | null;
+  weekOfMonth?: number | null;
+  dayOfWeek?: number | null;
+  daysOfWeek?: string | null;
+  startDate?: Date | string | null;
   createdAt: Date | string;
   updatedAt: Date | string;
   isActive: boolean;
@@ -21,6 +30,21 @@ function transformRoutine(rawRoutine: {
 }): Routine {
   return {
     ...rawRoutine,
+    // 新しいフィールドのデフォルト値を設定
+    goalType: rawRoutine.goalType || 'schedule_based',
+    targetPeriod: rawRoutine.targetPeriod || null,
+    recurrenceType: rawRoutine.recurrenceType || 'daily',
+    recurrenceInterval: rawRoutine.recurrenceInterval || 1,
+    monthlyType: rawRoutine.monthlyType || null,
+    dayOfMonth: rawRoutine.dayOfMonth || null,
+    weekOfMonth: rawRoutine.weekOfMonth || null,
+    dayOfWeek: rawRoutine.dayOfWeek || null,
+    daysOfWeek: rawRoutine.daysOfWeek || null,
+    startDate: rawRoutine.startDate
+      ? rawRoutine.startDate instanceof Date
+        ? rawRoutine.startDate
+        : new Date(rawRoutine.startDate)
+      : null,
     createdAt:
       rawRoutine.createdAt instanceof Date ? rawRoutine.createdAt : new Date(rawRoutine.createdAt),
     updatedAt:

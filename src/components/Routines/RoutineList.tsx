@@ -193,12 +193,10 @@ export default function RoutineList({
                 </span>
 
                 <div className="text-sm text-gray-600 dark:text-gray-300">
-                  頻度:{' '}
-                  {routine.targetFrequency === 'daily'
-                    ? '毎日'
-                    : routine.targetFrequency === 'weekly'
-                      ? `週${routine.targetCount || 1}回`
-                      : `月${routine.targetCount || 1}回`}
+                  {routine.goalType === 'frequency_based' 
+                    ? `目標: ${routine.targetPeriod === 'weekly' ? '週' : routine.targetPeriod === 'monthly' ? '月' : '日'}${routine.targetCount || 1}回`
+                    : `スケジュール: ${routine.recurrenceType === 'daily' ? '毎日' : routine.recurrenceType === 'weekly' ? '週間' : '月間'}`
+                  }
                 </div>
 
                 <div className="text-xs text-gray-500 dark:text-gray-400">

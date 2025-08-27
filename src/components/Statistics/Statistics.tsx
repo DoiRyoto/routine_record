@@ -50,7 +50,8 @@ export default function Statistics({ routines, executionRecords, userSettings }:
         const lastExecuted = sortedRecords.length > 0 ? sortedRecords[0].executedAt : undefined;
 
         let streak = 0;
-        if (routine.targetFrequency === 'daily') {
+        // スケジュールベースのデイリーミッションのみストリークを計算
+        if (routine.goalType === 'schedule_based' && routine.recurrenceType === 'daily') {
           const timezone = userSettings?.timezone;
           const today = getTodayStartInUserTimezone(timezone);
           const checkDate = new Date(today);
@@ -69,12 +70,21 @@ export default function Statistics({ routines, executionRecords, userSettings }:
           }
         }
 
-        const targetExecutions =
-          routine.targetFrequency === 'daily'
-            ? 30
-            : routine.targetFrequency === 'weekly'
-              ? (routine.targetCount || 1) * 4
-              : routine.targetCount || 1;
+        // ゴールタイプによって違う計算方法
+        let targetExecutions: number;
+        if (routine.goalType === 'schedule_based') {
+          // スケジュールベースの場合は传統的な計算
+          targetExecutions = routine.recurrenceType === 'daily' ? 30 : 10;
+        } else {
+          // 頻度ベースの場合は目標回数を使用
+          if (routine.targetPeriod === 'weekly') {
+            targetExecutions = (routine.targetCount || 1) * 4; // 4週分
+          } else if (routine.targetPeriod === 'monthly') {
+            targetExecutions = routine.targetCount || 1;
+          } else {
+            targetExecutions = 30; // デフォルト
+          }
+        }
         const completionRate = Math.round((totalExecutions / Math.max(targetExecutions, 1)) * 100);
 
         return {

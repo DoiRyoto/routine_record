@@ -84,19 +84,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '認証が必要です' }, { status: 401 });
     }
 
-    const { name, description, category, targetFrequency, targetCount } = await request.json();
+    const routineData = await request.json();
+    const { name, description, category, goalType, targetCount, targetPeriod, recurrenceType } = routineData;
 
     // バリデーション
-    if (!name || !category || !targetFrequency) {
+    if (!name || !category || !goalType || !recurrenceType) {
       return NextResponse.json({ error: '必須項目が不足しています' }, { status: 400 });
     }
 
+    // 頻度ベースの場合は targetCount と targetPeriod が必要
+    if (goalType === 'frequency_based' && (!targetCount || !targetPeriod)) {
+      return NextResponse.json({ error: '頻度ベースミッションには目標回数と期間が必要です' }, { status: 400 });
+    }
+
     const newRoutine = await createRoutine({
+      ...routineData,
       userId: user.id,
-      name,
       description: description || null,
-      category,
-      targetFrequency,
       targetCount: targetCount || null,
     });
 

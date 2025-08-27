@@ -12,6 +12,7 @@ import {
 
 import Card from '../Common/Card';
 
+import CatchupSuggestions from './CatchupSuggestions';
 import ProgressRoutineItem from './ProgressRoutineItem';
 import TodayRoutineItem from './TodayRoutineItem';
 
@@ -48,18 +49,26 @@ export default function Dashboard({ routines, executionRecords, userSettings }: 
   };
 
   // ルーティンをタイプ別に分割
-  const { dailyRoutines, weeklyRoutines, monthlyRoutines } = useMemo(() => {
+  const { scheduleBasedRoutines, frequencyBasedRoutines } = useMemo(() => {
     const active = routines.filter((routine) => routine.isActive);
 
     return {
-      dailyRoutines: active.filter((routine) => routine.targetFrequency === 'daily'),
-      weeklyRoutines: active.filter((routine) => routine.targetFrequency === 'weekly'),
-      monthlyRoutines: active.filter((routine) => routine.targetFrequency === 'monthly'),
+      scheduleBasedRoutines: active.filter((routine) => routine.goalType === 'schedule_based'),
+      frequencyBasedRoutines: active.filter((routine) => routine.goalType === 'frequency_based'),
     };
   }, [routines]);
+  
+  // スケジュールベースのルーティンをさらに分類
+  const { dailyScheduleRoutines, weeklyScheduleRoutines, monthlyScheduleRoutines } = useMemo(() => {
+    return {
+      dailyScheduleRoutines: scheduleBasedRoutines.filter((routine) => routine.recurrenceType === 'daily'),
+      weeklyScheduleRoutines: scheduleBasedRoutines.filter((routine) => routine.recurrenceType === 'weekly'),
+      monthlyScheduleRoutines: scheduleBasedRoutines.filter((routine) => routine.recurrenceType === 'monthly'),
+    };
+  }, [scheduleBasedRoutines]);
 
-  // 今日のルーチンを取得（デイリーのみ）
-  const todayRoutines = dailyRoutines;
+  // 今日のルーチンを取得（デイリースケジュールのみ）
+  const todayRoutines = dailyScheduleRoutines;
 
   // 今日完了したルーチンのID一覧
   const todayCompletedRoutineIds = useMemo(() => {
@@ -73,17 +82,29 @@ export default function Dashboard({ routines, executionRecords, userSettings }: 
       .map((record) => record.routineId);
   }, [localExecutionRecords, userSettings?.timezone]);
 
-  // ウィークリールーティンの進捗データ
-  const weeklyRoutinesWithProgress = useMemo(() => {
+  // 頻度ベースルーティンの進捗データ（週間・月間の回数目標）
+  const frequencyBasedRoutinesWithProgress = useMemo(() => {
     const timezone = userSettings?.timezone;
-    const startOfWeek = getWeekStartInUserTimezone(new Date(), timezone);
-
-    return weeklyRoutines.map((routine) => {
+    const now = new Date();
+    
+    return frequencyBasedRoutines.map((routine) => {
+      // 期間の開始日を取得
+      let periodStart: Date;
+      if (routine.targetPeriod === 'weekly') {
+        periodStart = getWeekStartInUserTimezone(now, timezone);
+      } else if (routine.targetPeriod === 'monthly') {
+        periodStart = getMonthStartInUserTimezone(now, timezone);
+      } else {
+        // daily の場合は今日から
+        periodStart = new Date(now);
+        periodStart.setHours(0, 0, 0, 0);
+      }
+      
       const executedCount = localExecutionRecords.filter(
         (record) =>
           record.routineId === routine.id &&
           record.isCompleted &&
-          new Date(record.executedAt) >= startOfWeek
+          new Date(record.executedAt) >= periodStart
       ).length;
 
       const targetCount = routine.targetCount || 1;
@@ -95,39 +116,22 @@ export default function Dashboard({ routines, executionRecords, userSettings }: 
         targetCount,
         progress: progress * 100, // パーセンテージ
         isCompleted: executedCount >= targetCount,
+        periodType: routine.targetPeriod || 'daily',
       };
     });
-  }, [weeklyRoutines, localExecutionRecords, userSettings?.timezone]);
+  }, [frequencyBasedRoutines, localExecutionRecords, userSettings?.timezone]);
 
-  // マンスリールーティンの進捗データ
-  const monthlyRoutinesWithProgress = useMemo(() => {
-    const timezone = userSettings?.timezone;
-    const startOfMonth = getMonthStartInUserTimezone(new Date(), timezone);
-
-    return monthlyRoutines.map((routine) => {
-      const executedCount = localExecutionRecords.filter(
-        (record) =>
-          record.routineId === routine.id &&
-          record.isCompleted &&
-          new Date(record.executedAt) >= startOfMonth
-      ).length;
-
-      const targetCount = routine.targetCount || 1;
-      const progress = Math.min(executedCount / targetCount, 1);
-
-      return {
-        ...routine,
-        executedCount,
-        targetCount,
-        progress: progress * 100, // パーセンテージ
-        isCompleted: executedCount >= targetCount,
-      };
-    });
-  }, [monthlyRoutines, localExecutionRecords, userSettings?.timezone]);
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white">ダッシュボード</h1>
+
+      {/* 挽回プラン提案 */}
+      <CatchupSuggestions
+        routines={routines}
+        executionRecords={localExecutionRecords}
+        userSettings={userSettings}
+      />
 
       {/* 今日のミッション（デイリー） */}
       <Card>
@@ -153,37 +157,47 @@ export default function Dashboard({ routines, executionRecords, userSettings }: 
         )}
       </Card>
 
-      {/* ウィークリーミッション */}
-      {weeklyRoutinesWithProgress.length > 0 && (
+      {/* 頻度ベースミッション（週に○回、月に○回） */}
+      {frequencyBasedRoutinesWithProgress.length > 0 && (
         <Card>
           <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">
-            ウィークリーミッション
+            頻度ベースミッション
           </h2>
           <div className="space-y-3">
-            {weeklyRoutinesWithProgress.map((routine) => (
+            {frequencyBasedRoutinesWithProgress.map((routine) => (
               <ProgressRoutineItem
                 key={routine.id}
                 routine={routine}
-                frequencyType="weekly"
+                frequencyType={routine.periodType as 'weekly' | 'monthly'}
                 onComplete={addExecutionRecord}
               />
             ))}
           </div>
         </Card>
       )}
-
-      {/* マンスリーミッション */}
-      {monthlyRoutinesWithProgress.length > 0 && (
+      
+      {/* スケジュールベースミッション（週間・月間） */}
+      {(weeklyScheduleRoutines.length > 0 || monthlyScheduleRoutines.length > 0) && (
         <Card>
           <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">
-            マンスリーミッション
+            スケジュールベースミッション
           </h2>
           <div className="space-y-3">
-            {monthlyRoutinesWithProgress.map((routine) => (
-              <ProgressRoutineItem
+            {/* 週間スケジュール */}
+            {weeklyScheduleRoutines.map((routine) => (
+              <TodayRoutineItem
                 key={routine.id}
                 routine={routine}
-                frequencyType="monthly"
+                isCompleted={todayCompletedRoutineIds.includes(routine.id)}
+                onComplete={addExecutionRecord}
+              />
+            ))}
+            {/* 月間スケジュール */}
+            {monthlyScheduleRoutines.map((routine) => (
+              <TodayRoutineItem
+                key={routine.id}
+                routine={routine}
+                isCompleted={todayCompletedRoutineIds.includes(routine.id)}
                 onComplete={addExecutionRecord}
               />
             ))}
