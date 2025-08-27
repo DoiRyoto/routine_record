@@ -1,5 +1,5 @@
-import SignUpForm from '@/components/Auth/SignUpForm';
+import SignUpPage from './SignUpPage';
 
-export default function SignUpPage() {
-  return <SignUpForm />;
+export default function SignUpServerPage() {
+  return <SignUpPage />;
 }

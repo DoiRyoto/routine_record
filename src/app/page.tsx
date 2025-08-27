@@ -1,4 +1,4 @@
-import DashboardClientPage from '@/components/Dashboard/DashboardClientPage';
+import DashboardPage from './DashboardPage';
 import { requireAuth } from '@/lib/auth/server';
 import { getExecutionRecords } from '@/lib/db/queries/execution-records';
 import { getRoutines } from '@/lib/db/queries/routines';
@@ -15,7 +15,7 @@ export default async function HomePage() {
   ]);
 
   return (
-    <DashboardClientPage
+    <DashboardPage
       initialRoutines={routines}
       initialExecutionRecords={executionRecords}
       userSettings={userSettings}

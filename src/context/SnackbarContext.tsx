@@ -2,7 +2,7 @@
 
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
-import Snackbar, { type SnackbarMessage } from '@/components/Common/Snackbar';
+import { Snackbar, type SnackbarMessage } from '@/components/ui/Snackbar';
 
 interface SnackbarContextType {
   showSnackbar: (message: Omit<SnackbarMessage, 'id'>) => void;

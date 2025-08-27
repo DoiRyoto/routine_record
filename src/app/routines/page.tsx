@@ -1,9 +1,9 @@
-import RoutineClientPage from '@/components/Routines/RoutineClientPage';
+import RoutinesPage from './RoutinesPage';
 import { requireAuth } from '@/lib/auth/server';
 import { getRoutines } from '@/lib/db/queries/routines';
 import { getOrCreateUserSettings } from '@/lib/db/queries/user-settings';
 
-export default async function RoutinesPage() {
+export default async function RoutinesServerPage() {
   const user = await requireAuth('/routines');
 
   // サーバーサイドでデータを並行取得
@@ -12,5 +12,10 @@ export default async function RoutinesPage() {
     getOrCreateUserSettings(user.id),
   ]);
 
-  return <RoutineClientPage initialRoutines={routines} userSettings={userSettings} />;
+  return (
+    <RoutinesPage
+      initialRoutines={routines}
+      userSettings={userSettings}
+    />
+  );
 }

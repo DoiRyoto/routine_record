@@ -5,8 +5,8 @@ import React, { useState } from 'react';
 
 import { useAuth } from '@/context/AuthContext';
 
-import Button from '../Common/Button';
-import Card from '../Common/Card';
+import { Button } from '../ui/Button';
+import { Card } from '../ui/Card';
 
 export default function SignInForm() {
   const [email, setEmail] = useState('');

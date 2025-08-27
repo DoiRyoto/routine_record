@@ -1,10 +1,10 @@
-import CalendarClientPage from '@/components/Calendar/CalendarClientPage';
+import CalendarPage from './CalendarPage';
 import { requireAuth } from '@/lib/auth/server';
 import { getExecutionRecords } from '@/lib/db/queries/execution-records';
 import { getRoutines } from '@/lib/db/queries/routines';
 import { getOrCreateUserSettings } from '@/lib/db/queries/user-settings';
 
-export default async function CalendarPage() {
+export default async function CalendarServerPage() {
   const user = await requireAuth('/calendar');
 
   // サーバーサイドでデータを並行取得
@@ -15,7 +15,7 @@ export default async function CalendarPage() {
   ]);
 
   return (
-    <CalendarClientPage
+    <CalendarPage
       initialRoutines={routines}
       initialExecutionRecords={executionRecords}
       userSettings={userSettings}

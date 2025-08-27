@@ -1,10 +1,10 @@
-import StatisticsClientPage from '@/components/Statistics/StatisticsClientPage';
+import StatisticsPage from './StatisticsPage';
 import { requireAuth } from '@/lib/auth/server';
 import { getExecutionRecords } from '@/lib/db/queries/execution-records';
 import { getRoutines } from '@/lib/db/queries/routines';
 import { getOrCreateUserSettings } from '@/lib/db/queries/user-settings';
 
-export default async function StatisticsPage() {
+export default async function StatisticsServerPage() {
   const user = await requireAuth('/statistics');
 
   // サーバーサイドでデータを並行取得
@@ -15,7 +15,7 @@ export default async function StatisticsPage() {
   ]);
 
   return (
-    <StatisticsClientPage
+    <StatisticsPage
       initialRoutines={routines}
       initialExecutionRecords={executionRecords}
       userSettings={userSettings}

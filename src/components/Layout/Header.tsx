@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 
 import { useAuth } from '@/context/AuthContext';
 
-import Button from '../Common/Button';
+import { Button } from '../ui/Button';
 
 export default function Header() {
   const pathname = usePathname();
