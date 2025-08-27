@@ -1,18 +1,23 @@
 'use client';
 
 import React from 'react';
+import { Card as UICard, type CardProps as UICardProps } from '../ui/Card';
 
-interface CardProps {
+interface CardProps extends UICardProps {
   children: React.ReactNode;
-  className?: string;
 }
 
-export default function Card({ children, className = '' }: CardProps) {
+export default function Card({
+  children,
+  className = '',
+  ...props
+}: CardProps) {
   return (
-    <div
-      className={`rounded-lg shadow-sm border p-6 bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 ${className}`}
+    <UICard
+      className={className}
+      {...props}
     >
       {children}
-    </div>
+    </UICard>
   );
 }

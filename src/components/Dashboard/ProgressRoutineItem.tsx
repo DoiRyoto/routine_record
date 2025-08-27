@@ -1,8 +1,9 @@
 'use client';
 
 import type { ExecutionRecord, Routine } from '@/types/routine';
-
-import Button from '../Common/Button';
+import { Card, CardContent } from '../ui/Card';
+import { Button } from '../ui/Button';
+import { Progress } from '../ui/Progress';
 
 interface ProgressRoutineItemProps {
   routine: Routine & {
@@ -34,75 +35,85 @@ export default function ProgressRoutineItem({
     return frequencyType === 'weekly' ? '今週' : '今月';
   };
 
-  const getProgressColor = () => {
-    if (routine.isCompleted) return 'bg-green-500';
-    if (routine.progress >= 75) return 'bg-blue-500';
-    if (routine.progress >= 50) return 'bg-yellow-500';
-    return 'bg-gray-300';
+  const getProgressVariant = (): 'default' | 'success' | 'warning' | 'danger' => {
+    if (routine.isCompleted) return 'success';
+    if (routine.progress >= 75) return 'default';
+    if (routine.progress >= 50) return 'warning';
+    return 'danger';
   };
 
   const getProgressTextColor = () => {
-    if (routine.isCompleted) return 'text-green-600 dark:text-green-400';
-    if (routine.progress >= 75) return 'text-blue-600 dark:text-blue-400';
-    if (routine.progress >= 50) return 'text-yellow-600 dark:text-yellow-400';
-    return 'text-gray-600 dark:text-gray-400';
+    if (routine.isCompleted) return 'text-green-600';
+    if (routine.progress >= 75) return 'text-blue-600';
+    if (routine.progress >= 50) return 'text-orange-600';
+    return 'text-gray-600';
   };
 
   return (
-    <div
-      className={`p-4 rounded-lg border bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 ${
-        routine.isCompleted ? 'opacity-80' : ''
+    <Card 
+      className={`transition-all duration-200 ${
+        routine.isCompleted ? 'opacity-80 bg-green-50 border-green-200' : 'hover:shadow-md'
       }`}
+      padding="md"
     >
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex-1">
-          <h3 className="font-medium text-gray-900 dark:text-white">{routine.name}</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">{routine.description}</p>
-          <span className="inline-block mt-1 px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-            {routine.category}
-          </span>
-        </div>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <h3 className="font-semibold text-gray-900 text-base mb-1">{routine.name}</h3>
+              {routine.description && (
+                <p className="text-sm text-gray-600 mb-2">{routine.description}</p>
+              )}
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                {routine.category}
+              </span>
+            </div>
 
-        <div className="ml-4">
-          {routine.isCompleted ? (
-            <span className="text-green-600 dark:text-green-400 font-medium flex items-center">
-              <svg className="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              {getFrequencyLabel()}完了
-            </span>
-          ) : (
-            <Button
-              size="sm"
-              onClick={handleComplete}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              実行
-            </Button>
-          )}
-        </div>
-      </div>
+            <div className="ml-4 flex-shrink-0">
+              {routine.isCompleted ? (
+                <div className="flex items-center text-green-600 font-medium">
+                  <svg className="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  {getFrequencyLabel()}完了
+                </div>
+              ) : (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={handleComplete}
+                  className="font-medium"
+                >
+                  実行
+                </Button>
+              )}
+            </div>
+          </div>
 
-      {/* 進捗バー */}
-      <div className="space-y-2">
-        <div className="flex justify-between items-center text-sm">
-          <span className={getProgressTextColor()}>
-            {getFrequencyLabel()}の進捗: {routine.executedCount}/{routine.targetCount}回
-          </span>
-          <span className={getProgressTextColor()}>{Math.round(routine.progress)}%</span>
-        </div>
+          {/* 進捗セクション */}
+          <div className="space-y-2">
+            <div className="flex justify-between items-center text-sm">
+              <span className={getProgressTextColor()}>
+                {getFrequencyLabel()}の進捗: {routine.executedCount}/{routine.targetCount}回
+              </span>
+              <span className={`font-medium ${getProgressTextColor()}`}>
+                {Math.round(routine.progress)}%
+              </span>
+            </div>
 
-        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-          <div
-            className={`h-2 rounded-full transition-all duration-300 ${getProgressColor()}`}
-            style={{ width: `${Math.min(routine.progress, 100)}%` }}
-          />
+            <Progress
+              value={routine.progress}
+              max={100}
+              variant={getProgressVariant()}
+              className="w-full"
+            />
+          </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

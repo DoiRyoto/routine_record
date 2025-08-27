@@ -1,8 +1,8 @@
 'use client';
 
 import type { ExecutionRecord, Routine } from '@/types/routine';
-
-import Button from '../Common/Button';
+import { Card, CardContent } from '../ui/Card';
+import { Button } from '../ui/Button';
 
 interface TodayRoutineItemProps {
   routine: Routine;
@@ -18,7 +18,7 @@ export default function TodayRoutineItem({
   const handleComplete = async () => {
     await onComplete({
       routineId: routine.id,
-      executedAt: new Date(), // 単純に現在時刻を使用（データベースでタイムゾーン付きで保存される）
+      executedAt: new Date(),
       duration: null,
       memo: null,
       isCompleted: true,
@@ -26,32 +26,49 @@ export default function TodayRoutineItem({
   };
 
   return (
-    <div
-      className={`p-4 rounded-lg border bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 ${isCompleted ? 'opacity-60' : ''}`}
+    <Card 
+      className={`transition-all duration-200 ${
+        isCompleted ? 'opacity-60 bg-green-50 border-green-200' : 'hover:shadow-md'
+      }`}
+      padding="md"
     >
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <h3 className="font-medium text-gray-900 dark:text-white">{routine.name}</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">{routine.description}</p>
-          <span className="inline-block mt-1 px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-            {routine.category}
-          </span>
-        </div>
+      <CardContent>
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <h3 className="font-semibold text-gray-900 text-base mb-1">{routine.name}</h3>
+            {routine.description && (
+              <p className="text-sm text-gray-600 mb-2">{routine.description}</p>
+            )}
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+              {routine.category}
+            </span>
+          </div>
 
-        <div className="ml-4">
-          {isCompleted ? (
-            <span className="text-green-600 dark:text-green-400 font-medium">✓ 完了</span>
-          ) : (
-            <Button
-              size="sm"
-              onClick={handleComplete}
-              className="bg-green-600 hover:bg-green-700 text-white"
-            >
-              完了
-            </Button>
-          )}
+          <div className="ml-4 flex-shrink-0">
+            {isCompleted ? (
+              <div className="flex items-center text-green-600 font-medium">
+                <svg className="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                完了
+              </div>
+            ) : (
+              <Button
+                variant="success"
+                size="sm"
+                onClick={handleComplete}
+                className="font-medium"
+              >
+                完了
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
