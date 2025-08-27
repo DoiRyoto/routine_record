@@ -147,12 +147,13 @@ export default function RoutinesPage({
           const updateFields = {
             name: routine.name,
             description: routine.description,
-            categoryId: routine.categoryId,
-            frequencyType: routine.frequencyType,
-            frequencyValue: routine.frequencyValue,
+            category: routine.category,
+            goalType: routine.goalType,
             targetCount: routine.targetCount,
+            targetPeriod: routine.targetPeriod,
+            recurrenceType: routine.recurrenceType,
+            recurrenceInterval: routine.recurrenceInterval,
             isActive: routine.isActive,
-            reminderTime: routine.reminderTime,
           };
           handleUpdateRoutine(routine.id, updateFields);
         }}

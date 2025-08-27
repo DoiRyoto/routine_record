@@ -63,15 +63,13 @@ const FormMessage = React.forwardRef<
 ));
 FormMessage.displayName = FormPrimitive.Message.displayName;
 
-const FormValidityState = React.forwardRef<
-  React.ElementRef<typeof FormPrimitive.ValidityState>,
-  React.ComponentPropsWithoutRef<typeof FormPrimitive.ValidityState>
->((props, ref) => (
+const FormValidityState = (
+  props: React.ComponentPropsWithoutRef<typeof FormPrimitive.ValidityState>
+) => (
   <FormPrimitive.ValidityState
-    ref={ref}
     {...props}
   />
-));
+);
 FormValidityState.displayName = FormPrimitive.ValidityState.displayName;
 
 const FormSubmit = React.forwardRef<
