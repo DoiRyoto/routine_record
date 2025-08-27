@@ -1,14 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 
 import {
   ProfileAvatar,
   LevelIndicator,
   BadgeGrid,
   StreakCounter,
-  StatCard,
-  XPCounter as _XPCounter
+  StatCard
 } from '@/components/gamification';
 import { Card } from '@/components/ui/Card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
@@ -37,13 +36,13 @@ export function ProfilePage({
     }
   };
 
-  const handleTitleChange = (title: string) => {
-    if (_onTitleChange) {
-      _onTitleChange(title);
-    } else {
-      console.warn('Title changed:', title);
-    }
-  };
+  // const handleTitleChange = (title: string) => {
+  //   if (_onTitleChange) {
+  //     _onTitleChange(title);
+  //   } else {
+  //     console.warn('Title changed:', title);
+  //   }
+  // };
 
   const handleBadgeClick = (badge: UserBadge) => {
     if (onBadgeClick) {
@@ -52,7 +51,7 @@ export function ProfilePage({
       console.warn('Badge clicked:', badge);
     }
   };
-  const [isEditing, _setIsEditing] = useState(false);
+  // const [isEditing, _setIsEditing] = useState(false);
 
   // バッジをレアリティ別に分類
   const badgesByRarity = userProfile.badges.reduce((acc, badge) => {
@@ -83,7 +82,7 @@ export function ProfilePage({
               showLevel={true}
               onClick={() => {
                 handleAvatarChange('');
-                _setIsEditing(true);
+                // _setIsEditing(true);
               }}
             />
             {userProfile.title && (

@@ -1,7 +1,6 @@
-import { ProfilePage } from './ProfilePage';
 import { getCurrentUser } from '@/lib/auth/server';
-import { getUserProfile, createUserProfile } from '@/lib/db/queries/user-profiles';
-import { getStreakData } from '@/lib/db/queries/gamification';
+
+import { ProfilePage } from './ProfilePage';
 
 async function getProfileData(userId?: string) {
   if (!userId) {
@@ -12,71 +11,58 @@ async function getProfileData(userId?: string) {
   }
 
   try {
-    let userProfile = await getUserProfile(userId);
+    // API Route経由でユーザープロフィール情報を取得
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
     
-    // ユーザープロフィールがない場合は作成
-    if (!userProfile) {
-      userProfile = await createUserProfile({
-        userId,
-        level: 1,
-        totalXP: 0,
-        currentXP: 0,
-        nextLevelXP: 100,
-        streak: 0,
-        longestStreak: 0,
-        totalRoutines: 0,
-        totalExecutions: 0
-      });
-    }
-
-    // バッジ情報とストリークデータを取得
-    const [badges, streakData] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/user-badges?userId=${userId}`)
+    const [profileResponse, streakResponse] = await Promise.all([
+      fetch(`${baseUrl}/api/user-profiles?userId=${userId}&includeDetails=true`)
+        .then(res => res.json()),
+      fetch(`${baseUrl}/api/gamification?type=stats&userId=${userId}`)
         .then(res => res.json())
-        .catch(() => []),
-      getStreakData(userId)
     ]);
 
-    const profileWithBadges = {
-      ...userProfile,
-      badges: badges || []
-    };
+    // ユーザープロフィールがない場合は作成
+    if (profileResponse.error && profileResponse.error.includes('見つかりません')) {
+      const createResponse = await fetch(`${baseUrl}/api/user-profiles`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'create',
+          userId,
+          level: 1,
+          totalXP: 0,
+          currentXP: 0,
+          nextLevelXP: 100,
+          streak: 0,
+          longestStreak: 0,
+          totalRoutines: 0,
+          totalExecutions: 0
+        })
+      });
+
+      if (!createResponse.ok) {
+        throw new Error('プロフィールの作成に失敗しました');
+      }
+
+      // 作成後に再度取得
+      const newProfileResponse = await fetch(`${baseUrl}/api/user-profiles?userId=${userId}&includeDetails=true`)
+        .then(res => res.json());
+      
+      return {
+        userProfile: newProfileResponse.userProfile,
+        streakData: newProfileResponse.streakData || streakResponse
+      };
+    }
 
     return {
-      userProfile: profileWithBadges,
-      streakData
+      userProfile: profileResponse.userProfile,
+      streakData: profileResponse.streakData || streakResponse
     };
   } catch (error) {
     console.error('Failed to fetch profile data:', error);
-    
-    // エラー時はモックデータを返す
-    const mockUserProfile = {
-      userId,
-      level: 1,
-      totalXP: 0,
-      currentXP: 0,
-      nextLevelXP: 100,
-      badges: [],
-      streak: 0,
-      longestStreak: 0,
-      totalRoutines: 0,
-      totalExecutions: 0,
-      joinedAt: new Date(),
-      lastActiveAt: new Date(),
-    };
-
-    const mockStreakData = {
-      current: 0,
-      longest: 0,
-      lastExecutionDate: null,
-      freezesUsed: 0,
-      freezesAvailable: 3,
-    };
-
-    return {
-      userProfile: mockUserProfile,
-      streakData: mockStreakData
-    };
+    throw error;
   }
 }
 

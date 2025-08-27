@@ -1,22 +1,29 @@
 import { requireAuth } from '@/lib/auth/server';
-import { getRoutines } from '@/lib/db/queries/routines';
-import { getOrCreateUserSettings } from '@/lib/db/queries/user-settings';
 
 import RoutinesPage from './RoutinesPage';
 
 export default async function RoutinesServerPage() {
-  const user = await requireAuth('/routines');
+  await requireAuth('/routines');
 
-  // サーバーサイドでデータを並行取得
-  const [routines, userSettings] = await Promise.all([
-    getRoutines(user.id),
-    getOrCreateUserSettings(user.id),
-  ]);
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
-  return (
-    <RoutinesPage
-      initialRoutines={routines}
-      userSettings={userSettings}
-    />
-  );
+    // サーバーサイドでデータを並行取得
+    const [routinesResponse, userSettingsResponse] = await Promise.all([
+      fetch(`${baseUrl}/api/routines`)
+        .then(res => res.json()),
+      fetch(`${baseUrl}/api/user-settings`)
+        .then(res => res.json()),
+    ]);
+
+    return (
+      <RoutinesPage
+        initialRoutines={routinesResponse.data || []}
+        userSettings={userSettingsResponse.data}
+      />
+    );
+  } catch (error) {
+    console.error('Failed to fetch routines data:', error);
+    throw error;
+  }
 }

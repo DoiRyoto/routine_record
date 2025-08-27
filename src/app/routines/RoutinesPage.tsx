@@ -3,14 +3,13 @@
 import { useCallback, useState } from 'react';
 
 import { useSnackbar } from '@/context/SnackbarContext';
-import type { Routine } from '@/types/routine';
-import type { UserSettings } from '@/types/user-settings';
+import type { Routine, UserSetting } from '@/lib/db/schema';
 
 import RoutineList from './_components/RoutineList';
 
 interface RoutinesPageProps {
   initialRoutines: Routine[];
-  userSettings: UserSettings;
+  userSettings: UserSetting;
 }
 
 export default function RoutinesPage({

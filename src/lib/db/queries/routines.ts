@@ -1,6 +1,6 @@
 import { and, desc, eq, isNull } from 'drizzle-orm';
 
-import type { Routine } from '@/types/routine';
+import type { Routine } from '@/lib/db/schema';
 
 import { db } from '../index';
 import { routines, type InsertRoutine } from '../schema';

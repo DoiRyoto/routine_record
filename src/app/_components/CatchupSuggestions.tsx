@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 
 import { Card } from '@/components/ui/Card';
 import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
-import type { ExecutionRecord, Routine } from '@/types/routine';
+import type { ExecutionRecord, Routine } from '@/lib/db/schema';
 import {
   analyzeAllCatchupNeeds,
   generateDailyMissionSuggestions,

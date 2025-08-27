@@ -1,17 +1,24 @@
 import { requireAuth } from '@/lib/auth/server';
-import { getOrCreateUserSettings } from '@/lib/db/queries/user-settings';
 
 import SettingsPage from './SettingsPage';
 
 export default async function SettingsServerPage() {
-  const user = await requireAuth('/settings');
+  await requireAuth('/settings');
 
-  // サーバーサイドでユーザー設定を取得
-  const userSettings = await getOrCreateUserSettings(user.id);
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
-  return (
-    <SettingsPage
-      initialSettings={userSettings}
-    />
-  );
+    // サーバーサイドでユーザー設定を取得
+    const userSettingsResponse = await fetch(`${baseUrl}/api/user-settings`)
+      .then(res => res.json());
+
+    return (
+      <SettingsPage
+        initialSettings={userSettingsResponse.data}
+      />
+    );
+  } catch (error) {
+    console.error('Failed to fetch user settings:', error);
+    throw error;
+  }
 }

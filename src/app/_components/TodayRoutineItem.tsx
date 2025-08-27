@@ -2,12 +2,12 @@
 
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
-import type { ExecutionRecord, Routine } from '@/types/routine';
+import type { Routine, InsertExecutionRecord } from '@/lib/db/schema';
 
 interface TodayRoutineItemProps {
   routine: Routine;
   isCompleted: boolean;
-  onComplete: (record: Omit<ExecutionRecord, 'id'>) => Promise<void>;
+  onComplete: (record: Omit<InsertExecutionRecord, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
 }
 
 export default function TodayRoutineItem({

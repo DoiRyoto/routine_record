@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Progress } from '@/components/ui/Progress';
-import type { ExecutionRecord, Routine } from '@/types/routine';
+import type { Routine, InsertExecutionRecord } from '@/lib/db/schema';
 
 interface ProgressRoutineItemProps {
   routine: Routine & {
@@ -13,7 +13,7 @@ interface ProgressRoutineItemProps {
     isCompleted: boolean;
   };
   frequencyType: 'weekly' | 'monthly';
-  onComplete: (record: Omit<ExecutionRecord, 'id'>) => Promise<void>;
+  onComplete: (record: Omit<InsertExecutionRecord, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
 }
 
 export default function ProgressRoutineItem({

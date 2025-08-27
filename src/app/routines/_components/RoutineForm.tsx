@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
-import type { Routine } from '@/types/routine';
+import type { Routine } from '@/lib/db/schema';
 
 interface RoutineFormProps {
   routine?: Routine;

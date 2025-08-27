@@ -1,21 +1,16 @@
-import { eq, desc, and, sql } from 'drizzle-orm';
+import { eq, desc, and } from 'drizzle-orm';
 
 import { db } from '../index';
-import type {
-  UserProfile,
-  UserBadge,
-  Badge,
-  XPTransaction,
-  InsertUserProfile,
-  InsertUserBadge,
-  InsertXPTransaction,
-} from '../schema';
 import {
   userProfiles,
   userBadges,
   badges,
   xpTransactions,
-  users
+  type UserProfile,
+  type UserBadge,
+  type Badge,
+  type XPTransaction,
+  type InsertUserProfile,
 } from '../schema';
 
 // ユーザープロフィール取得

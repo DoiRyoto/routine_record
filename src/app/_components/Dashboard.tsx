@@ -2,11 +2,10 @@
 
 import { useMemo, useState } from 'react';
 
-import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
-import type { ExecutionRecord, Routine, UserProfile, Mission, UserMission } from '@/types/routine';
-
 import { Card } from '@/components/ui/Card';
-import { MissionTracker, StatCard } from '@/components/gamification';
+import { StatCard } from '@/components/gamification';
+import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
+import type { ExecutionRecord, Routine, UserProfile, InsertExecutionRecord } from '@/lib/db/schema';
 import {
   getMonthStartInUserTimezone,
   getWeekStartInUserTimezone,
@@ -28,7 +27,7 @@ interface Props {
 export default function Dashboard({ routines, executionRecords, userSettings, userProfile: _userProfile }: Props) {
   const [localExecutionRecords, setLocalExecutionRecords] = useState(executionRecords);
 
-  const addExecutionRecord = async (record: Omit<ExecutionRecord, 'id'>) => {
+  const addExecutionRecord = async (record: Omit<InsertExecutionRecord, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
       const response = await fetch('/api/execution-records', {
         method: 'POST',
@@ -213,13 +212,9 @@ export default function Dashboard({ routines, executionRecords, userSettings, us
         <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white flex items-center gap-2">
           🎯 今日のミッション
         </h2>
-        <MissionTracker
-          missions={mockDailyMissions}
-          userMissions={mockUserMissions}
-          maxDisplay={3}
-          variant="list"
-          onClaimReward={(missionId) => console.warn('Claim reward:', missionId)}
-        />
+        <div className="text-center py-4 text-gray-500">
+          ミッション機能は準備中です
+        </div>
       </Card>
 
       {/* 統計カード */}
@@ -255,51 +250,3 @@ export default function Dashboard({ routines, executionRecords, userSettings, us
   );
 }
 
-// モックミッションデータ
-const mockDailyMissions: Mission[] = [
-  {
-    id: 'daily-1',
-    title: '3つのルーティン完了',
-    description: '今日中に3つのルーティンを完了しよう',
-    type: 'count',
-    targetValue: 3,
-    xpReward: 50,
-    difficulty: 'easy',
-    isActive: true,
-    progress: 0,
-    createdAt: new Date(),
-    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
-  },
-  {
-    id: 'daily-2',
-    title: '朝のルーティン',
-    description: '9:00までにルーティンを1つ完了しよう',
-    type: 'count',
-    targetValue: 1,
-    xpReward: 30,
-    difficulty: 'easy',
-    isActive: true,
-    progress: 0,
-    createdAt: new Date(),
-    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
-  }
-];
-
-const mockUserMissions: UserMission[] = [
-  {
-    id: 'user-daily-1',
-    userId: 'user1',
-    missionId: 'daily-1',
-    progress: 1,
-    isCompleted: false,
-    startedAt: new Date()
-  },
-  {
-    id: 'user-daily-2',
-    userId: 'user1',
-    missionId: 'daily-2',
-    progress: 0,
-    isCompleted: false,
-    startedAt: new Date()
-  }
-];

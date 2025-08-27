@@ -1,20 +1,18 @@
 import { eq, desc, and, sql } from 'drizzle-orm';
 
 import { db } from '../index';
-import type {
-  Challenge,
-  UserChallenge,
-  ChallengeRequirement,
-  ChallengeReward,
-  InsertChallenge,
-  InsertChallengeRequirement,
-  InsertChallengeReward,
-} from '../schema';
 import {
   challenges,
   userChallenges,
   challengeRequirements,
   challengeRewards,
+  type Challenge,
+  type UserChallenge,
+  type ChallengeRequirement,
+  type ChallengeReward,
+  type InsertChallenge,
+  type InsertChallengeRequirement,
+  type InsertChallengeReward,
 } from '../schema';
 
 // チャレンジ一覧取得（アクティブなチャレンジのみ）

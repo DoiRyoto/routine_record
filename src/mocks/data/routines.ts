@@ -1,0 +1,101 @@
+import type { Routine } from '@/lib/db/schema';
+
+export const mockRoutines: Routine[] = [
+  {
+    id: '1',
+    userId: 'user1',
+    name: '朝のストレッチ',
+    description: '1日を気持ちよく始めるための軽いストレッチ',
+    category: '健康',
+    goalType: 'schedule_based',
+    recurrenceType: 'daily',
+    targetCount: null,
+    targetPeriod: null,
+    isActive: true,
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-01'),
+  },
+  {
+    id: '2',
+    userId: 'user1',
+    name: '読書時間',
+    description: '週に3回、30分間の読書習慣',
+    category: '学習',
+    goalType: 'frequency_based',
+    recurrenceType: null,
+    targetCount: 3,
+    targetPeriod: 'weekly',
+    isActive: true,
+    createdAt: new Date('2024-01-02'),
+    updatedAt: new Date('2024-01-02'),
+  },
+  {
+    id: '3',
+    userId: 'user1',
+    name: 'ジム通い',
+    description: '筋力トレーニングと有酸素運動',
+    category: '健康',
+    goalType: 'frequency_based',
+    recurrenceType: null,
+    targetCount: 2,
+    targetPeriod: 'weekly',
+    isActive: true,
+    createdAt: new Date('2024-01-03'),
+    updatedAt: new Date('2024-01-03'),
+  },
+  {
+    id: '4',
+    userId: 'user1',
+    name: 'プログラミング学習',
+    description: '新しいプログラミング技術の学習',
+    category: '学習',
+    goalType: 'schedule_based',
+    recurrenceType: 'weekly',
+    targetCount: null,
+    targetPeriod: null,
+    isActive: false,
+    createdAt: new Date('2024-01-04'),
+    updatedAt: new Date('2024-01-04'),
+  },
+];
+
+// モック関数
+export const getMockRoutines = (userId: string) =>
+  mockRoutines.filter((routine) => routine.userId === userId);
+
+export const getMockRoutineById = (id: string) => mockRoutines.find((routine) => routine.id === id);
+
+export const getMockActiveRoutines = (userId: string) =>
+  mockRoutines.filter((routine) => routine.userId === userId && routine.isActive);
+
+export const createMockRoutine = (routineData: Omit<Routine, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const newRoutine: Routine = {
+    id: Math.random().toString(36).substr(2, 9),
+    ...routineData,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+  mockRoutines.push(newRoutine);
+  return newRoutine;
+};
+
+export const updateMockRoutine = (id: string, updates: Partial<Routine>) => {
+  const index = mockRoutines.findIndex((routine) => routine.id === id);
+  if (index !== -1) {
+    mockRoutines[index] = {
+      ...mockRoutines[index],
+      ...updates,
+      updatedAt: new Date(),
+    };
+    return mockRoutines[index];
+  }
+  return null;
+};
+
+export const deleteMockRoutine = (id: string) => {
+  const index = mockRoutines.findIndex((routine) => routine.id === id);
+  if (index !== -1) {
+    return mockRoutines.splice(index, 1)[0];
+  }
+  return null;
+};

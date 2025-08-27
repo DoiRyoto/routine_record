@@ -1,25 +1,32 @@
 import { requireAuth } from '@/lib/auth/server';
-import { getExecutionRecords } from '@/lib/db/queries/execution-records';
-import { getRoutines } from '@/lib/db/queries/routines';
-import { getOrCreateUserSettings } from '@/lib/db/queries/user-settings';
 
 import StatisticsPage from './StatisticsPage';
 
 export default async function StatisticsServerPage() {
-  const user = await requireAuth('/statistics');
+  await requireAuth('/statistics');
 
-  // サーバーサイドでデータを並行取得
-  const [routines, executionRecords, userSettings] = await Promise.all([
-    getRoutines(user.id),
-    getExecutionRecords(user.id),
-    getOrCreateUserSettings(user.id),
-  ]);
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
-  return (
-    <StatisticsPage
-      initialRoutines={routines}
-      initialExecutionRecords={executionRecords}
-      userSettings={userSettings}
-    />
-  );
+    // サーバーサイドでデータを並行取得
+    const [routinesResponse, executionRecordsResponse, userSettingsResponse] = await Promise.all([
+      fetch(`${baseUrl}/api/routines`)
+        .then(res => res.json()),
+      fetch(`${baseUrl}/api/execution-records`)
+        .then(res => res.json()),
+      fetch(`${baseUrl}/api/user-settings`)
+        .then(res => res.json()),
+    ]);
+
+    return (
+      <StatisticsPage
+        initialRoutines={routinesResponse.data || []}
+        initialExecutionRecords={executionRecordsResponse.data || []}
+        userSettings={userSettingsResponse.data}
+      />
+    );
+  } catch (error) {
+    console.error('Failed to fetch statistics data:', error);
+    throw error;
+  }
 }

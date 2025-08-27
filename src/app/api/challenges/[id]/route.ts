@@ -4,10 +4,10 @@ import { leaveChallenge, updateChallengeProgress } from '@/lib/db/queries/challe
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const challengeId = params.id;
+    const { id: challengeId } = await params;
     const { userId } = await request.json();
 
     if (!userId) {
@@ -39,10 +39,10 @@ export async function DELETE(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const challengeId = params.id;
+    const { id: challengeId } = await params;
     const { userId, progress } = await request.json();
 
     if (!userId || progress === undefined) {

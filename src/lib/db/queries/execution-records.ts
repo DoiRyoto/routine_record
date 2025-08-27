@@ -1,6 +1,6 @@
 import { and, desc, eq, gte, isNull, lte } from 'drizzle-orm';
 
-import type { ExecutionRecord } from '@/types/routine';
+import type { ExecutionRecord } from '@/lib/db/schema';
 
 import { db } from '../index';
 import { executionRecords, routines, type InsertExecutionRecord } from '../schema';

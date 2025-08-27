@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { getStreakData } from '@/lib/db/queries/gamification';
 import { 
   getUserProfile, 
   createUserProfile, 
@@ -9,7 +10,6 @@ import {
   updateStreak,
   updateUserStats
 } from '@/lib/db/queries/user-profiles';
-import { getStreakData } from '@/lib/db/queries/gamification';
 
 export async function GET(request: NextRequest) {
   try {

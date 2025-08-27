@@ -2,17 +2,16 @@
 
 import { useState } from 'react';
 
-import type { ExecutionRecord, Routine, UserProfile } from '@/types/routine';
-import type { UserSettings } from '@/types/user-settings';
-
 import { ProfileAvatar, LevelIndicator, XPCounter, StreakCounter } from '@/components/gamification';
+import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
+import type { ExecutionRecord, Routine, UserProfile } from '@/lib/db/schema';
 
 import Dashboard from './_components/Dashboard';
 
 interface DashboardPageProps {
   initialRoutines: Routine[];
   initialExecutionRecords: ExecutionRecord[];
-  userSettings: UserSettings;
+  userSettings: UserSettingWithTimezone;
   userProfile?: UserProfile;
 }
 
@@ -32,13 +31,14 @@ export default function DashboardPage({
     totalXP: 1650,
     currentXP: 150,
     nextLevelXP: 300,
-    badges: [],
     streak: 12,
     longestStreak: 28,
     totalRoutines: routines.length,
     totalExecutions: executionRecords.length,
     joinedAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
     lastActiveAt: new Date(),
+    createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
+    updatedAt: new Date(),
   };
 
   const mockStreakData = {

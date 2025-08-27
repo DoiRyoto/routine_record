@@ -1,13 +1,13 @@
 import { setupWorker } from 'msw/browser';
 
-import { gamificationHandlers } from './gamification-handlers';
+import { allHandlers } from './handlers';
 
 // MSW service worker setup
-export const worker = setupWorker(...gamificationHandlers);
+export const worker = setupWorker(...allHandlers);
 
 // Start worker
 export const startWorker = async () => {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     return worker.start({
       onUnhandledRequest: 'warn',
     });
