@@ -91,3 +91,27 @@ export interface CalendarData {
 
 // Category型とCatchupPlan型をschemaから再エクスポート
 export type { Category, CatchupPlan } from '@/lib/db/schema';
+
+// ゲーミフィケーション関連型を再エクスポート
+export type {
+  Mission,
+  UserMission,
+  Badge,
+  UserBadge,
+  UserProfile,
+  Challenge,
+  UserChallenge,
+  Achievement,
+  UserAchievement,
+  XPTransaction,
+  LevelSystem,
+  StreakData,
+  GameNotification,
+  LeaderboardEntry,
+  Leaderboard,
+  GameStats,
+  MissionType,
+  MissionDifficulty,
+  BadgeRarity,
+  ChallengeType
+} from './gamification';

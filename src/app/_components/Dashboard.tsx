@@ -3,8 +3,9 @@
 import { useMemo, useState } from 'react';
 
 import { Card } from '@/components/ui/Card';
+import { MissionTracker, StatCard } from '@/components/gamification';
 import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
-import type { ExecutionRecord, Routine } from '@/types/routine';
+import type { ExecutionRecord, Routine, UserProfile, Mission, UserMission } from '@/types/routine';
 import {
   getMonthStartInUserTimezone,
   getWeekStartInUserTimezone,
@@ -20,9 +21,10 @@ interface Props {
   routines: Routine[];
   executionRecords: ExecutionRecord[];
   userSettings: UserSettingWithTimezone;
+  userProfile?: UserProfile;
 }
 
-export default function Dashboard({ routines, executionRecords, userSettings }: Props) {
+export default function Dashboard({ routines, executionRecords, userSettings, userProfile }: Props) {
   const [localExecutionRecords, setLocalExecutionRecords] = useState(executionRecords);
 
   const addExecutionRecord = async (record: Omit<ExecutionRecord, 'id'>) => {
@@ -204,6 +206,99 @@ export default function Dashboard({ routines, executionRecords, userSettings }: 
           </div>
         </Card>
       )}
+
+      {/* デイリーミッション */}
+      <Card>
+        <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white flex items-center gap-2">
+          🎯 今日のミッション
+        </h2>
+        <MissionTracker
+          missions={mockDailyMissions}
+          userMissions={mockUserMissions}
+          maxDisplay={3}
+          variant="list"
+          onClaimReward={(missionId) => console.log('Claim reward:', missionId)}
+        />
+      </Card>
+
+      {/* 統計カード */}
+      <div className="grid md:grid-cols-3 gap-4">
+        <StatCard
+          title="今日の完了"
+          value={todayCompletedRoutineIds.length}
+          subtitle={`/ ${todayRoutines.length} ルーティン`}
+          icon={<span className="text-lg">✅</span>}
+          variant="success"
+          trend={{
+            value: 15,
+            isPositive: true,
+            period: "昨日比"
+          }}
+        />
+        <StatCard
+          title="週間進捗"
+          value={Math.round((weekCompletedCount / Math.max(weekTotalCount, 1)) * 100)}
+          subtitle="完了率"
+          icon={<span className="text-lg">📊</span>}
+          variant="primary"
+        />
+        <StatCard
+          title="月間進捗"
+          value={Math.round((monthCompletedCount / Math.max(monthTotalCount, 1)) * 100)}
+          subtitle="完了率"
+          icon={<span className="text-lg">🗓️</span>}
+          variant="warning"
+        />
+      </div>
     </div>
   );
 }
+
+// モックミッションデータ
+const mockDailyMissions: Mission[] = [
+  {
+    id: 'daily-1',
+    title: '3つのルーティン完了',
+    description: '今日中に3つのルーティンを完了しよう',
+    type: 'count',
+    targetValue: 3,
+    xpReward: 50,
+    difficulty: 'easy',
+    isActive: true,
+    progress: 0,
+    createdAt: new Date(),
+    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+  },
+  {
+    id: 'daily-2',
+    title: '朝のルーティン',
+    description: '9:00までにルーティンを1つ完了しよう',
+    type: 'count',
+    targetValue: 1,
+    xpReward: 30,
+    difficulty: 'easy',
+    isActive: true,
+    progress: 0,
+    createdAt: new Date(),
+    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+  }
+];
+
+const mockUserMissions: UserMission[] = [
+  {
+    id: 'user-daily-1',
+    userId: 'user1',
+    missionId: 'daily-1',
+    progress: 1,
+    isCompleted: false,
+    startedAt: new Date()
+  },
+  {
+    id: 'user-daily-2',
+    userId: 'user1',
+    missionId: 'daily-2',
+    progress: 0,
+    isCompleted: false,
+    startedAt: new Date()
+  }
+];

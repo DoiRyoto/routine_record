@@ -15,7 +15,9 @@
       "Bash(npx tsc:*)",
       "Bash(find:*)",
       "Bash(powershell:*)",
-      "Bash(npx eslint:*)"
+      "Bash(npx eslint:*)",
+      "WebSearch",
+      "Bash(npx playwright:*)"
     ],
     "defaultMode": "acceptEdits",
     "additionalDirectories": [
