@@ -29,6 +29,29 @@ export function ProfilePage({
   onTitleChange: _onTitleChange,
   onBadgeClick
 }: ProfilePageProps) {
+  const handleAvatarChange = (avatarUrl: string) => {
+    if (onAvatarChange) {
+      onAvatarChange(avatarUrl);
+    } else {
+      console.warn('Avatar changed:', avatarUrl);
+    }
+  };
+
+  const handleTitleChange = (title: string) => {
+    if (_onTitleChange) {
+      _onTitleChange(title);
+    } else {
+      console.warn('Title changed:', title);
+    }
+  };
+
+  const handleBadgeClick = (badge: UserBadge) => {
+    if (onBadgeClick) {
+      onBadgeClick(badge);
+    } else {
+      console.warn('Badge clicked:', badge);
+    }
+  };
   const [isEditing, _setIsEditing] = useState(false);
 
   // バッジをレアリティ別に分類
@@ -58,7 +81,10 @@ export function ProfilePage({
               userProfile={userProfile}
               size="xl"
               showLevel={true}
-              onClick={() => onAvatarChange && _setIsEditing(true)}
+              onClick={() => {
+                handleAvatarChange('');
+                _setIsEditing(true);
+              }}
             />
             {userProfile.title && (
               <div className="mt-2 px-3 py-1 bg-rarity-rare text-white rounded-full text-sm font-medium">
@@ -155,7 +181,7 @@ export function ProfilePage({
                 maxDisplay={24}
                 showEmpty={true}
                 size="md"
-                onBadgeClick={onBadgeClick}
+                onBadgeClick={handleBadgeClick}
               />
             ) : (
               <div className="text-center py-12">
@@ -181,7 +207,7 @@ export function ProfilePage({
                   maxDisplay={12}
                   showEmpty={false}
                   size="md"
-                  onBadgeClick={onBadgeClick}
+                  onBadgeClick={handleBadgeClick}
                 />
               </div>
             ) : (
@@ -199,7 +225,7 @@ export function ProfilePage({
                 badges={badgesByRarity.legendary}
                 showEmpty={false}
                 size="lg"
-                onBadgeClick={onBadgeClick}
+                onBadgeClick={handleBadgeClick}
               />
             ) : (
               <div className="text-center py-12">
@@ -222,7 +248,7 @@ export function ProfilePage({
                 badges={badgesByRarity.epic}
                 showEmpty={false}
                 size="md"
-                onBadgeClick={onBadgeClick}
+                onBadgeClick={handleBadgeClick}
               />
             ) : (
               <div className="text-center py-8">

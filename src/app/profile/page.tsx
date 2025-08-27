@@ -1,99 +1,158 @@
 import { ProfilePage } from './ProfilePage';
+import { getCurrentUser } from '@/lib/auth/server';
+import { getUserProfile, createUserProfile } from '@/lib/db/queries/user-profiles';
+import { getStreakData } from '@/lib/db/queries/gamification';
 
-// モックデータ
-const mockUserProfile = {
-  userId: 'user1',
-  level: 12,
-  totalXP: 2450,
-  currentXP: 450,
-  nextLevelXP: 600,
-  badges: [
-    {
-      id: '1',
-      userId: 'user1',
-      badgeId: 'badge1',
-      badge: {
-        id: 'badge1',
-        name: '習慣マスター',
-        description: '10個のルーティンを完了',
-        iconUrl: '',
-        rarity: 'rare' as const,
-        category: '実績',
-        createdAt: new Date(),
-      },
-      unlockedAt: new Date(),
-      isNew: true,
-    },
-    {
-      id: '2',
-      userId: 'user1',
-      badgeId: 'badge2',
-      badge: {
-        id: 'badge2',
-        name: 'ストリークキング',
-        description: '30日連続実行',
-        iconUrl: '',
-        rarity: 'epic' as const,
-        category: 'ストリーク',
-        createdAt: new Date(),
-      },
-      unlockedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-      isNew: false,
-    },
-    {
-      id: '3',
-      userId: 'user1',
-      badgeId: 'badge3',
-      badge: {
-        id: 'badge3',
-        name: '伝説の継続者',
-        description: '100日連続実行',
-        iconUrl: '',
-        rarity: 'legendary' as const,
-        category: 'ストリーク',
-        createdAt: new Date(),
-      },
-      unlockedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-      isNew: false,
+async function getProfileData(userId?: string) {
+  if (!userId) {
+    return {
+      userProfile: null,
+      streakData: null
+    };
+  }
+
+  try {
+    let userProfile = await getUserProfile(userId);
+    
+    // ユーザープロフィールがない場合は作成
+    if (!userProfile) {
+      userProfile = await createUserProfile({
+        userId,
+        level: 1,
+        totalXP: 0,
+        currentXP: 0,
+        nextLevelXP: 100,
+        streak: 0,
+        longestStreak: 0,
+        totalRoutines: 0,
+        totalExecutions: 0
+      });
     }
-  ],
-  streak: 45,
-  longestStreak: 67,
-  totalRoutines: 15,
-  totalExecutions: 342,
-  title: 'ルーティンマスター',
-  joinedAt: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000),
-  lastActiveAt: new Date(),
-};
 
-const mockStreakData = {
-  current: 45,
-  longest: 67,
-  lastExecutionDate: new Date(),
-  freezesUsed: 2,
-  freezesAvailable: 3,
-};
+    // バッジ情報とストリークデータを取得
+    const [badges, streakData] = await Promise.all([
+      fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/user-badges?userId=${userId}`)
+        .then(res => res.json())
+        .catch(() => []),
+      getStreakData(userId)
+    ]);
 
-export default function Page() {
-  const handleAvatarChange = (avatarUrl: string) => {
-    console.warn('Avatar changed:', avatarUrl);
+    const profileWithBadges = {
+      ...userProfile,
+      badges: badges || []
+    };
+
+    return {
+      userProfile: profileWithBadges,
+      streakData
+    };
+  } catch (error) {
+    console.error('Failed to fetch profile data:', error);
+    
+    // エラー時はモックデータを返す
+    const mockUserProfile = {
+      userId,
+      level: 1,
+      totalXP: 0,
+      currentXP: 0,
+      nextLevelXP: 100,
+      badges: [],
+      streak: 0,
+      longestStreak: 0,
+      totalRoutines: 0,
+      totalExecutions: 0,
+      joinedAt: new Date(),
+      lastActiveAt: new Date(),
+    };
+
+    const mockStreakData = {
+      current: 0,
+      longest: 0,
+      lastExecutionDate: null,
+      freezesUsed: 0,
+      freezesAvailable: 3,
+    };
+
+    return {
+      userProfile: mockUserProfile,
+      streakData: mockStreakData
+    };
+  }
+}
+
+export default async function Page() {
+  const user = await getCurrentUser();
+  const { userProfile, streakData } = await getProfileData(user?.id);
+
+  if (!userProfile || !streakData) {
+    return (
+      <div className="container mx-auto px-4 py-6">
+        <div className="text-center py-12">
+          <h1 className="text-2xl font-bold text-text-primary mb-4">
+            プロフィールを表示するにはログインが必要です
+          </h1>
+          <p className="text-text-secondary mb-6">
+            アカウントにサインインしてプロフィールを表示してください。
+          </p>
+          <a
+            href="/auth/signin"
+            className="inline-flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+          >
+            サインイン
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  const handleAvatarChange = async (avatarUrl: string) => {
+    'use server';
+    if (!user?.id) return;
+    
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/user-profiles`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'update',
+          userId: user.id,
+          avatarUrl
+        })
+      });
+    } catch (error) {
+      console.error('Failed to update avatar:', error);
+    }
   };
 
-  const handleTitleChange = (title: string) => {
-    console.warn('Title changed:', title);
-  };
+  const handleTitleChange = async (title: string) => {
+    'use server';
+    if (!user?.id) return;
 
-  const handleBadgeClick = (badge: { id: string; userId: string; badgeId: string; unlockedAt: Date }) => {
-    console.warn('Badge clicked:', badge);
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/user-profiles`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'update',
+          userId: user.id,
+          title
+        })
+      });
+    } catch (error) {
+      console.error('Failed to update title:', error);
+    }
   };
 
   return (
     <ProfilePage
-      userProfile={mockUserProfile}
-      streakData={mockStreakData}
+      userProfile={userProfile}
+      streakData={streakData}
       onAvatarChange={handleAvatarChange}
       onTitleChange={handleTitleChange}
-      onBadgeClick={handleBadgeClick}
     />
   );
 }

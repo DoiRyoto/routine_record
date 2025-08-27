@@ -29,6 +29,21 @@ export function ChallengesPage({
   onJoinChallenge,
   onLeaveChallenge
 }: ChallengesPageProps) {
+  const handleJoinChallenge = (challengeId: string) => {
+    if (onJoinChallenge) {
+      onJoinChallenge(challengeId);
+    } else {
+      console.warn('Joining challenge:', challengeId);
+    }
+  };
+
+  const handleLeaveChallenge = (challengeId: string) => {
+    if (onLeaveChallenge) {
+      onLeaveChallenge(challengeId);
+    } else {
+      console.warn('Leaving challenge:', challengeId);
+    }
+  };
   const [selectedType, setSelectedType] = useState<ChallengeType | 'all'>('all');
 
   // 統計データ
@@ -173,8 +188,8 @@ export function ChallengesPage({
                   key={challenge.id}
                   challenge={challenge}
                   userChallenge={userChallengeMap.get(challenge.id)}
-                  onJoin={onJoinChallenge}
-                  onLeave={onLeaveChallenge}
+                  onJoin={handleJoinChallenge}
+                  onLeave={handleLeaveChallenge}
                 />
               ))}
           </div>
@@ -188,8 +203,8 @@ export function ChallengesPage({
                 <ChallengeCard
                   key={challenge.id}
                   challenge={challenge}
-                  onJoin={onJoinChallenge}
-                  onLeave={onLeaveChallenge}
+                  onJoin={handleJoinChallenge}
+                  onLeave={handleLeaveChallenge}
                 />
               ))}
           </div>
@@ -204,8 +219,8 @@ export function ChallengesPage({
                   key={challenge.id}
                   challenge={challenge}
                   userChallenge={userChallengeMap.get(challenge.id)}
-                  onJoin={onJoinChallenge}
-                  onLeave={onLeaveChallenge}
+                  onJoin={handleJoinChallenge}
+                  onLeave={handleLeaveChallenge}
                 />
               ))}
           </div>
@@ -220,8 +235,8 @@ export function ChallengesPage({
                   key={challenge.id}
                   challenge={challenge}
                   userChallenge={userChallengeMap.get(challenge.id)}
-                  onJoin={onJoinChallenge}
-                  onLeave={onLeaveChallenge}
+                  onJoin={handleJoinChallenge}
+                  onLeave={handleLeaveChallenge}
                 />
               ))}
           </div>

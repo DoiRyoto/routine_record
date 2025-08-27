@@ -76,11 +76,12 @@ export interface Challenge {
   endDate: Date;
   type: ChallengeType;
   participants: number;
-  maxParticipants?: number;
+  maxParticipants?: number | null;
   isActive: boolean;
   rewards: ChallengeReward[];
   requirements: ChallengeRequirement[];
   createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ChallengeReward {
@@ -88,17 +89,19 @@ export interface ChallengeReward {
   challengeId: string;
   name: string;
   description: string;
-  xpAmount?: number;
-  badgeId?: string;
-  requirement: 'participation' | 'completion' | 'top_10' | 'top_3' | 'winner';
+  xpAmount?: number | null;
+  badgeId?: string | null;
+  requirement: string;
+  createdAt: Date;
 }
 
 export interface ChallengeRequirement {
   id: string;
   challengeId: string;
-  type: 'routine_count' | 'category' | 'streak' | 'total_duration';
-  value: string | number;
+  type: string;
+  value: number;
   description: string;
+  createdAt: Date;
 }
 
 export interface UserChallenge {
@@ -109,9 +112,11 @@ export interface UserChallenge {
   joinedAt: Date;
   progress: number;
   isCompleted: boolean;
-  completedAt?: Date;
-  rank?: number;
+  completedAt?: Date | null;
+  rank?: number | null;
   rewards?: ChallengeReward[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Achievement {
@@ -172,7 +177,7 @@ export interface LevelSystem {
 export interface StreakData {
   current: number;
   longest: number;
-  lastExecutionDate?: Date;
+  lastExecutionDate?: Date | null;
   freezesUsed: number;
   freezesAvailable: number;
 }
