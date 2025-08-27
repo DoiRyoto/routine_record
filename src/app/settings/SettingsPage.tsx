@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import type { UserSettings } from '@/types/user-settings';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
-import { ThemeSelect } from '@/components/ui/ThemeSelect';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/AlertDialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
+import { Label } from '@/components/ui/Label';
 
 interface SettingsPageProps {
   initialSettings: UserSettings;
@@ -46,7 +47,7 @@ export default function SettingsPage({
   };
 
   const handleChange = (field: string, value: string | number) => {
-    setFormData((prev) => ({
+    setFormData((prev: UserSettings) => ({
       ...prev,
       [field]: value,
     }));
@@ -94,7 +95,16 @@ export default function SettingsPage({
               <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-200">
                 テーマ
               </label>
-              <ThemeSelect />
+              <Select value={formData.theme} onValueChange={(value: 'auto' | 'light' | 'dark') => setFormData(prev => ({ ...prev, theme: value }))}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="light">ライト</SelectItem>
+                  <SelectItem value="dark">ダーク</SelectItem>
+                  <SelectItem value="auto">自動</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
@@ -188,16 +198,22 @@ export default function SettingsPage({
       </form>
 
       {/* リセット確認ダイアログ */}
-      <ConfirmDialog
-        isOpen={showResetDialog}
-        onClose={() => setShowResetDialog(false)}
-        onConfirm={handleResetConfirm}
-        title="設定をリセット"
-        message="すべての設定をデフォルト値に戻します。この操作は元に戻せません。"
-        confirmText="リセット"
-        cancelText="キャンセル"
-        variant="danger"
-      />
+      <AlertDialog open={showResetDialog} onOpenChange={(open) => !open && setShowResetDialog(false)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>設定をリセット</AlertDialogTitle>
+            <AlertDialogDescription>
+              すべての設定をデフォルト値に戻します。この操作は元に戻せません。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowResetDialog(false)}>キャンセル</AlertDialogCancel>
+            <AlertDialogAction onClick={handleResetConfirm} className="bg-red-600 hover:bg-red-700">
+              リセット
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

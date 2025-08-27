@@ -1,1 +1,1 @@
-export { AspectRatio, type AspectRatioProps } from './AspectRatio';
+export { AspectRatio } from './AspectRatio';

@@ -8,7 +8,7 @@ import { getUserTimezone, isSameDayInUserTimezone } from '@/utils/timezone';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { Modal } from '@/components/ui/Modal';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/Dialog';
 
 interface Props {
   routines: Routine[];
@@ -219,11 +219,11 @@ export default function Calendar({ routines, executionRecords, userSettings }: P
       </Card>
 
       {/* 日付詳細モーダル */}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        title={selectedDay ? `${selectedDay.dayNumber}日の実行記録` : ''}
-      >
+      <Dialog open={isModalOpen} onOpenChange={(open) => !open && handleCloseModal()}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{selectedDay ? `${selectedDay.dayNumber}日の実行記録` : ''}</DialogTitle>
+          </DialogHeader>
         {selectedDay && (
           <div className="space-y-4">
             {selectedDay.routines.filter((routine) => routine.isCompleted).length === 0 ? (
@@ -263,7 +263,8 @@ export default function Calendar({ routines, executionRecords, userSettings }: P
             )}
           </div>
         )}
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

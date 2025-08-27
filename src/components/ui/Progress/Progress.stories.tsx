@@ -10,14 +10,7 @@ const meta: Meta<typeof Progress> = {
   tags: ['autodocs'],
   argTypes: {
     value: {
-      control: { type: 'number', min: 0, max: 100 },
-    },
-    max: {
-      control: { type: 'number', min: 1, max: 200 },
-    },
-    variant: {
-      control: { type: 'select' },
-      options: ['default', 'success', 'warning', 'danger'],
+      control: { type: 'range', min: 0, max: 100, step: 1 },
     },
   },
 };
@@ -27,130 +20,94 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    value: 60,
-    max: 100,
+    value: 50,
   },
   render: (args) => (
-    <div className="w-64">
-      <Progress {...args} />
+    <div className="w-60">
+      <div className="mb-2 text-sm font-medium">今日のミッション進捗</div>
+      <Progress value={args.value} />
+      <div className="mt-1 text-xs text-gray-600">{args.value}% 完了</div>
     </div>
   ),
 };
 
-export const Success: Story = {
-  args: {
-    value: 85,
-    max: 100,
-    variant: 'success',
-  },
-  render: (args) => (
-    <div className="w-64">
-      <Progress {...args} />
-    </div>
-  ),
-};
-
-export const Warning: Story = {
-  args: {
-    value: 45,
-    max: 100,
-    variant: 'warning',
-  },
-  render: (args) => (
-    <div className="w-64">
-      <Progress {...args} />
-    </div>
-  ),
-};
-
-export const Danger: Story = {
+export const Low: Story = {
   args: {
     value: 15,
-    max: 100,
-    variant: 'danger',
   },
   render: (args) => (
-    <div className="w-64">
-      <Progress {...args} />
+    <div className="w-60">
+      <div className="mb-2 text-sm font-medium">週間ミッション進捗</div>
+      <Progress value={args.value} />
+      <div className="mt-1 text-xs text-gray-600">{args.value}% 完了</div>
     </div>
   ),
 };
 
-export const Empty: Story = {
+export const Medium: Story = {
   args: {
-    value: 0,
-    max: 100,
+    value: 65,
   },
   render: (args) => (
-    <div className="w-64">
-      <Progress {...args} />
+    <div className="w-60">
+      <div className="mb-2 text-sm font-medium">月間ミッション進捗</div>
+      <Progress value={args.value} />
+      <div className="mt-1 text-xs text-gray-600">{args.value}% 完了</div>
     </div>
   ),
 };
 
-export const Full: Story = {
+export const High: Story = {
+  args: {
+    value: 90,
+  },
+  render: (args) => (
+    <div className="w-60">
+      <div className="mb-2 text-sm font-medium">年間目標進捗</div>
+      <Progress value={args.value} />
+      <div className="mt-1 text-xs text-gray-600">{args.value}% 完了</div>
+    </div>
+  ),
+};
+
+export const Complete: Story = {
   args: {
     value: 100,
-    max: 100,
-    variant: 'success',
   },
   render: (args) => (
-    <div className="w-64">
-      <Progress {...args} />
-    </div>
-  ),
-};
-
-export const CustomMax: Story = {
-  args: {
-    value: 7,
-    max: 10,
-    variant: 'default',
-  },
-  render: (args) => (
-    <div className="w-64 space-y-2">
-      <div className="flex justify-between text-sm">
-        <span>今週の進捗</span>
-        <span>{args.value}/{args.max}回</span>
+    <div className="w-60">
+      <div className="mb-2 text-sm font-medium">読書ミッション</div>
+      <Progress value={args.value} />
+      <div className="mt-1 text-xs text-green-600 font-medium">
+        🎉 {args.value}% 達成！おめでとうございます！
       </div>
-      <Progress {...args} />
     </div>
   ),
 };
 
-export const AllVariants: Story = {
+export const MultipleProgress: Story = {
   render: () => (
-    <div className="w-80 space-y-6">
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span>デフォルト (60%)</span>
-          <span>60%</span>
+    <div className="space-y-4">
+      <div className="w-60">
+        <div className="mb-2 flex justify-between text-sm">
+          <span className="font-medium">運動ミッション</span>
+          <span className="text-gray-600">3/5 完了</span>
         </div>
-        <Progress value={60} variant="default" />
+        <Progress value={60} />
       </div>
-      
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span>成功 (85%)</span>
-          <span>85%</span>
+      <div className="w-60">
+        <div className="mb-2 flex justify-between text-sm">
+          <span className="font-medium">読書ミッション</span>
+          <span className="text-gray-600">2/3 完了</span>
         </div>
-        <Progress value={85} variant="success" />
+        <Progress value={67} />
       </div>
-      
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span>警告 (45%)</span>
-          <span>45%</span>
+      <div className="w-60">
+        <div className="mb-2 flex justify-between text-sm">
+          <span className="font-medium">学習ミッション</span>
+          <span className="text-gray-600">1/4 完了</span>
         </div>
-        <Progress value={45} variant="warning" />
-      </div>
-      
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span>危険 (15%)</span>
-          <span>15%</span>
-        </div>
-        <Progress value={15} variant="danger" />
+        <Progress value={25} />
       </div>
     </div>
   ),

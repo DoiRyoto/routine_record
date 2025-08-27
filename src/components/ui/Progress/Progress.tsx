@@ -1,39 +1,27 @@
 'use client';
 
-import React from 'react';
+import * as React from 'react';
 import * as ProgressPrimitive from '@radix-ui/react-progress';
+import { cn } from '@/lib/ui-utils';
 
-export interface ProgressProps
-  extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
-  value?: number;
-  max?: number;
-  variant?: 'default' | 'success' | 'warning' | 'danger';
-}
-
-export const Progress = React.forwardRef<
+const Progress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
-  ProgressProps
->(({ className = '', value = 0, max = 100, variant = 'default', ...props }, ref) => {
-  const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
-  
-  const indicatorColors = {
-    default: 'bg-blue-500',
-    success: 'bg-green-500',
-    warning: 'bg-orange-500',
-    danger: 'bg-red-500',
-  };
-
-  return (
-    <ProgressPrimitive.Root
-      ref={ref}
-      className={`relative h-2 w-full overflow-hidden rounded-full bg-gray-200 ${className}`}
-      {...props}
-    >
-      <ProgressPrimitive.Indicator
-        className={`h-full w-full flex-1 transition-all duration-300 ease-in-out ${indicatorColors[variant]}`}
-        style={{ transform: `translateX(-${100 - percentage}%)` }}
-      />
-    </ProgressPrimitive.Root>
-  );
-});
+  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
+>(({ className, value, ...props }, ref) => (
+  <ProgressPrimitive.Root
+    ref={ref}
+    className={cn(
+      'relative h-4 w-full overflow-hidden rounded-full bg-gray-100',
+      className
+    )}
+    {...props}
+  >
+    <ProgressPrimitive.Indicator
+      className="h-full w-full flex-1 bg-gradient-to-r from-blue-500 to-green-500 transition-all"
+      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+    />
+  </ProgressPrimitive.Root>
+));
 Progress.displayName = ProgressPrimitive.Root.displayName;
+
+export { Progress };

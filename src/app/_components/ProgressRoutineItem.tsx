@@ -1,9 +1,9 @@
 'use client';
 
 import type { ExecutionRecord, Routine } from '@/types/routine';
-import { Card, CardContent } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { Progress } from '../ui/Progress';
+import { Card, CardContent } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Progress } from '@/components/ui/Progress';
 
 interface ProgressRoutineItemProps {
   routine: Routine & {
@@ -51,10 +51,9 @@ export default function ProgressRoutineItem({
 
   return (
     <Card 
-      className={`transition-all duration-200 ${
+      className={`transition-all duration-200 p-4 ${
         routine.isCompleted ? 'opacity-80 bg-green-50 border-green-200' : 'hover:shadow-md'
       }`}
-      padding="md"
     >
       <CardContent>
         <div className="space-y-4">
@@ -108,7 +107,6 @@ export default function ProgressRoutineItem({
             <Progress
               value={routine.progress}
               max={100}
-              variant={getProgressVariant()}
               className="w-full"
             />
           </div>

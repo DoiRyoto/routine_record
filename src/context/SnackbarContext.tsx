@@ -2,7 +2,14 @@
 
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
-import { Snackbar, type SnackbarMessage } from '@/components/ui/Snackbar';
+import { Toast, ToastClose } from '@/components/ui/Toast';
+
+interface SnackbarMessage {
+  id: string;
+  message: string;
+  type: 'success' | 'destructive' | 'warning' | 'default';
+  duration?: number;
+}
 
 interface SnackbarContextType {
   showSnackbar: (message: Omit<SnackbarMessage, 'id'>) => void;
@@ -44,14 +51,14 @@ export function SnackbarProvider({ children }: { children: React.ReactNode }) {
 
   const showError = useCallback(
     (message: string, duration?: number) => {
-      showSnackbar({ message, type: 'error', duration });
+      showSnackbar({ message, type: 'destructive', duration });
     },
     [showSnackbar]
   );
 
   const showInfo = useCallback(
     (message: string, duration?: number) => {
-      showSnackbar({ message, type: 'info', duration });
+      showSnackbar({ message, type: 'default', duration });
     },
     [showSnackbar]
   );
@@ -77,10 +84,6 @@ export function SnackbarProvider({ children }: { children: React.ReactNode }) {
         type,
         duration,
         id,
-        action: {
-          label: actionLabel,
-          onClick: actionCallback,
-        },
       };
 
       setMessages((prev) => [...prev, newMessage]);
@@ -118,7 +121,12 @@ export function SnackbarProvider({ children }: { children: React.ReactNode }) {
             transform: 'translateX(-50%)',
           }}
         >
-          <Snackbar message={message} onClose={closeSnackbar} />
+          <Toast 
+            variant={message.type}
+          >
+            {message.message}
+            <ToastClose onClick={() => closeSnackbar(message.id)} />
+          </Toast>
         </div>
       ))}
     </SnackbarContext.Provider>

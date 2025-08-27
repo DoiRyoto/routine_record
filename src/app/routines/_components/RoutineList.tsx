@@ -7,7 +7,7 @@ import type { Routine } from '@/types/routine';
 import { formatDateInUserTimezone } from '@/utils/timezone';
 
 import { Button } from '@/components/ui/Button';
-import { Modal } from '@/components/ui/Modal';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/Dialog';
 
 import RoutineForm from './RoutineForm';
 
@@ -217,17 +217,18 @@ export default function RoutineList({
         </div>
       )}
 
-      <Modal
-        isOpen={isFormModalOpen}
-        onClose={handleCloseModal}
-        title={editingRoutine ? 'ミッション編集' : '新しいミッション'}
-      >
-        <RoutineForm
-          routine={editingRoutine || undefined}
-          onSubmit={handleFormSubmit}
-          onCancel={handleCloseModal}
-        />
-      </Modal>
+      <Dialog open={isFormModalOpen} onOpenChange={(open) => !open && handleCloseModal()}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editingRoutine ? 'ミッション編集' : '新しいミッション'}</DialogTitle>
+          </DialogHeader>
+          <RoutineForm
+            routine={editingRoutine || undefined}
+            onSubmit={handleFormSubmit}
+            onCancel={handleCloseModal}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 'use client';
 
 import type { ExecutionRecord, Routine } from '@/types/routine';
-import { Card, CardContent } from '../ui/Card';
-import { Button } from '../ui/Button';
+import { Card, CardContent } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 
 interface TodayRoutineItemProps {
   routine: Routine;
@@ -27,10 +27,9 @@ export default function TodayRoutineItem({
 
   return (
     <Card 
-      className={`transition-all duration-200 ${
+      className={`transition-all duration-200 p-4 ${
         isCompleted ? 'opacity-60 bg-green-50 border-green-200' : 'hover:shadow-md'
       }`}
-      padding="md"
     >
       <CardContent>
         <div className="flex items-center justify-between">
@@ -58,7 +57,7 @@ export default function TodayRoutineItem({
               </div>
             ) : (
               <Button
-                variant="success"
+                variant="secondary"
                 size="sm"
                 onClick={handleComplete}
                 className="font-medium"

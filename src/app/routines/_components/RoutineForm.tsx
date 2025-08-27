@@ -6,8 +6,8 @@ import type { Routine } from '@/types/routine';
 
 // RoutineContext is no longer needed
 import { Button } from '@/components/ui/Button';
-import { CategorySelector } from '@/components/ui/CategorySelector';
-import { NumberInput } from '@/components/ui/NumberInput';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
+import { Label } from '@/components/ui/Label';
 
 interface RoutineFormProps {
   routine?: Routine;
@@ -127,11 +127,19 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
         <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-slate-200">
           カテゴリー *
         </label>
-        <CategorySelector
-          value={formData.category}
-          onChange={handleCategoryChange}
-          placeholder="カテゴリを選択または入力..."
-        />
+        <Select value={formData.category} onValueChange={handleCategoryChange}>
+          <SelectTrigger>
+            <SelectValue placeholder="カテゴリを選択..." />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="学習">学習</SelectItem>
+            <SelectItem value="運動">運動</SelectItem>
+            <SelectItem value="健康">健康</SelectItem>
+            <SelectItem value="趣味">趣味</SelectItem>
+            <SelectItem value="家事">家事</SelectItem>
+            <SelectItem value="その他">その他</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div>
@@ -201,14 +209,21 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
               </select>
             </div>
             
-            <NumberInput
-              label="目標回数 *"
-              value={formData.targetCount}
-              onChange={handleTargetCountChange}
-              min={1}
-              max={50}
-              step={1}
-            />
+            <div>
+              <Label htmlFor="targetCount">目標回数 *</Label>
+              <input
+                id="targetCount"
+                type="number"
+                value={formData.targetCount}
+                onChange={(e) => handleTargetCountChange(parseInt(e.target.value) || 1)}
+                min="1"
+                max="50"
+                step="1"
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
+                           bg-white border-gray-300 text-gray-900
+                           dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+              />
+            </div>
           </div>
           
           <div className="text-sm text-gray-600 dark:text-gray-300">

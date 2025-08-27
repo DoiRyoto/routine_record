@@ -11,14 +11,11 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: { type: 'select' },
-      options: ['primary', 'secondary', 'success', 'warning', 'danger', 'ghost'],
+      options: ['primary', 'secondary', 'outline', 'ghost', 'danger'],
     },
     size: {
       control: { type: 'select' },
-      options: ['sm', 'md', 'lg'],
-    },
-    disabled: {
-      control: { type: 'boolean' },
+      options: ['sm', 'default', 'lg', 'icon'],
     },
   },
 };
@@ -28,93 +25,49 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    children: 'Primary Button',
     variant: 'primary',
+    children: 'ボタン',
   },
 };
 
 export const Secondary: Story = {
   args: {
-    children: 'Secondary Button',
     variant: 'secondary',
+    children: 'ボタン',
   },
 };
 
-export const Success: Story = {
+export const Outline: Story = {
   args: {
-    children: 'Success Button',
-    variant: 'success',
-  },
-};
-
-export const Warning: Story = {
-  args: {
-    children: 'Warning Button',
-    variant: 'warning',
-  },
-};
-
-export const Danger: Story = {
-  args: {
-    children: 'Danger Button',
-    variant: 'danger',
+    variant: 'outline',
+    children: 'ボタン',
   },
 };
 
 export const Ghost: Story = {
   args: {
-    children: 'Ghost Button',
     variant: 'ghost',
+    children: 'ボタン',
+  },
+};
+
+export const Danger: Story = {
+  args: {
+    variant: 'danger',
+    children: '削除',
   },
 };
 
 export const Small: Story = {
   args: {
-    children: 'Small Button',
     size: 'sm',
-  },
-};
-
-export const Medium: Story = {
-  args: {
-    children: 'Medium Button',
-    size: 'md',
+    children: '小さいボタン',
   },
 };
 
 export const Large: Story = {
   args: {
-    children: 'Large Button',
     size: 'lg',
+    children: '大きいボタン',
   },
-};
-
-export const Disabled: Story = {
-  args: {
-    children: 'Disabled Button',
-    disabled: true,
-  },
-};
-
-export const AllVariants: Story = {
-  render: () => (
-    <div className="flex flex-col gap-4">
-      <div className="flex gap-2">
-        <Button variant="primary">Primary</Button>
-        <Button variant="secondary">Secondary</Button>
-        <Button variant="success">Success</Button>
-        <Button variant="warning">Warning</Button>
-        <Button variant="danger">Danger</Button>
-        <Button variant="ghost">Ghost</Button>
-      </div>
-      <div className="flex gap-2 items-center">
-        <Button size="sm">Small</Button>
-        <Button size="md">Medium</Button>
-        <Button size="lg">Large</Button>
-      </div>
-      <div className="flex gap-2">
-        <Button disabled>Disabled</Button>
-      </div>
-    </div>
-  ),
 };

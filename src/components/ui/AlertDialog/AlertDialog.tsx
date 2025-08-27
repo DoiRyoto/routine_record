@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
-import { clsx } from 'clsx';
+import { cn } from '@/lib/ui-utils';
+import { buttonVariants } from '../Button';
 
 const AlertDialog = AlertDialogPrimitive.Root;
 
@@ -15,10 +16,8 @@ const AlertDialogOverlay = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Overlay
-    className={clsx(
-      'fixed inset-0 z-50 bg-black/50 backdrop-blur-sm',
-      'data-[state=open]:animate-in data-[state=closed]:animate-out',
-      'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+    className={cn(
+      'fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
       className
     )}
     {...props}
@@ -35,14 +34,8 @@ const AlertDialogContent = React.forwardRef<
     <AlertDialogOverlay />
     <AlertDialogPrimitive.Content
       ref={ref}
-      className={clsx(
-        'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 p-6',
-        'bg-white dark:bg-slate-900 shadow-lg duration-200 rounded-lg border border-border-light',
-        'data-[state=open]:animate-in data-[state=closed]:animate-out',
-        'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
-        'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
-        'data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]',
-        'data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
+      className={cn(
+        'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg',
         className
       )}
       {...props}
@@ -56,7 +49,7 @@ const AlertDialogHeader = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={clsx(
+    className={cn(
       'flex flex-col space-y-2 text-center sm:text-left',
       className
     )}
@@ -70,7 +63,7 @@ const AlertDialogFooter = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={clsx(
+    className={cn(
       'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',
       className
     )}
@@ -85,7 +78,7 @@ const AlertDialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Title
     ref={ref}
-    className={clsx('text-lg font-semibold text-text-primary', className)}
+    className={cn('text-lg font-semibold', className)}
     {...props}
   />
 ));
@@ -97,7 +90,7 @@ const AlertDialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Description
     ref={ref}
-    className={clsx('text-sm text-text-secondary', className)}
+    className={cn('text-sm text-gray-600', className)}
     {...props}
   />
 ));
@@ -110,14 +103,7 @@ const AlertDialogAction = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Action
     ref={ref}
-    className={clsx(
-      'inline-flex h-10 items-center justify-center rounded-lg px-4 py-2 text-sm font-medium',
-      'bg-primary-500 text-white hover:bg-primary-600',
-      'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-      'disabled:pointer-events-none disabled:opacity-50',
-      'transition-colors',
-      className
-    )}
+    className={cn(buttonVariants(), className)}
     {...props}
   />
 ));
@@ -129,13 +115,9 @@ const AlertDialogCancel = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Cancel
     ref={ref}
-    className={clsx(
-      'mt-2 sm:mt-0 inline-flex h-10 items-center justify-center rounded-lg px-4 py-2 text-sm font-medium',
-      'border border-border-light bg-white hover:bg-gray-50 text-text-primary',
-      'dark:bg-slate-800 dark:hover:bg-slate-700',
-      'focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2',
-      'disabled:pointer-events-none disabled:opacity-50',
-      'transition-colors',
+    className={cn(
+      buttonVariants({ variant: 'outline' }),
+      'mt-2 sm:mt-0',
       className
     )}
     {...props}
