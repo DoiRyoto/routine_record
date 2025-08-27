@@ -1,7 +1,8 @@
 'use client';
 
-import * as React from 'react';
 import * as FormPrimitive from '@radix-ui/react-form';
+import * as React from 'react';
+
 import { cn } from '@/lib/ui-utils';
 
 const Form = FormPrimitive.Root;
@@ -67,6 +68,7 @@ const FormValidityState = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof FormPrimitive.ValidityState>
 >((props, ref) => (
   <FormPrimitive.ValidityState
+    ref={ref}
     {...props}
   />
 ));

@@ -1,5 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
+
+import { Button } from '../Button';
+
 import {
   Toast,
   ToastAction,
@@ -9,7 +12,6 @@ import {
   ToastTitle,
   ToastViewport,
 } from './Toast';
-import { Button } from '../Button';
 
 const meta: Meta<typeof Toast> = {
   title: 'UI/Toast',

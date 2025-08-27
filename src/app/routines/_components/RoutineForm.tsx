@@ -2,12 +2,12 @@
 
 import React, { useState } from 'react';
 
-import type { Routine } from '@/types/routine';
 
 // RoutineContext is no longer needed
 import { Button } from '@/components/ui/Button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Label } from '@/components/ui/Label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
+import type { Routine } from '@/types/routine';
 
 interface RoutineFormProps {
   routine?: Routine;

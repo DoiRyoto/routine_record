@@ -1,5 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+
 import { Button } from '../Button';
+
 import {
   DropdownMenu,
   DropdownMenuContent,

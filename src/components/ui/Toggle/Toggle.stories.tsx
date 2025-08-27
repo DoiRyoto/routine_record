@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+
 import { Toggle, ToggleGroup, ToggleGroupItem } from './Toggle';
 
 const meta: Meta<typeof Toggle> = {

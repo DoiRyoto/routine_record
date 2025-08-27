@@ -1,4 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import Image from 'next/image';
+
 import { AspectRatio } from './AspectRatio';
 
 const meta: Meta<typeof AspectRatio> = {
@@ -25,10 +27,11 @@ export const Default: Story = {
   render: (args) => (
     <div className="w-96">
       <AspectRatio ratio={args.ratio} className="bg-gray-100 rounded-md overflow-hidden">
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&dpr=2&q=80"
           alt="ミッションのイメージ写真"
-          className="h-full w-full object-cover"
+          fill
+          className="object-cover"
         />
       </AspectRatio>
     </div>

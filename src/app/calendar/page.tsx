@@ -1,8 +1,9 @@
-import CalendarPage from './CalendarPage';
 import { requireAuth } from '@/lib/auth/server';
 import { getExecutionRecords } from '@/lib/db/queries/execution-records';
 import { getRoutines } from '@/lib/db/queries/routines';
 import { getOrCreateUserSettings } from '@/lib/db/queries/user-settings';
+
+import CalendarPage from './CalendarPage';
 
 export default async function CalendarServerPage() {
   const user = await requireAuth('/calendar');

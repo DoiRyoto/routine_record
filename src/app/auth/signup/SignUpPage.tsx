@@ -3,10 +3,10 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 
-import { useAuth } from '@/context/AuthContext';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { useAuth } from '@/context/AuthContext';
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('');

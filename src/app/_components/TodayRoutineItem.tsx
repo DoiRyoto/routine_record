@@ -1,8 +1,8 @@
 'use client';
 
-import type { ExecutionRecord, Routine } from '@/types/routine';
-import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { Card, CardContent } from '@/components/ui/Card';
+import type { ExecutionRecord, Routine } from '@/types/routine';
 
 interface TodayRoutineItemProps {
   routine: Routine;

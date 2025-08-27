@@ -12,7 +12,10 @@
       "Bash(mkdir:*)",
       "Bash(start /min npm run db:studio)",
       "Bash(rmdir:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(find:*)",
+      "Bash(powershell:*)",
+      "Bash(npx eslint:*)"
     ],
     "defaultMode": "acceptEdits",
     "additionalDirectories": [

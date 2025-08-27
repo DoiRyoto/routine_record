@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
+
 import { PasswordField } from './PasswordField';
 
 const meta: Meta<typeof PasswordField> = {

@@ -1,6 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { RadioGroup, RadioGroupItem } from './RadioGroup';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+
 import { Label } from '../Label';
+
+import { RadioGroup, RadioGroupItem } from './RadioGroup';
 
 const meta: Meta<typeof RadioGroup> = {
   title: 'UI/RadioGroup',

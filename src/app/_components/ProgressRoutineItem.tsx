@@ -1,9 +1,9 @@
 'use client';
 
-import type { ExecutionRecord, Routine } from '@/types/routine';
-import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Progress } from '@/components/ui/Progress';
+import type { ExecutionRecord, Routine } from '@/types/routine';
 
 interface ProgressRoutineItemProps {
   routine: Routine & {
@@ -35,12 +35,6 @@ export default function ProgressRoutineItem({
     return frequencyType === 'weekly' ? '今週' : '今月';
   };
 
-  const getProgressVariant = (): 'default' | 'success' | 'warning' | 'danger' => {
-    if (routine.isCompleted) return 'success';
-    if (routine.progress >= 75) return 'default';
-    if (routine.progress >= 50) return 'warning';
-    return 'danger';
-  };
 
   const getProgressTextColor = () => {
     if (routine.isCompleted) return 'text-green-600';

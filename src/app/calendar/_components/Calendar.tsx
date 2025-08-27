@@ -2,13 +2,13 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/Dialog';
 import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
 import type { CalendarData, ExecutionRecord, Routine } from '@/types/routine';
 import { getUserTimezone, isSameDayInUserTimezone } from '@/utils/timezone';
 
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/Dialog';
 
 interface Props {
   routines: Routine[];
@@ -175,6 +175,15 @@ export default function Calendar({ routines, executionRecords, userSettings }: P
             <div
               key={index}
               onClick={() => handleDayClick(day)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleDayClick(day);
+                }
+              }}
+              tabIndex={0}
+              role="button"
+              aria-label={`${day.date}の予定を表示`}
               className={`min-h-[80px] p-1 border rounded cursor-pointer transition-colors ${
                 day.isCurrentMonth ? 'border-gray-200 dark:border-gray-700' : 'opacity-50'
               } ${

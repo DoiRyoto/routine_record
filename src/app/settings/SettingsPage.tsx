@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import type { UserSettings } from '@/types/user-settings';
+
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/AlertDialog';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/AlertDialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
-import { Label } from '@/components/ui/Label';
+import type { UserSettings } from '@/types/user-settings';
 
 interface SettingsPageProps {
   initialSettings: UserSettings;

@@ -1,6 +1,7 @@
-import SettingsPage from './SettingsPage';
 import { requireAuth } from '@/lib/auth/server';
 import { getOrCreateUserSettings } from '@/lib/db/queries/user-settings';
+
+import SettingsPage from './SettingsPage';
 
 export default async function SettingsServerPage() {
   const user = await requireAuth('/settings');

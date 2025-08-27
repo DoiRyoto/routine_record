@@ -1,5 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import Link from 'next/link';
 import * as React from 'react';
+
+import { cn } from '@/lib/ui-utils';
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -9,7 +13,6 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from './NavigationMenu';
-import { cn } from '@/lib/ui-utils';
 
 const meta: Meta<typeof NavigationMenu> = {
   title: 'UI/NavigationMenu',
@@ -59,7 +62,7 @@ export const Default: Story = {
             <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
               <li className="row-span-3">
                 <NavigationMenuLink asChild>
-                  <a
+                  <Link
                     className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-blue-500/20 to-blue-700/20 p-6 no-underline outline-none focus:shadow-md"
                     href="/"
                   >
@@ -69,7 +72,7 @@ export const Default: Story = {
                     <p className="text-sm leading-tight text-gray-600">
                       今日のミッション進捗と統計を確認できます
                     </p>
-                  </a>
+                  </Link>
                 </NavigationMenuLink>
               </li>
               <ListItem href="/missions" title="ミッション一覧">

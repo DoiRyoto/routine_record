@@ -1,6 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { ScrollArea } from './ScrollArea';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+
 import { Separator } from '../Separator';
+
+import { ScrollArea } from './ScrollArea';
 
 const meta: Meta<typeof ScrollArea> = {
   title: 'UI/ScrollArea',
@@ -15,7 +17,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const tags = Array.from({ length: 50 }).map(
-  (_, i, a) => `ミッション${i + 1}: ${
+  (_, i) => `ミッション${i + 1}: ${
     i % 5 === 0 ? '運動' : 
     i % 5 === 1 ? '学習' : 
     i % 5 === 2 ? '健康' : 
@@ -152,7 +154,7 @@ export const MissionHistory: Story = {
                   {entry.date} {entry.time} • {entry.duration}
                 </div>
               </div>
-              <div className="flex-shrink-0 w-3 h-3 bg-green-400 rounded-full"></div>
+              <div className="flex-shrink-0 w-3 h-3 bg-green-400 rounded-full" />
             </div>
           ))}
         </div>

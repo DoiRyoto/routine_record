@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 
+import { Card } from '@/components/ui/Card';
 import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
 import type { ExecutionRecord, Routine } from '@/types/routine';
 import {
@@ -10,7 +11,6 @@ import {
   getCatchupProgressMessage,
 } from '@/utils/catchupUtils';
 
-import { Card } from '@/components/ui/Card';
 
 interface Props {
   routines: Routine[];

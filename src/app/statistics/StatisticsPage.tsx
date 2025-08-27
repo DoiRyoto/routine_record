@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+
 import type { ExecutionRecord, Routine } from '@/types/routine';
 import type { UserSettings } from '@/types/user-settings';
+
 import Statistics from './_components/Statistics';
 
 interface StatisticsPageProps {

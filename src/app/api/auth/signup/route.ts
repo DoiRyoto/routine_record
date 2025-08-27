@@ -94,7 +94,8 @@ export async function POST(request: NextRequest) {
       });
 
       // デフォルトカテゴリの自動作成は削除
-    } catch (error) {
+    } catch (settingsError) {
+      console.error('User settings creation failed:', settingsError);
       // データベースエラーの場合、Supabaseのユーザーを削除
       try {
         await supabaseAdmin.auth.admin.deleteUser(data.user.id);

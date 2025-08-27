@@ -1,8 +1,9 @@
-import StatisticsPage from './StatisticsPage';
 import { requireAuth } from '@/lib/auth/server';
 import { getExecutionRecords } from '@/lib/db/queries/execution-records';
 import { getRoutines } from '@/lib/db/queries/routines';
 import { getOrCreateUserSettings } from '@/lib/db/queries/user-settings';
+
+import StatisticsPage from './StatisticsPage';
 
 export default async function StatisticsServerPage() {
   const user = await requireAuth('/statistics');

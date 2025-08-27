@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
+import { Card } from '@/components/ui/Card';
 import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
 import type { ExecutionRecord, Routine, StatisticsData } from '@/types/routine';
 import {
@@ -10,7 +11,6 @@ import {
   isSameDayInUserTimezone,
 } from '@/utils/timezone';
 
-import { Card } from '@/components/ui/Card';
 
 interface Props {
   routines: Routine[];
@@ -98,7 +98,7 @@ export default function Statistics({ routines, executionRecords, userSettings }:
         } as StatisticsData;
       })
       .sort((a, b) => b.totalExecutions - a.totalExecutions);
-  }, [routines, executionRecords, isMounted]);
+  }, [routines, executionRecords, isMounted, userSettings?.timezone]);
 
   const overallStats = useMemo(() => {
     if (!isMounted) {

@@ -1,9 +1,11 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+
 import { useSnackbar } from '@/context/SnackbarContext';
 import type { Routine } from '@/types/routine';
 import type { UserSettings } from '@/types/user-settings';
+
 import RoutineList from './_components/RoutineList';
 
 interface RoutinesPageProps {
@@ -142,14 +144,16 @@ export default function RoutinesPage({
         userSettings={userSettings}
         onEdit={(routine) => {
           // 更新可能なフィールドのみを抽出
-          const {
-            id: _id,
-            userId: _userId,
-            createdAt: _createdAt,
-            updatedAt: _updatedAt,
-            deletedAt: _deletedAt,
-            ...updateFields
-          } = routine;
+          const updateFields = {
+            name: routine.name,
+            description: routine.description,
+            categoryId: routine.categoryId,
+            frequencyType: routine.frequencyType,
+            frequencyValue: routine.frequencyValue,
+            targetCount: routine.targetCount,
+            isActive: routine.isActive,
+            reminderTime: routine.reminderTime,
+          };
           handleUpdateRoutine(routine.id, updateFields);
         }}
         onDelete={handleDeleteRoutine}
