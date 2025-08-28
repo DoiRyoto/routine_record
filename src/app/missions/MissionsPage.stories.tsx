@@ -1,10 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
+import { WithLayoutAndAuth } from '@/components/StorybookWrapper';
+
 import { MissionsPage } from './MissionsPage';
 
 const meta: Meta<typeof MissionsPage> = {
   title: 'Pages/MissionsPage',
   component: MissionsPage,
+  decorators: [
+    (Story) => (
+      <WithLayoutAndAuth>
+        <Story />
+      </WithLayoutAndAuth>
+    ),
+  ],
   parameters: {
     layout: 'fullscreen',
     viewport: {

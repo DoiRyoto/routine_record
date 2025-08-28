@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
+import { WithLayoutAndAuth } from '@/components/StorybookWrapper';
 import type { UserChallenge } from '@/lib/db/schema';
 import { getMockActiveChallenges } from '@/mocks/data/challenges';
 
@@ -8,6 +9,13 @@ import { ChallengesPage } from './ChallengesPage';
 const meta: Meta<typeof ChallengesPage> = {
   title: 'Pages/ChallengesPage',
   component: ChallengesPage,
+  decorators: [
+    (Story) => (
+      <WithLayoutAndAuth>
+        <Story />
+      </WithLayoutAndAuth>
+    ),
+  ],
   parameters: {
     layout: 'fullscreen',
     viewport: {

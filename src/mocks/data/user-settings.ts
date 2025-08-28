@@ -1,3 +1,4 @@
+import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
 import type { UserSetting } from '@/lib/db/schema';
 
 export const mockUserSettings: UserSetting[] = [
@@ -31,8 +32,18 @@ export const mockUserSettings: UserSetting[] = [
 ];
 
 // モック関数
-export const getMockUserSettings = (userId: string) =>
-  mockUserSettings.find((settings) => settings.userId === userId);
+export const getMockUserSettings = (userId?: string): UserSettingWithTimezone | undefined => {
+  const baseSetting = userId 
+    ? mockUserSettings.find((settings) => settings.userId === userId)
+    : mockUserSettings[0]; // デフォルトで最初の設定を返す
+  
+  if (!baseSetting) return undefined;
+  
+  return {
+    ...baseSetting,
+    timezone: 'Asia/Tokyo',
+  };
+};
 
 export const getMockOrCreateUserSettings = (userId: string) => {
   const existing = getMockUserSettings(userId);

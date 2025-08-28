@@ -158,8 +158,12 @@ export const mockRoutines: Routine[] = [
 ];
 
 // モック関数
-export const getMockRoutines = (userId: string) =>
-  mockRoutines.filter((routine) => routine.userId === userId);
+export const getMockRoutines = (userId?: string) => {
+  if (userId) {
+    return mockRoutines.filter((routine) => routine.userId === userId);
+  }
+  return mockRoutines; // デフォルトで全てのルーチンを返す
+};
 
 export const getMockRoutineById = (id: string) => mockRoutines.find((routine) => routine.id === id);
 

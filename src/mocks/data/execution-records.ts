@@ -114,8 +114,12 @@ export const mockExecutionRecords: ExecutionRecord[] = [
 ];
 
 // モック関数
-export const getMockExecutionRecords = (userId: string) =>
-  mockExecutionRecords.filter((record) => record.userId === userId);
+export const getMockExecutionRecords = (userId?: string) => {
+  if (userId) {
+    return mockExecutionRecords.filter((record) => record.userId === userId);
+  }
+  return mockExecutionRecords; // デフォルトで全ての実行記録を返す
+};
 
 export const getMockExecutionRecordById = (id: string) =>
   mockExecutionRecords.find((record) => record.id === id);

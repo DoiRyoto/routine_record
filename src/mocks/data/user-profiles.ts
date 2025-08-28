@@ -102,8 +102,11 @@ export const mockXPTransactions: XPTransaction[] = [
 ];
 
 // Mock関数 - lib/db/queries/user-profiles.ts に対応
-export const getMockUserProfile = (userId: string): UserProfile | null => {
-  return mockUserProfiles.find(p => p.userId === userId) || null;
+export const getMockUserProfile = (userId?: string): UserProfile | null => {
+  if (userId) {
+    return mockUserProfiles.find(p => p.userId === userId) || null;
+  }
+  return mockUserProfiles[0] || null; // デフォルトで最初のプロファイルを返す
 };
 
 export const mockCreateUserProfile = (profileData: Omit<UserProfile, 'createdAt' | 'updatedAt'>): UserProfile => {
