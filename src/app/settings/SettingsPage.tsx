@@ -6,10 +6,11 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
-import type { UserSettings } from '@/types/user-settings';
+import { apiClient } from '@/lib/api-client/endpoints';
+import type { UserSetting } from '@/lib/db/schema';
 
 interface SettingsPageProps {
-  initialSettings: UserSettings;
+  initialSettings: UserSetting;
 }
 
 export default function SettingsPage({
@@ -25,29 +26,21 @@ export default function SettingsPage({
     setSaving(true);
 
     try {
-      const response = await fetch('/api/user-settings', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('設定の更新に失敗しました');
+      const result = await apiClient.userSettings.update(formData);
+      
+      if (result.success) {
+        setIsSaved(true);
+        setTimeout(() => setIsSaved(false), 2000);
       }
-
-      setIsSaved(true);
-      setTimeout(() => setIsSaved(false), 2000);
-    } catch {
-      // 設定の更新に失敗
+    } catch (error) {
+      console.error('設定の更新に失敗しました:', error);
     } finally {
       setSaving(false);
     }
   };
 
   const handleChange = (field: string, value: string | number) => {
-    setFormData((prev: UserSettings) => ({
+    setFormData((prev: UserSetting) => ({
       ...prev,
       [field]: value,
     }));
@@ -58,7 +51,7 @@ export default function SettingsPage({
   };
 
   const handleResetConfirm = async () => {
-    const defaultSettings: UserSettings = {
+    const defaultSettings: UserSetting = {
       ...initialSettings,
       theme: 'auto' as const,
       language: 'ja' as const,
@@ -66,19 +59,9 @@ export default function SettingsPage({
     };
     setFormData(defaultSettings);
     try {
-      const response = await fetch('/api/user-settings', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(defaultSettings),
-      });
-
-      if (!response.ok) {
-        throw new Error('設定のリセットに失敗しました');
-      }
-    } catch {
-      // 設定のリセットに失敗
+      await apiClient.userSettings.update(defaultSettings);
+    } catch (error) {
+      console.error('設定のリセットに失敗しました:', error);
     }
   };
 

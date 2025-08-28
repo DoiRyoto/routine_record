@@ -2,22 +2,15 @@ import { getCurrentUser } from '@/lib/auth/server';
 
 import { ChallengesPage } from './ChallengesPage';
 
-async function getChallengesData(userId?: string) {
+async function getChallengesData(_userId?: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-
-    const [challengesResponse, userChallengesResponse] = await Promise.all([
-      fetch(`${baseUrl}/api/challenges`)
-        .then(res => res.json()),
-      userId ? 
-        fetch(`${baseUrl}/api/user-challenges?userId=${userId}`)
-          .then(res => res.json()) : 
-        Promise.resolve([])
-    ]);
+    // 現在はモックデータを返す（API実装まで）
+    const mockChallenges: any[] = [];
+    const mockUserChallenges: any[] = [];
 
     return {
-      challenges: challengesResponse,
-      userChallenges: userChallengesResponse
+      challenges: mockChallenges,
+      userChallenges: mockUserChallenges
     };
   } catch (error) {
     console.error('Failed to fetch challenges data:', error);

@@ -3,7 +3,7 @@
 ## 1. 型定義の統一
 
 ### データベーススキーマとフロントエンド型の整合性
-- データベーススキーマ (`src/lib/db/schema.ts`) とフロントエンド型定義 (`src/types/`) を統一する
+- データベーススキーマ (`src/lib/db/schema.ts`) を用いる
 - `null` と `undefined` の使い分けを明確にする
   - データベースから取得: `null`
   - フロントエンドでのオプション: `undefined`
@@ -11,7 +11,6 @@
 
 ### 型エクスポートルール
 - データベーススキーマから自動生成される型を活用する
-- フロントエンド独自の型は `src/types/` 配下で管理
 - APIレスポンス型とUI型を分離する
 
 ## 2. APIクライアント実装
@@ -81,14 +80,30 @@
 - MSWによるAPI呼び出しインターセプト
 - 詳細構造は`docs/rules/msw-mock-system.md`参照
 
-## 6. Mock から実データへの移行手順
+## 6. 型システム統一の手順
 
-1. データベースクエリ関数を実装
-2. APIルートを実装
-3. Page コンポーネントを実データに切り替え
-4. エラーハンドリングを確認
-5. 型チェック・Lint を実行
-6. E2Eテストで動作確認
+1. 全 `@/types/*` インポートを `@/lib/db/schema` に置換
+2. Mock データをスキーマ型に完全一致させる
+3. TypeScript エラーを段階的に解決
+4. Handler での型不整合を修正
+5. 最終的な type-check と lint 実行
+
+### 段階的エラー解決手順
+```bash
+# 1. 型チェック実行
+npm run type-check
+
+# 2. 主要なエラーから順番に修正
+# - Missing properties (userId, createdAt, updatedAt など)
+# - Invalid enum values (theme: 'system' → 'auto')  
+# - Non-existent fields (dailyGoal, description など)
+
+# 3. Lint 実行
+npm run lint
+
+# 4. 最終確認
+npm run type-check
+```
 
 ## 7. Next.js 15 対応ルール
 
@@ -121,7 +136,6 @@ export default async function Page({
 
 ### スキーマベース型定義
 - 全ての型定義は`@/lib/db/schema.ts`から取得する
-- `@/types/*` モジュールは使用しない
 - 型変換は行わず、スキーマから直接型を推論する
 
 ### 型インポートパターン
@@ -147,14 +161,83 @@ export async function GET(): Promise<Response> {
 }
 ```
 
-## 9. 品質チェック
+### Mock データ型整合性ルール
+- Mock データはスキーマ定義と完全一致させる
+- Enum値は schema で定義されている値のみ使用
+```typescript
+// 正しい例
+theme: 'auto', // schema の themeEnum に存在
+language: 'ja', // schema の languageEnum に存在
+
+// 間違い例
+theme: 'system', // schema に存在しない値
+```
+- 存在しないフィールドは削除する
+- 必須フィールドは必ず追加する
+
+### よくある型エラーと解決方法
+
+#### ExecutionRecord の使い分け
+```typescript
+// データベース挿入時
+import type { InsertExecutionRecord } from '@/lib/db/schema';
+const record: InsertExecutionRecord = {
+  userId: 'user1',
+  routineId: routine.id,
+  executedAt: new Date(),
+  // ...
+};
+
+// データベース取得時
+import type { ExecutionRecord } from '@/lib/db/schema';
+const records: ExecutionRecord[] = await getExecutionRecords();
+```
+
+#### API呼び出し時のユーザーID
+```typescript
+// 正しい例 - userIdを含める
+await onComplete({
+  userId: routine.userId,
+  routineId: routine.id,
+  executedAt: new Date(),
+  // ...
+});
+
+// 間違い例 - userIdが欠損
+await onComplete({
+  routineId: routine.id, // userId が無い
+  executedAt: new Date(),
+});
+```
+
+### スキーマ更新時の影響範囲チェック
+1. Mock データファイル (`src/mocks/data/*.ts`) の更新
+2. Handler ファイル (`src/mocks/handlers/*.ts`) の型チェック
+3. Schema に存在しないフィールドの削除
+
+## 9. TypeScript厳格ルール
+
+### ts-ignore禁止ルール
+- **@ts-ignore は絶対に使用禁止**
+- **@ts-expect-error も原則禁止** （どうしても必要な場合のみ例外的に使用）
+- 型エラーは必ず根本的な型定義修正で解決する
+- 型アサーション（as）も最小限に留め、適切な型定義を優先する
+
+### 型安全性確保手順
+1. スキーマベースの型定義を最優先
+2. コンポーネントプロパティの型を厳密に定義
+3. any型の使用を禁止し、具体的な型を指定
+4. 型エラー発生時は型定義の見直しから始める
+
+## 10. 品質チェック
 
 ### 実装完了時に必ず実行
 1. `npm run type-check` - TypeScript型チェック
-2. `npm run lint` - ESLint実行
+2. `npm run lint` - ESLint実行（警告含む全て解消）
 3. `npm run test:e2e` - E2Eテスト実行
 
 ### コミット前チェック
 - 型エラーがないことを確認
-- Lintエラーがないことを確認
+- **Lintエラー・警告が0個であることを確認**
+- ts-ignore系コメントが存在しないことを確認
 - 基本的な動作確認を実施

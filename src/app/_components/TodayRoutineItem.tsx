@@ -17,6 +17,7 @@ export default function TodayRoutineItem({
 }: TodayRoutineItemProps) {
   const handleComplete = async () => {
     await onComplete({
+      userId: routine.userId,
       routineId: routine.id,
       executedAt: new Date(),
       duration: null,

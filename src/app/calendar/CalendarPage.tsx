@@ -2,15 +2,15 @@
 
 import { useState } from 'react';
 
-import type { ExecutionRecord, Routine } from '@/types/routine';
-import type { UserSettings } from '@/types/user-settings';
+import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
+import type { ExecutionRecord, Routine } from '@/lib/db/schema';
 
 import Calendar from './_components/Calendar';
 
 interface CalendarPageProps {
   initialRoutines: Routine[];
   initialExecutionRecords: ExecutionRecord[];
-  userSettings: UserSettings;
+  userSettings: UserSettingWithTimezone;
 }
 
 export default function CalendarPage({

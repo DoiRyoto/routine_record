@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
-import { getMockStreakData } from '../data/gamification';
+// import { getMockStreakData } from '../data/gamification'; // Removed non-existent module
 import {
   getMockUserProfile,
   mockCreateUserProfile,
@@ -39,14 +39,14 @@ export const userProfilesHandlers = [
 
       if (includeDetails) {
         const badges = getMockUserBadges(userId);
-        const streakData = getMockStreakData(userId);
+        // const streakData = getMockStreakData(userId); // Temporarily removed
 
         return HttpResponse.json({
           userProfile: {
             ...userProfile,
             badges
           },
-          streakData
+          // streakData // Temporarily removed
         });
       }
 

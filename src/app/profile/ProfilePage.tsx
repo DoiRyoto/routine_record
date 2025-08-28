@@ -3,38 +3,48 @@
 import React from 'react';
 
 import {
-  ProfileAvatar,
-  LevelIndicator,
-  BadgeGrid,
-  StreakCounter,
-  StatCard
+  UserAvatar,
+  LevelProgressBar,
+  BadgeCollection,
+  StreakDisplay,
+  StatsCard
 } from '@/components/gamification';
 import { Card } from '@/components/ui/Card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
-import type { UserProfile, UserBadge, StreakData } from '@/types/gamification';
+import type { UserProfile, UserBadge, Badge } from '@/lib/db/schema';
+
+// UserBadge with related Badge data
+type UserBadgeWithBadge = UserBadge & {
+  badge: Badge;
+};
+
+// Extended UserProfile with badges
+type UserProfileWithBadges = UserProfile & {
+  badges: UserBadgeWithBadge[];
+  title?: string;
+};
+
+interface StreakData {
+  current: number;
+  longest: number;
+  freezeCount: number;
+  lastActiveDate: Date;
+}
 
 interface ProfilePageProps {
-  userProfile: UserProfile;
+  userProfile: UserProfileWithBadges;
   streakData: StreakData;
-  onAvatarChange?: (avatarUrl: string) => void;
   onTitleChange?: (title: string) => void;
-  onBadgeClick?: (badge: UserBadge) => void;
+  onBadgeClick?: (badge: UserBadgeWithBadge) => void;
 }
 
 export function ProfilePage({
   userProfile,
   streakData,
-  onAvatarChange,
   onTitleChange: _onTitleChange,
   onBadgeClick
 }: ProfilePageProps) {
-  const handleAvatarChange = (avatarUrl: string) => {
-    if (onAvatarChange) {
-      onAvatarChange(avatarUrl);
-    } else {
-      console.warn('Avatar changed:', avatarUrl);
-    }
-  };
+  // Avatar change functionality removed as onClick prop doesn't exist on UserAvatar
 
   // const handleTitleChange = (title: string) => {
   //   if (_onTitleChange) {
@@ -44,7 +54,7 @@ export function ProfilePage({
   //   }
   // };
 
-  const handleBadgeClick = (badge: UserBadge) => {
+  const handleBadgeClick = (badge: UserBadgeWithBadge) => {
     if (onBadgeClick) {
       onBadgeClick(badge);
     } else {
@@ -61,7 +71,7 @@ export function ProfilePage({
       acc[rarity].push(badge);
     }
     return acc;
-  }, {} as Record<string, UserBadge[]>);
+  }, {} as Record<string, UserBadgeWithBadge[]>);
 
   // 最近の実績（新しいバッジ）
   const recentBadges = userProfile.badges
@@ -76,14 +86,8 @@ export function ProfilePage({
         <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
           {/* アバターセクション */}
           <div className="flex-shrink-0 text-center">
-            <ProfileAvatar
+            <UserAvatar
               userProfile={userProfile}
-              size="xl"
-              showLevel={true}
-              onClick={() => {
-                handleAvatarChange('');
-                // _setIsEditing(true);
-              }}
             />
             {userProfile.title && (
               <div className="mt-2 px-3 py-1 bg-rarity-rare text-white rounded-full text-sm font-medium">
@@ -99,13 +103,11 @@ export function ProfilePage({
             </h1>
             
             <div className="mb-4">
-              <LevelIndicator
+              <LevelProgressBar
                 level={userProfile.level}
                 currentXP={userProfile.currentXP}
                 nextLevelXP={userProfile.nextLevelXP}
                 totalXP={userProfile.totalXP}
-                showXPNumbers={true}
-                size="lg"
               />
             </div>
 
@@ -134,28 +136,23 @@ export function ProfilePage({
 
       {/* ストリーク情報 */}
       <div className="grid md:grid-cols-2 gap-6">
-        <StreakCounter
+        <StreakDisplay
           streakData={streakData}
-          variant="card"
-          showFreeze={true}
-          onUseFreeze={() => console.warn('Use streak freeze')}
         />
         
         <div className="grid grid-cols-2 gap-4">
-          <StatCard
+          <StatsCard
             title="アクティブ日数"
             value={Math.floor((new Date().getTime() - userProfile.joinedAt.getTime()) / (1000 * 60 * 60 * 24))}
             subtitle="参加から"
             icon={<span className="text-lg">📅</span>}
             variant="primary"
-            size="sm"
           />
-          <StatCard
+          <StatsCard
             title="総XP"
             value={userProfile.totalXP}
             icon={<span className="text-lg">⭐</span>}
             variant="success"
-            size="sm"
           />
         </div>
       </div>
@@ -175,8 +172,8 @@ export function ProfilePage({
         <TabsContent value="all">
           <Card className="p-6">
             {userProfile.badges.length > 0 ? (
-              <BadgeGrid
-                badges={userProfile.badges}
+              <BadgeCollection
+                badges={userProfile.badges as UserBadgeWithBadge[]}
                 maxDisplay={24}
                 showEmpty={true}
                 size="md"
@@ -201,8 +198,8 @@ export function ProfilePage({
             {recentBadges.length > 0 ? (
               <div className="space-y-4">
                 <p className="text-sm text-text-secondary">最近獲得したバッジ</p>
-                <BadgeGrid
-                  badges={recentBadges}
+                <BadgeCollection
+                  badges={recentBadges as UserBadgeWithBadge[]}
                   maxDisplay={12}
                   showEmpty={false}
                   size="md"
@@ -220,8 +217,8 @@ export function ProfilePage({
         <TabsContent value="legendary">
           <Card className="p-6">
             {badgesByRarity.legendary?.length > 0 ? (
-              <BadgeGrid
-                badges={badgesByRarity.legendary}
+              <BadgeCollection
+                badges={badgesByRarity.legendary as UserBadgeWithBadge[]}
                 showEmpty={false}
                 size="lg"
                 onBadgeClick={handleBadgeClick}
@@ -243,8 +240,8 @@ export function ProfilePage({
         <TabsContent value="epic">
           <Card className="p-6">
             {badgesByRarity.epic?.length > 0 ? (
-              <BadgeGrid
-                badges={badgesByRarity.epic}
+              <BadgeCollection
+                badges={badgesByRarity.epic as UserBadgeWithBadge[]}
                 showEmpty={false}
                 size="md"
                 onBadgeClick={handleBadgeClick}
@@ -265,21 +262,21 @@ export function ProfilePage({
       <Card className="p-6">
         <h2 className="text-xl font-bold text-text-primary mb-4">📊 統計サマリー</h2>
         <div className="grid md:grid-cols-3 gap-4">
-          <StatCard
+          <StatsCard
             title="参加日"
             value={userProfile.joinedAt.toLocaleDateString()}
             subtitle={`${Math.floor((new Date().getTime() - userProfile.joinedAt.getTime()) / (1000 * 60 * 60 * 24))}日前`}
             icon={<span className="text-lg">📅</span>}
             variant="default"
           />
-          <StatCard
+          <StatsCard
             title="最終アクティブ"
             value={userProfile.lastActiveAt.toLocaleDateString()}
             subtitle="最後の活動"
             icon={<span className="text-lg">👤</span>}
             variant="default"
           />
-          <StatCard
+          <StatsCard
             title="総ルーティン数"
             value={userProfile.totalRoutines}
             subtitle="作成したルーティン"

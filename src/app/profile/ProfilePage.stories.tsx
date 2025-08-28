@@ -24,6 +24,14 @@ const mockUserProfile = {
   totalXP: 2450,
   currentXP: 450,
   nextLevelXP: 600,
+  streak: 45,
+  longestStreak: 67,
+  totalRoutines: 15,
+  totalExecutions: 342,
+  joinedAt: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000),
+  lastActiveAt: new Date(),
+  createdAt: new Date('2024-01-01'),
+  updatedAt: new Date(),
   badges: [
     {
       id: '1',
@@ -37,9 +45,11 @@ const mockUserProfile = {
         rarity: 'rare' as const,
         category: '実績',
         createdAt: new Date(),
+        updatedAt: new Date(),
       },
       unlockedAt: new Date(),
       isNew: true,
+      createdAt: new Date(),
     },
     {
       id: '2',
@@ -53,9 +63,11 @@ const mockUserProfile = {
         rarity: 'epic' as const,
         category: 'ストリーク',
         createdAt: new Date(),
+        updatedAt: new Date(),
       },
       unlockedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
       isNew: false,
+      createdAt: new Date(),
     },
     {
       id: '3',
@@ -69,9 +81,11 @@ const mockUserProfile = {
         rarity: 'legendary' as const,
         category: 'ストリーク',
         createdAt: new Date(),
+        updatedAt: new Date(),
       },
       unlockedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
       isNew: false,
+      createdAt: new Date(),
     },
     {
       id: '4',
@@ -85,26 +99,21 @@ const mockUserProfile = {
         rarity: 'common' as const,
         category: '時間',
         createdAt: new Date(),
+        updatedAt: new Date(),
       },
       unlockedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
       isNew: false,
+      createdAt: new Date(),
     }
   ],
-  streak: 45,
-  longestStreak: 67,
-  totalRoutines: 15,
-  totalExecutions: 342,
   title: 'ルーティンマスター',
-  joinedAt: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000),
-  lastActiveAt: new Date(),
 };
 
 const mockStreakData = {
   current: 45,
   longest: 67,
-  lastExecutionDate: new Date(),
-  freezesUsed: 2,
-  freezesAvailable: 3,
+  freezeCount: 3,
+  lastActiveDate: new Date(),
 };
 
 export const Default: Story = {
@@ -133,9 +142,8 @@ export const NewUser: Story = {
     streakData: {
       current: 0,
       longest: 0,
-      lastExecutionDate: undefined,
-      freezesUsed: 0,
-      freezesAvailable: 5,
+      freezeCount: 5,
+      lastActiveDate: new Date(),
     },
   },
 };
@@ -163,9 +171,8 @@ export const HighLevel: Story = {
     streakData: {
       current: 156,
       longest: 203,
-      lastExecutionDate: new Date(),
-      freezesUsed: 8,
-      freezesAvailable: 1,
+      freezeCount: 1,
+      lastActiveDate: new Date(),
     },
   },
 };
@@ -186,9 +193,11 @@ export const ManyBadges: Story = {
           rarity: (['common', 'rare', 'epic', 'legendary'] as const)[i % 4],
           category: 'テスト',
           createdAt: new Date(),
+          updatedAt: new Date(),
         },
         unlockedAt: new Date(Date.now() - i * 24 * 60 * 60 * 1000),
         isNew: i < 3,
+        createdAt: new Date(),
       })),
     },
     streakData: mockStreakData,

@@ -2,11 +2,14 @@
 
 import React, { useState } from 'react';
 
-import type { Mission, UserMission, MissionType, MissionDifficulty } from '@/types/gamification';
 
-import { MissionTracker, StatCard } from '@/components/gamification';
+import { TaskCard, StatsCard } from '@/components/gamification';
 import { Card } from '@/components/ui/Card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
+import type { Mission, UserMission } from '@/lib/db/schema';
+
+type MissionType = 'streak' | 'count' | 'duration' | 'variety' | 'consistency';
+type MissionDifficulty = 'easy' | 'medium' | 'hard' | 'legendary';
 
 interface MissionsPageProps {
   missions: Mission[];
@@ -112,25 +115,25 @@ export function MissionsPage({
 
       {/* 統計カード */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard
+        <StatsCard
           title="総ミッション数"
           value={stats.total}
           icon={<span className="text-lg">🎯</span>}
           variant="default"
         />
-        <StatCard
+        <StatsCard
           title="進行中"
           value={stats.active}
           icon={<span className="text-lg">⏳</span>}
           variant="primary"
         />
-        <StatCard
+        <StatsCard
           title="完了済み"
           value={stats.completed}
           icon={<span className="text-lg">✅</span>}
           variant="success"
         />
-        <StatCard
+        <StatsCard
           title="利用可能"
           value={stats.available}
           icon={<span className="text-lg">🆕</span>}
@@ -220,43 +223,55 @@ export function MissionsPage({
         </TabsList>
 
         <TabsContent value="all" className="mt-6">
-          <MissionTracker
-            missions={getFilteredMissions('all')}
-            userMissions={userMissions}
-            onClaimReward={onClaimReward}
-            maxDisplay={20}
-            variant="grid"
-          />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {getFilteredMissions('all').slice(0, 20).map((mission) => (
+              <TaskCard
+                key={mission.id}
+                mission={mission}
+                userMission={userMissions.find(um => um.missionId === mission.id)}
+                onClaim={onClaimReward}
+              />
+            ))}
+          </div>
         </TabsContent>
 
         <TabsContent value="active" className="mt-6">
-          <MissionTracker
-            missions={getFilteredMissions('active')}
-            userMissions={userMissions}
-            onClaimReward={onClaimReward}
-            maxDisplay={20}
-            variant="grid"
-          />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {getFilteredMissions('active').slice(0, 20).map((mission) => (
+              <TaskCard
+                key={mission.id}
+                mission={mission}
+                userMission={userMissions.find(um => um.missionId === mission.id)}
+                onClaim={onClaimReward}
+              />
+            ))}
+          </div>
         </TabsContent>
 
         <TabsContent value="available" className="mt-6">
-          <MissionTracker
-            missions={getFilteredMissions('available')}
-            userMissions={userMissions}
-            onClaimReward={onClaimReward}
-            maxDisplay={20}
-            variant="grid"
-          />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {getFilteredMissions('available').slice(0, 20).map((mission) => (
+              <TaskCard
+                key={mission.id}
+                mission={mission}
+                userMission={userMissions.find(um => um.missionId === mission.id)}
+                onClaim={onClaimReward}
+              />
+            ))}
+          </div>
         </TabsContent>
 
         <TabsContent value="completed" className="mt-6">
-          <MissionTracker
-            missions={getFilteredMissions('completed')}
-            userMissions={userMissions}
-            onClaimReward={onClaimReward}
-            maxDisplay={20}
-            variant="grid"
-          />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {getFilteredMissions('completed').slice(0, 20).map((mission) => (
+              <TaskCard
+                key={mission.id}
+                mission={mission}
+                userMission={userMissions.find(um => um.missionId === mission.id)}
+                onClaim={onClaimReward}
+              />
+            ))}
+          </div>
         </TabsContent>
       </Tabs>
 

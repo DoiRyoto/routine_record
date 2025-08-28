@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/Dialog';
 import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
-import type { Routine } from '@/lib/db/schema';
+import type { Routine, InsertRoutine } from '@/lib/db/schema';
 import { formatDateInUserTimezone } from '@/utils/timezone';
 
 
@@ -16,7 +16,7 @@ interface RoutineListProps {
   userSettings: UserSettingWithTimezone;
   onEdit: (routine: Routine) => void;
   onDelete: (id: string) => void;
-  onAdd: (routine: Omit<Routine, 'id' | 'userId' | 'createdAt' | 'updatedAt'>) => void;
+  onAdd: (routine: Omit<InsertRoutine, 'userId'>) => void;
 }
 
 export default function RoutineList({
@@ -69,11 +69,11 @@ export default function RoutineList({
   };
 
   const handleFormSubmit = (
-    routineData: Omit<Routine, 'id' | 'userId' | 'createdAt' | 'updatedAt'>
+    routineData: Omit<InsertRoutine, 'userId'>
   ) => {
     if (editingRoutine) {
       // 編集時は更新可能なフィールドのみ送信
-      onEdit({ ...editingRoutine, ...routineData });
+      onEdit({ ...editingRoutine, ...routineData } as Routine);
     } else {
       onAdd(routineData);
     }

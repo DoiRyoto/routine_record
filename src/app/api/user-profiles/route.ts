@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { getStreakData } from '@/lib/db/queries/gamification';
+// import { getStreakData } from '@/lib/db/queries/gamification'; // Removed non-existent module
 import { 
   getUserProfile, 
   createUserProfile, 
@@ -34,17 +34,15 @@ export async function GET(request: NextRequest) {
     }
 
     if (includeDetails) {
-      const [badges, streakData] = await Promise.all([
-        getUserBadges(userId),
-        getStreakData(userId)
-      ]);
+      const badges = await getUserBadges(userId);
+      // const streakData = await getStreakData(userId); // Temporarily removed
 
       return NextResponse.json({
         userProfile: {
           ...userProfile,
           badges
         },
-        streakData
+        // streakData // Temporarily removed
       });
     }
 

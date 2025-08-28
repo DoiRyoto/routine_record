@@ -8,11 +8,14 @@ import { executionRecords, routines, type InsertExecutionRecord } from '../schem
 // データベースから取得した生データをExecutionRecord型に変換
 function transformExecutionRecord(rawRecord: {
   id: string;
+  userId: string;
   routineId: string;
   executedAt: Date | string;
   duration: number | null;
   memo: string | null;
   isCompleted: boolean;
+  createdAt: Date;
+  updatedAt: Date;
   routineName?: string | null;
 }): ExecutionRecord {
   return {
@@ -27,11 +30,14 @@ export async function getExecutionRecords(userId: string): Promise<ExecutionReco
   const rawRecords = await db
     .select({
       id: executionRecords.id,
+      userId: executionRecords.userId,
       routineId: executionRecords.routineId,
       executedAt: executionRecords.executedAt,
       duration: executionRecords.duration,
       memo: executionRecords.memo,
       isCompleted: executionRecords.isCompleted,
+      createdAt: executionRecords.createdAt,
+      updatedAt: executionRecords.updatedAt,
       routineName: routines.name,
     })
     .from(executionRecords)
@@ -82,11 +88,14 @@ export async function getExecutionRecordsByDateRange(
   return await db
     .select({
       id: executionRecords.id,
+      userId: executionRecords.userId,
       routineId: executionRecords.routineId,
       executedAt: executionRecords.executedAt,
       duration: executionRecords.duration,
       memo: executionRecords.memo,
       isCompleted: executionRecords.isCompleted,
+      createdAt: executionRecords.createdAt,
+      updatedAt: executionRecords.updatedAt,
       routineName: routines.name,
     })
     .from(executionRecords)

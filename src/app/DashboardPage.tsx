@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { ProfileAvatar, LevelIndicator, XPCounter, StreakCounter } from '@/components/gamification';
+import { UserAvatar, LevelProgressBar, ExperiencePoints, StreakDisplay } from '@/components/gamification';
 import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
 import type { ExecutionRecord, Routine, UserProfile } from '@/lib/db/schema';
 
@@ -41,27 +41,27 @@ export default function DashboardPage({
     updatedAt: new Date(),
   };
 
+
   const mockStreakData = {
     current: 12,
     longest: 28,
-    lastExecutionDate: new Date(),
-    freezesUsed: 1,
-    freezesAvailable: 2,
+    freezeCount: 1,
+    lastActiveDate: new Date(),
   };
 
   return (
     <div className="space-y-6">
       {/* ゲーミフィケーションヘッダー */}
-      <div className="bg-gradient-to-r from-primary-50 via-primary-100 to-xp-50 rounded-xl p-6 border border-primary-200">
+      <div className="bg-gradient-to-r from-primary-50 via-primary-100 to-primary-50 rounded-xl p-6 border border-primary-200">
         <div className="flex flex-col md:flex-row items-center gap-6">
-          <ProfileAvatar 
+          <UserAvatar 
             userProfile={mockUserProfile}
             size="lg"
             showLevel={true}
           />
           
           <div className="flex-1 space-y-4">
-            <LevelIndicator
+            <LevelProgressBar
               level={mockUserProfile.level}
               currentXP={mockUserProfile.currentXP}
               nextLevelXP={mockUserProfile.nextLevelXP}
@@ -70,13 +70,13 @@ export default function DashboardPage({
             />
             
             <div className="flex items-center gap-6">
-              <XPCounter 
+              <ExperiencePoints 
                 value={mockUserProfile.totalXP}
                 variant="badge"
                 size="md"
               />
               
-              <StreakCounter
+              <StreakDisplay
                 streakData={mockStreakData}
                 variant="compact"
                 size="md"

@@ -6,7 +6,20 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/Dialog';
 import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
-import type { CalendarData, ExecutionRecord, Routine } from '@/types/routine';
+import type { ExecutionRecord, Routine } from '@/lib/db/schema';
+
+// Local interface for calendar display
+interface CalendarData {
+  date: string;
+  dayNumber: number;
+  isCurrentMonth: boolean;
+  isToday: boolean;
+  routines: {
+    routineId: string;
+    routineName: string;
+    isCompleted: boolean;
+  }[];
+}
 import { getUserTimezone, isSameDayInUserTimezone } from '@/utils/timezone';
 
 

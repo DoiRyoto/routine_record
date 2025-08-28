@@ -1,4 +1,4 @@
-import type { Routine } from '@/types/routine';
+import type { Routine } from '@/lib/db/schema';
 
 /**
  * 繰り返しパターンに基づいて、特定の日付がミッションの実行日かどうかを判定する

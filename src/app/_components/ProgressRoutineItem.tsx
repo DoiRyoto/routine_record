@@ -23,6 +23,7 @@ export default function ProgressRoutineItem({
 }: ProgressRoutineItemProps) {
   const handleComplete = async () => {
     await onComplete({
+      userId: routine.userId,
       routineId: routine.id,
       executedAt: new Date(),
       duration: null,

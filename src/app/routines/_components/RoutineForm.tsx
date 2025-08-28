@@ -7,11 +7,11 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
-import type { Routine } from '@/lib/db/schema';
+import type { Routine, InsertRoutine } from '@/lib/db/schema';
 
 interface RoutineFormProps {
   routine?: Routine;
-  onSubmit: (routine: Omit<Routine, 'id' | 'userId' | 'createdAt' | 'updatedAt'>) => void;
+  onSubmit: (routine: Omit<InsertRoutine, 'userId'>) => void;
   onCancel: () => void;
 }
 
@@ -54,6 +54,7 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
       ...formData,
       daysOfWeek: JSON.stringify(formData.daysOfWeek),
       startDate: new Date(formData.startDate),
+      deletedAt: null,
     };
     
     onSubmit(submitData);

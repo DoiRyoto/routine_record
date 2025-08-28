@@ -11,54 +11,35 @@ async function getProfileData(userId?: string) {
   }
 
   try {
-    // API Route経由でユーザープロフィール情報を取得
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    // 現在はモックデータを返す（API実装まで）
+    const mockProfile = {
+      userId,
+      level: 1,
+      totalXP: 0,
+      currentXP: 0,
+      nextLevelXP: 100,
+      streak: 0,
+      longestStreak: 0,
+      totalRoutines: 0,
+      totalExecutions: 0,
+      joinedAt: new Date(),
+      lastActiveAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      badges: [], // UserBadgeWithBadge[]
+      title: undefined // optional title
+    };
     
-    const [profileResponse, streakResponse] = await Promise.all([
-      fetch(`${baseUrl}/api/user-profiles?userId=${userId}&includeDetails=true`)
-        .then(res => res.json()),
-      fetch(`${baseUrl}/api/gamification?type=stats&userId=${userId}`)
-        .then(res => res.json())
-    ]);
-
-    // ユーザープロフィールがない場合は作成
-    if (profileResponse.error && profileResponse.error.includes('見つかりません')) {
-      const createResponse = await fetch(`${baseUrl}/api/user-profiles`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'create',
-          userId,
-          level: 1,
-          totalXP: 0,
-          currentXP: 0,
-          nextLevelXP: 100,
-          streak: 0,
-          longestStreak: 0,
-          totalRoutines: 0,
-          totalExecutions: 0
-        })
-      });
-
-      if (!createResponse.ok) {
-        throw new Error('プロフィールの作成に失敗しました');
-      }
-
-      // 作成後に再度取得
-      const newProfileResponse = await fetch(`${baseUrl}/api/user-profiles?userId=${userId}&includeDetails=true`)
-        .then(res => res.json());
-      
-      return {
-        userProfile: newProfileResponse.userProfile,
-        streakData: newProfileResponse.streakData || streakResponse
-      };
-    }
+    const mockStreakData = { 
+      current: 0, 
+      longest: 0, 
+      freezeCount: 0, 
+      lastActiveDate: new Date() 
+    };
 
     return {
-      userProfile: profileResponse.userProfile,
-      streakData: profileResponse.streakData || streakResponse
+      userProfile: mockProfile,
+      streakData: mockStreakData
     };
   } catch (error) {
     console.error('Failed to fetch profile data:', error);
@@ -91,43 +72,13 @@ export default async function Page() {
     );
   }
 
-  const handleAvatarChange = async (avatarUrl: string) => {
-    'use server';
-    if (!user?.id) return;
-    
-    try {
-      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/user-profiles`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'update',
-          userId: user.id,
-          avatarUrl
-        })
-      });
-    } catch (error) {
-      console.error('Failed to update avatar:', error);
-    }
-  };
-
   const handleTitleChange = async (title: string) => {
     'use server';
     if (!user?.id) return;
 
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/user-profiles`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'update',
-          userId: user.id,
-          title
-        })
-      });
+      console.warn('Updating title for user:', { userId: user.id, title });
+      // TODO: API実装後に有効化
     } catch (error) {
       console.error('Failed to update title:', error);
     }
@@ -137,7 +88,6 @@ export default async function Page() {
     <ProfilePage
       userProfile={userProfile}
       streakData={streakData}
-      onAvatarChange={handleAvatarChange}
       onTitleChange={handleTitleChange}
     />
   );

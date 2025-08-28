@@ -70,7 +70,14 @@ export const executionRecordsHandlers = [
   // POST: 実行記録作成
   http.post('/api/execution-records', async ({ request }) => {
     try {
-      const body = await request.json() as any;
+      const body = await request.json() as {
+        routineId: string;
+        userId: string;
+        executedAt?: Date | string;
+        duration?: number;
+        memo?: string;
+        isCompleted?: boolean;
+      };
       const { routineId, userId, executedAt, duration, memo, isCompleted } = body;
 
       // バリデーション
@@ -115,12 +122,19 @@ export const executionRecordsHandlers = [
         );
       }
 
-      const updates = await request.json() as any;
-      if (updates.executedAt) {
-        updates.executedAt = new Date(updates.executedAt);
-      }
+      const updates = await request.json() as {
+        executedAt?: Date | string;
+        duration?: number;
+        memo?: string;
+        isCompleted?: boolean;
+      };
+      
+      const processedUpdates = {
+        ...updates,
+        executedAt: updates.executedAt ? new Date(updates.executedAt) : undefined
+      };
 
-      const updatedRecord = updateMockExecutionRecord(id, updates);
+      const updatedRecord = updateMockExecutionRecord(id, processedUpdates);
 
       if (!updatedRecord) {
         return HttpResponse.json(

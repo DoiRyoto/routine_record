@@ -1,7 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
 import {
-  getMockUserSettings,
   getMockOrCreateUserSettings,
   updateMockUserSettings,
   createMockUserSettings,
@@ -31,8 +30,14 @@ export const userSettingsHandlers = [
   // POST: ユーザー設定作成
   http.post('/api/user-settings', async ({ request }) => {
     try {
-      const body = await request.json() as any;
-      const { userId, theme, language, timeFormat, dailyGoal, weeklyGoal, monthlyGoal, timezone } = body;
+      const body = await request.json() as {
+        userId: string;
+        theme?: 'light' | 'dark' | 'auto';
+        language?: 'ja' | 'en';
+        timeFormat?: '12h' | '24h';
+        timezone?: string;
+      };
+      const { userId, theme, language, timeFormat, timezone } = body;
 
       // バリデーション
       if (!userId) {
@@ -44,12 +49,9 @@ export const userSettingsHandlers = [
 
       const newSettings = createMockUserSettings({
         userId,
-        theme: theme || 'system',
+        theme: theme || 'auto',
         language: language || 'ja',
         timeFormat: timeFormat || '24h',
-        dailyGoal: dailyGoal || 3,
-        weeklyGoal: weeklyGoal || 15,
-        monthlyGoal: monthlyGoal || 60,
         timezone: timezone || 'Asia/Tokyo',
       });
 
@@ -69,7 +71,12 @@ export const userSettingsHandlers = [
   // PUT: ユーザー設定更新
   http.put('/api/user-settings', async ({ request }) => {
     try {
-      const body = await request.json() as any;
+      const body = await request.json() as {
+        userId: string;
+        theme?: 'light' | 'dark' | 'auto';
+        language?: 'ja' | 'en';
+        timeFormat?: '12h' | '24h';
+      };
       const { userId, ...updates } = body;
 
       if (!userId) {
@@ -93,7 +100,7 @@ export const userSettingsHandlers = [
       const filteredUpdates = Object.keys(updates)
         .filter((key) => allowedFields.includes(key))
         .reduce((obj: Record<string, unknown>, key) => {
-          obj[key] = updates[key];
+          obj[key] = (updates as Record<string, unknown>)[key];
           return obj;
         }, {});
 

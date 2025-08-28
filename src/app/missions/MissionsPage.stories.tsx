@@ -26,10 +26,11 @@ const mockMissions = [
     type: 'streak' as const,
     targetValue: 7,
     xpReward: 100,
+    badgeId: null,
     difficulty: 'easy' as const,
     isActive: true,
-    progress: 0,
     createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: '2',
@@ -38,10 +39,11 @@ const mockMissions = [
     type: 'count' as const,
     targetValue: 20,
     xpReward: 150,
+    badgeId: null,
     difficulty: 'medium' as const,
     isActive: true,
-    progress: 0,
     createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: '3',
@@ -53,8 +55,8 @@ const mockMissions = [
     badgeId: 'variety-master',
     difficulty: 'hard' as const,
     isActive: true,
-    progress: 0,
     createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: '4',
@@ -64,10 +66,10 @@ const mockMissions = [
     targetValue: 100,
     xpReward: 1000,
     badgeId: 'legendary-streak',
-    difficulty: 'legendary' as const,
+    difficulty: 'extreme' as const,
     isActive: true,
-    progress: 0,
     createdAt: new Date(),
+    updatedAt: new Date(),
   }
 ];
 
@@ -79,6 +81,10 @@ const mockUserMissions = [
     progress: 3,
     isCompleted: false,
     startedAt: new Date(),
+    completedAt: null,
+    claimedAt: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: '2',
@@ -87,6 +93,10 @@ const mockUserMissions = [
     progress: 12,
     isCompleted: false,
     startedAt: new Date(),
+    completedAt: null,
+    claimedAt: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: '3',
@@ -96,6 +106,9 @@ const mockUserMissions = [
     isCompleted: true,
     startedAt: new Date(),
     completedAt: new Date(),
+    claimedAt: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   }
 ];
 
@@ -124,6 +137,9 @@ export const AllCompleted: Story = {
       isCompleted: true,
       startedAt: new Date(),
       completedAt: new Date(),
+      claimedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     })),
   },
 };
@@ -138,6 +154,10 @@ export const InProgress: Story = {
       progress: Math.floor(mission.targetValue * 0.6),
       isCompleted: false,
       startedAt: new Date(),
+      completedAt: null,
+      claimedAt: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     })),
   },
 };

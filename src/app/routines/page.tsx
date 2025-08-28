@@ -1,3 +1,5 @@
+import { apiClient as typedApiClient } from '@/lib/api-client/index';
+
 import { requireAuth } from '@/lib/auth/server';
 
 import RoutinesPage from './RoutinesPage';
@@ -6,15 +8,15 @@ export default async function RoutinesServerPage() {
   await requireAuth('/routines');
 
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-
-    // サーバーサイドでデータを並行取得
+    // 型安全なAPIクライアントを使用してデータを並行取得
     const [routinesResponse, userSettingsResponse] = await Promise.all([
-      fetch(`${baseUrl}/api/routines`)
-        .then(res => res.json()),
-      fetch(`${baseUrl}/api/user-settings`)
-        .then(res => res.json()),
+      typedApiClient.routines.getAll(),
+      typedApiClient.userSettings.get(),
     ]);
+
+    if (!userSettingsResponse.data) {
+      throw new Error('User settings could not be loaded');
+    }
 
     return (
       <RoutinesPage

@@ -1,47 +1,20 @@
-// Mission System Components
-export { MissionCard } from './MissionCard';
-export { MissionTracker } from './MissionTracker';
+export { UserAvatar } from './UserAvatar';
+export { LevelProgressBar } from './LevelProgressBar';
+export { ExperiencePoints } from './ExperiencePoints';
+export { StreakDisplay } from './StreakDisplay';
+export { StatsCard } from './StatsCard';
+export { TaskCard } from './TaskCard';
+export { ChallengeItem } from './ChallengeItem';
+export { BadgeCollection } from './BadgeCollection';
 
-// Progression Components  
-export { ProgressBar } from './ProgressBar';
-export { LevelIndicator } from './LevelIndicator';
-export { XPCounter } from './XPCounter';
-export { StreakCounter } from './StreakCounter';
+// Type definitions
+export interface StreakData {
+  current: number;
+  longest: number;
+  freezeCount: number;
+  lastActiveDate: Date;
+}
 
-// User Profile Components
-export { ProfileAvatar } from './ProfileAvatar';
-export { BadgeGrid } from './BadgeGrid';
-export { StatCard } from './StatCard';
-
-// Challenge Components
-export { ChallengeCard } from './ChallengeCard';
-
-// Notification Components
-export { AchievementNotification, AchievementNotificationManager } from './AchievementNotification';
-
-// Utility Components
-export { GameTooltip, BadgeTooltip, MissionTooltip } from './GameTooltip';
-
-// Re-export types for convenience
-export type {
-  Mission,
-  UserMission,
-  Badge,
-  UserBadge,
-  UserProfile,
-  Challenge,
-  UserChallenge,
-  Achievement,
-  UserAchievement,
-  XPTransaction,
-  LevelSystem,
-  StreakData,
-  GameNotification,
-  LeaderboardEntry,
-  Leaderboard,
-  GameStats,
-  MissionType,
-  MissionDifficulty,
-  BadgeRarity,
-  ChallengeType
-} from '@/types/gamification';
+export type MissionType = 'streak' | 'count' | 'variety' | 'consistency';
+export type MissionDifficulty = 'easy' | 'medium' | 'hard' | 'extreme';
+export type ChallengeType = 'weekly' | 'monthly' | 'seasonal' | 'special';

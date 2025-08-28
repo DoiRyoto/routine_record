@@ -57,8 +57,8 @@ export const categoriesHandlers = [
   // POST: カテゴリ作成
   http.post('/api/categories', async ({ request }) => {
     try {
-      const body = await request.json() as any;
-      const { name, description, color, userId } = body;
+      const body = await request.json() as { name: string; color?: string; userId: string };
+      const { name, color, userId } = body;
 
       // バリデーション
       if (!name || !userId) {
@@ -71,8 +71,8 @@ export const categoriesHandlers = [
       const newCategory = createMockCategory({
         userId,
         name,
-        description: description || null,
         color: color || '#4CAF50',
+        isDefault: false,
         isActive: true,
       });
 
@@ -101,7 +101,7 @@ export const categoriesHandlers = [
         );
       }
 
-      const updates = await request.json() as any;
+      const updates = await request.json() as { name?: string; color?: string; isActive?: boolean; };
       const updatedCategory = updateMockCategory(id, updates);
 
       if (!updatedCategory) {

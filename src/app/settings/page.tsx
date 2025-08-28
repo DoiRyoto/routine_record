@@ -1,3 +1,5 @@
+import { apiClient as typedApiClient } from '@/lib/api-client/index';
+
 import { requireAuth } from '@/lib/auth/server';
 
 import SettingsPage from './SettingsPage';
@@ -6,11 +8,12 @@ export default async function SettingsServerPage() {
   await requireAuth('/settings');
 
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    // 型安全なAPIクライアントを使用してユーザー設定を取得
+    const userSettingsResponse = await typedApiClient.userSettings.get();
 
-    // サーバーサイドでユーザー設定を取得
-    const userSettingsResponse = await fetch(`${baseUrl}/api/user-settings`)
-      .then(res => res.json());
+    if (!userSettingsResponse.data) {
+      throw new Error('User settings could not be loaded');
+    }
 
     return (
       <SettingsPage

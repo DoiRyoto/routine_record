@@ -4,7 +4,18 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { Card } from '@/components/ui/Card';
 import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
-import type { ExecutionRecord, Routine, StatisticsData } from '@/types/routine';
+import type { ExecutionRecord, Routine } from '@/lib/db/schema';
+
+// Local interface for statistics display
+interface StatisticsData {
+  routineId: string;
+  routineName: string;
+  totalExecutions: number;
+  streak: number;
+  averageDuration?: number;
+  completionRate: number;
+  lastExecuted?: Date;
+}
 import {
   formatDateInUserTimezone,
   getTodayStartInUserTimezone,

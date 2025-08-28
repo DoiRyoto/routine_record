@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from 'react';
 
+import { StatsCard } from '@/components/gamification';
 import { Card } from '@/components/ui/Card';
-import { StatCard } from '@/components/gamification';
+import { apiClient } from '@/lib/api-client/endpoints';
 import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
 import type { ExecutionRecord, Routine, UserProfile, InsertExecutionRecord } from '@/lib/db/schema';
 import {
@@ -29,24 +30,19 @@ export default function Dashboard({ routines, executionRecords, userSettings, us
 
   const addExecutionRecord = async (record: Omit<InsertExecutionRecord, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
-      const response = await fetch('/api/execution-records', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(record),
-      });
-
-      if (!response.ok) {
-        throw new Error('実行記録の作成に失敗しました');
+      // APIリクエスト用にDateを文字列に変換
+      const requestData = {
+        ...record,
+        executedAt: record.executedAt?.toISOString(),
+      };
+      
+      const result = await apiClient.executionRecords.create(requestData);
+      
+      if (result.success && result.data) {
+        setLocalExecutionRecords((prev) => [...prev, result.data!]);
       }
-
-      const result = await response.json();
-      if (result.success) {
-        setLocalExecutionRecords((prev) => [...prev, result.data]);
-      }
-    } catch {
-      // 実行記録の作成に失敗
+    } catch (error) {
+      console.error('実行記録の作成に失敗しました:', error);
     }
   };
 
@@ -219,28 +215,23 @@ export default function Dashboard({ routines, executionRecords, userSettings, us
 
       {/* 統計カード */}
       <div className="grid md:grid-cols-3 gap-4">
-        <StatCard
+        <StatsCard
           title="今日の完了"
           value={todayCompletedRoutineIds.length}
           subtitle={`/ ${todayRoutines.length} ルーティン`}
           icon={<span className="text-lg">✅</span>}
           variant="success"
-          trend={{
-            value: 15,
-            isPositive: true,
-            period: '昨日比'
-          }}
         />
-        <StatCard
+        <StatsCard
           title="週間進捗"
-          value={0}
+          value="0%"
           subtitle="完了率"
           icon={<span className="text-lg">📊</span>}
           variant="primary"
         />
-        <StatCard
+        <StatsCard
           title="月間進捗"
-          value={0}
+          value="0%"
           subtitle="完了率"
           icon={<span className="text-lg">🗓️</span>}
           variant="warning"

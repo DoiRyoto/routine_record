@@ -2,11 +2,14 @@
 
 import React, { useState } from 'react';
 
-import type { Challenge, UserChallenge, ChallengeType } from '@/types/gamification';
+import { ChallengeItem, StatsCard } from '@/components/gamification';
 import { Card } from '@/components/ui/Card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
-import { ChallengeCard, StatCard } from '@/components/gamification';
+import type { Challenge, UserChallenge } from '@/lib/db/schema';
 import { cn } from '@/lib/ui-utils';
+
+
+type ChallengeType = 'weekly' | 'monthly' | 'seasonal' | 'special';
 
 interface ChallengesPageProps {
   challenges: Challenge[];
@@ -92,25 +95,25 @@ export function ChallengesPage({
 
       {/* 統計カード */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard
+        <StatsCard
           title="総チャレンジ数"
           value={stats.total}
           icon={<span className="text-lg">🚀</span>}
           variant="default"
         />
-        <StatCard
+        <StatsCard
           title="アクティブ"
           value={stats.active}
           icon={<span className="text-lg">⚡</span>}
           variant="primary"
         />
-        <StatCard
+        <StatsCard
           title="参加中"
           value={stats.joined}
           icon={<span className="text-lg">🎯</span>}
           variant="warning"
         />
-        <StatCard
+        <StatsCard
           title="完了済み"
           value={stats.completed}
           icon={<span className="text-lg">🏆</span>}
@@ -183,7 +186,7 @@ export function ChallengesPage({
             {getFilteredChallenges(selectedType)
               .filter(c => activeChallenges.includes(c))
               .map((challenge) => (
-                <ChallengeCard
+                <ChallengeItem
                   key={challenge.id}
                   challenge={challenge}
                   userChallenge={userChallengeMap.get(challenge.id)}
@@ -199,7 +202,7 @@ export function ChallengesPage({
             {getFilteredChallenges(selectedType)
               .filter(c => availableChallenges.includes(c))
               .map((challenge) => (
-                <ChallengeCard
+                <ChallengeItem
                   key={challenge.id}
                   challenge={challenge}
                   onJoin={handleJoinChallenge}
@@ -214,7 +217,7 @@ export function ChallengesPage({
             {getFilteredChallenges(selectedType)
               .filter(c => joinedChallenges.includes(c))
               .map((challenge) => (
-                <ChallengeCard
+                <ChallengeItem
                   key={challenge.id}
                   challenge={challenge}
                   userChallenge={userChallengeMap.get(challenge.id)}
@@ -230,7 +233,7 @@ export function ChallengesPage({
             {getFilteredChallenges(selectedType)
               .filter(c => completedChallenges.includes(c))
               .map((challenge) => (
-                <ChallengeCard
+                <ChallengeItem
                   key={challenge.id}
                   challenge={challenge}
                   userChallenge={userChallengeMap.get(challenge.id)}

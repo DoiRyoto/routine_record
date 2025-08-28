@@ -1,4 +1,4 @@
-import type { CatchupPlan, ExecutionRecord, Routine } from '@/types/routine';
+import type { CatchupPlan, ExecutionRecord, Routine } from '@/lib/db/schema';
 
 /**
  * 挽回プランの計算と生成に関するユーティリティ

@@ -57,7 +57,16 @@ export const routinesHandlers = [
   // POST: ルーチン作成
   http.post('/api/routines', async ({ request }) => {
     try {
-      const body = await request.json() as any;
+      const body = await request.json() as {
+        userId: string;
+        name: string;
+        description?: string;
+        category: string;
+        goalType: 'frequency_based' | 'schedule_based';
+        targetCount?: number;
+        targetPeriod?: string;
+        recurrenceType: 'daily' | 'weekly' | 'monthly' | 'custom';
+      };
       const { name, description, category, goalType, targetCount, targetPeriod, recurrenceType, userId } = body;
 
       // バリデーション
@@ -83,8 +92,16 @@ export const routinesHandlers = [
         category,
         goalType,
         recurrenceType,
+        recurrenceInterval: 1,
+        monthlyType: null,
+        dayOfMonth: null,
+        weekOfMonth: null,
+        dayOfWeek: null,
+        daysOfWeek: null,
+        startDate: null,
         targetCount: targetCount || null,
         targetPeriod: targetPeriod || null,
+        deletedAt: null,
         isActive: true,
       });
 
@@ -113,7 +130,12 @@ export const routinesHandlers = [
         );
       }
 
-      const updates = await request.json() as any;
+      const updates = await request.json() as {
+        name?: string;
+        description?: string;
+        category?: string;
+        isActive?: boolean;
+      };
       const updatedRoutine = updateMockRoutine(id, updates);
 
       if (!updatedRoutine) {
