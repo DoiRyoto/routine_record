@@ -1,6 +1,9 @@
-import { apiClient as typedApiClient } from '@/lib/api-client/index';
-
+import { serverTypedGet } from '@/lib/api-client/server-fetch';
 import { requireAuth } from '@/lib/auth/server';
+import {
+  RoutinesGetResponseSchema,
+  UserSettingsGetResponseSchema,
+} from '@/lib/schemas/api-response';
 
 import RoutinesPage from './RoutinesPage';
 
@@ -8,10 +11,10 @@ export default async function RoutinesServerPage() {
   await requireAuth('/routines');
 
   try {
-    // 型安全なAPIクライアントを使用してデータを並行取得
+    // API Routesを使用してデータを並行取得
     const [routinesResponse, userSettingsResponse] = await Promise.all([
-      typedApiClient.routines.getAll(),
-      typedApiClient.userSettings.get(),
+      serverTypedGet('/api/routines', RoutinesGetResponseSchema),
+      serverTypedGet('/api/user-settings', UserSettingsGetResponseSchema),
     ]);
 
     if (!userSettingsResponse.data) {

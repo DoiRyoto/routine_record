@@ -229,7 +229,31 @@ await onComplete({
 3. any型の使用を禁止し、具体的な型を指定
 4. 型エラー発生時は型定義の見直しから始める
 
-## 10. 品質チェック
+## 10. アーキテクチャ分離ルール
+
+### Page Components と Database の分離
+- **Page Components から直接データベースクエリを呼び出してはいけない**
+- **絶対に`lib/db/queries`を Page Component で直接 import・使用禁止**
+- Page Components は必ずAPI Routes経由でデータを取得する
+- サーバーサイドでは`serverTypedGet`を使用してcookieを含めた認証付きリクエストを実行
+
+### 正しいデータフェッチパターン
+```typescript
+// ❌ 間違い - Page ComponentでDBクエリを直接呼び出し
+import { getRoutines } from '@/lib/db/queries/routines';
+const routines = await getRoutines(user.id);
+
+// ✅ 正しい - API Routes経由でデータ取得
+import { serverTypedGet } from '@/lib/api-client/server-fetch';
+const response = await serverTypedGet('/api/routines', RoutinesGetResponseSchema);
+```
+
+### 責任分離の徹底
+- **Page Components**: レンダリング、初期データの取得（API Routes経由）
+- **API Routes**: 認証、バリデーション、ビジネスロジック、DB操作
+- **Database Queries**: 純粋なデータ操作、型安全性
+
+## 11. 品質チェック
 
 ### 実装完了時に必ず実行
 1. `npm run type-check` - TypeScript型チェック
@@ -240,4 +264,5 @@ await onComplete({
 - 型エラーがないことを確認
 - **Lintエラー・警告が0個であることを確認**
 - ts-ignore系コメントが存在しないことを確認
+- Page ComponentでDBクエリ直接呼び出しがないことを確認
 - 基本的な動作確認を実施

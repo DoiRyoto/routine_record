@@ -1,6 +1,10 @@
-import { apiClient as typedApiClient } from '@/lib/api-client/index';
-
+import { serverTypedGet } from '@/lib/api-client/server-fetch';
 import { requireAuth } from '@/lib/auth/server';
+import {
+  RoutinesGetResponseSchema,
+  ExecutionRecordsGetResponseSchema,
+  UserSettingsGetResponseSchema,
+} from '@/lib/schemas/api-response';
 
 import StatisticsPage from './StatisticsPage';
 
@@ -8,11 +12,11 @@ export default async function StatisticsServerPage() {
   await requireAuth('/statistics');
 
   try {
-    // 型安全なAPIクライアントを使用してデータを並行取得
+    // API Routesを使用してデータを並行取得
     const [routinesResponse, executionRecordsResponse, userSettingsResponse] = await Promise.all([
-      typedApiClient.routines.getAll(),
-      typedApiClient.executionRecords.getAll(),
-      typedApiClient.userSettings.get(),
+      serverTypedGet('/api/routines', RoutinesGetResponseSchema),
+      serverTypedGet('/api/execution-records', ExecutionRecordsGetResponseSchema),
+      serverTypedGet('/api/user-settings', UserSettingsGetResponseSchema),
     ]);
 
     if (!userSettingsResponse.data) {
