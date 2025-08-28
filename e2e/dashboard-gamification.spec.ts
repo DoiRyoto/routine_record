@@ -20,7 +20,6 @@ test.describe('Dashboard with Gamification', () => {
       // プロフィールが無い場合は基本ページが表示されることを確認
       const heading = page.locator('h1');
       await expect(heading).toBeVisible();
-      console.log('User profile not available - gamification header not shown');
     }
   });
 
@@ -33,9 +32,8 @@ test.describe('Dashboard with Gamification', () => {
       await expect(levelIndicator.locator('[role="progressbar"]')).toBeVisible();
       
       // 現在XPと次レベルまでのXPの確認
-      await expect(levelIndicator.locator('text=/\d+.*\/.*\d+.*XP/')).toBeVisible();
+      await expect(levelIndicator.locator('text=/\\d+.*\/.*\\d+.*XP/')).toBeVisible();
     } else {
-      console.log('Level indicator not visible - user profile may not be available');
     }
   });
 
@@ -45,12 +43,11 @@ test.describe('Dashboard with Gamification', () => {
     
     if (await xpCounter.isVisible()) {
       // 総XP表示の確認
-      await expect(xpCounter.locator('text=/\d+.*XP/')).toBeVisible();
+      await expect(xpCounter.locator('text=/\\d+.*XP/')).toBeVisible();
       
       // XPアイコンの確認
       await expect(xpCounter.locator('svg')).toBeVisible();
     } else {
-      console.log('XP counter not visible - user profile may not be available');
     }
   });
 
@@ -60,12 +57,11 @@ test.describe('Dashboard with Gamification', () => {
     
     if (await streakCounter.isVisible()) {
       // ストリーク数の確認
-      await expect(streakCounter.locator('text=/\d+日連続/')).toBeVisible();
+      await expect(streakCounter.locator('text=/\\d+日連続/')).toBeVisible();
       
       // フレームアイコンの確認
       await expect(streakCounter.locator('svg')).toBeVisible();
     } else {
-      console.log('Streak counter not visible - user profile may not be available');
     }
   });
 
@@ -76,7 +72,6 @@ test.describe('Dashboard with Gamification', () => {
     // 基本的な要素の確認（h1やメインコンテンツ）
     const heading = page.locator('h1');
     const headingText = await heading.textContent();
-    console.log('Page heading:', headingText);
     
     // h1が存在することを確認（内容は問わない）
     await expect(heading).toBeVisible();
@@ -92,18 +87,16 @@ test.describe('Dashboard with Gamification', () => {
                         await dashboardSection.isVisible();
     
     if (sectionFound) {
-      console.log('Main content sections found');
       
       // ルーティンアイテムの確認（存在する場合）
       const routineItems = page.locator('[data-testid="routine-item"]');
       const itemCount = await routineItems.count();
       
       if (itemCount > 0) {
-        console.log(`Found ${itemCount} routine items`);
         
         const firstRoutine = routineItems.first();
         // XP表示の確認（存在する場合）
-        const xpDisplay = firstRoutine.locator('text=/\+\d+.*XP/');
+        const xpDisplay = firstRoutine.locator('text=/\\+\\d+.*XP/');
         if (await xpDisplay.isVisible()) {
           await expect(xpDisplay).toBeVisible();
         }
@@ -116,7 +109,6 @@ test.describe('Dashboard with Gamification', () => {
         }
       }
     } else {
-      console.log('No main content sections visible - checking overall page state');
     }
   });
 
@@ -130,7 +122,7 @@ test.describe('Dashboard with Gamification', () => {
         await expect(progressRoutines.first().locator('[role="progressbar"]')).toBeVisible();
         
         // 完了時の報酬情報の確認
-        await expect(progressRoutines.first().locator('text=/報酬.*\+\d+.*XP/')).toBeVisible();
+        await expect(progressRoutines.first().locator('text=/報酬.*\\+\\d+.*XP/')).toBeVisible();
       }
     }
   });
@@ -141,7 +133,7 @@ test.describe('Dashboard with Gamification', () => {
     
     if (await catchupSection.isVisible()) {
       // 提案にXPボーナス情報があることを確認
-      await expect(catchupSection.locator('text=/ボーナス.*\+.*XP/')).toBeVisible();
+      await expect(catchupSection.locator('text=/ボーナス.*\\+.*XP/')).toBeVisible();
       
       // 提案アイテムの確認
       const suggestionItems = catchupSection.locator('[data-testid="suggestion-item"]');
@@ -225,7 +217,7 @@ test.describe('Dashboard with Gamification', () => {
     }
     
     // XP獲得フィードバックの確認
-    await expect(page.locator('text=/\+\d+.*XP/')).toBeVisible();
+    await expect(page.locator('text=/\\+\\d+.*XP/')).toBeVisible();
     
     // XPカウンターの更新確認
     await expect(page.locator('[data-testid="xp-counter"]')).not.toHaveText(initialXP || '');
@@ -246,7 +238,6 @@ test.describe('Dashboard with Gamification', () => {
     
     // 各要素の存在確認（条件付き）
     if (await profileAvatar.isVisible()) {
-      console.log('Gamification elements visible on mobile');
       
       // レベルインジケーターも確認
       if (await levelIndicator.isVisible()) {
@@ -263,7 +254,6 @@ test.describe('Dashboard with Gamification', () => {
         await expect(streakCounter).toBeVisible();
       }
     } else {
-      console.log('Gamification elements not visible on mobile - user profile may not be available');
     }
   });
 
@@ -290,7 +280,6 @@ test.describe('Dashboard with Gamification', () => {
       await expect(userLevel).toHaveText(initialLevel || '');
       await expect(xpCounter).toHaveText(initialXP || '');
     } else {
-      console.log('Gamification elements not available for state persistence test');
     }
   });
 

@@ -32,8 +32,8 @@ test.describe.skip('Challenges Page - SKIPPED (Feature Not Implemented)', () => 
     // チャレンジ詳細の確認
     const firstChallenge = challengeCards.first();
     await expect(firstChallenge.locator('text=新年スタートダッシュ')).toBeVisible();
-    await expect(firstChallenge.locator('text=/参加者.*\d+人/')).toBeVisible();
-    await expect(firstChallenge.locator('text=/期限.*\d+日/')).toBeVisible();
+    await expect(firstChallenge.locator('text=/参加者.*\\d+人/')).toBeVisible();
+    await expect(firstChallenge.locator('text=/期限.*\\d+日/')).toBeVisible();
   });
 
   test('should filter challenges by type', async ({ page }) => {
@@ -57,10 +57,10 @@ test.describe.skip('Challenges Page - SKIPPED (Feature Not Implemented)', () => 
     await expect(joinedChallenge.locator('[role="progressbar"]')).toBeVisible();
     
     // 進捗率の確認
-    await expect(joinedChallenge.locator('text=/\d+%/')).toBeVisible();
+    await expect(joinedChallenge.locator('text=/\\d+%/')).toBeVisible();
     
     // ランキング表示の確認
-    await expect(joinedChallenge.locator('text=/順位.*\d+位/')).toBeVisible();
+    await expect(joinedChallenge.locator('text=/順位.*\\d+位/')).toBeVisible();
   });
 
   test('should handle challenge joining', async ({ page }) => {
@@ -122,10 +122,10 @@ test.describe.skip('Challenges Page - SKIPPED (Feature Not Implemented)', () => 
   test('should display user rank in joined challenges', async ({ page }) => {
     // 自分の順位が表示されることを確認
     await expect(page.locator('text=あなたの順位')).toBeVisible();
-    await expect(page.locator('text=/\d+位/')).toBeVisible();
+    await expect(page.locator('text=/\\d+位/')).toBeVisible();
     
     // 自分のプログレス情報の確認
-    await expect(page.locator('text=/進捗.*\d+/')).toBeVisible();
+    await expect(page.locator('text=/進捗.*\\d+/')).toBeVisible();
   });
 
   test('should show challenge rewards and requirements', async ({ page }) => {
@@ -210,10 +210,10 @@ test.describe.skip('Challenges Page - SKIPPED (Feature Not Implemented)', () => 
 
   test('should show challenge duration and deadlines', async ({ page }) => {
     // チャレンジの期間情報の確認
-    await expect(page.locator('text=/\d+日残り/')).toBeVisible();
+    await expect(page.locator('text=/\\d+日残り/')).toBeVisible();
     
     // 開始・終了日の表示確認
     const challengeCard = page.locator('[data-testid="challenge-card"]').first();
-    await expect(challengeCard.locator('text=/期間:.*\d{4}/')).toBeVisible();
+    await expect(challengeCard.locator('text=/期間:.*\\d{4}/')).toBeVisible();
   });
 });
