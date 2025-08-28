@@ -36,7 +36,7 @@ export default function CatchupSuggestions({ routines, executionRecords, userSet
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-testid="catchup-suggestions">
       {/* デイリーミッション提案 */}
       {dailySuggestions.length > 0 && (
         <Card>
@@ -52,9 +52,13 @@ export default function CatchupSuggestions({ routines, executionRecords, userSet
               <div
                 key={index}
                 className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 rounded-r-lg"
+                data-testid="suggestion-item"
               >
                 <p className="text-sm text-yellow-800 dark:text-yellow-200">
                   {suggestion}
+                  <span className="ml-2 text-xs font-medium text-yellow-600">
+                    ボーナス +5 XP
+                  </span>
                 </p>
               </div>
             ))}

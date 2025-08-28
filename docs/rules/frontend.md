@@ -281,7 +281,34 @@ const response = await serverTypedGet('/api/routines', RoutinesGetResponseSchema
 - **API Routes**: 認証、バリデーション、ビジネスロジック、DB操作
 - **Database Queries**: 純粋なデータ操作、型安全性
 
-## 11. 品質チェック
+## 11. E2Eテスト実装ルール
+
+### data-testid属性の必須追加
+- 全てのテスト対象要素に`data-testid`属性を追加
+- ケバブケース（kebab-case）で命名
+- 詳細なルールは`docs/rules/e2e-testing.md`を参照
+
+### テスト実装の原則
+- **実装済み機能のみテストする**
+- 未実装機能は`test.skip()`でスキップし、TODOコメント追加
+- 実装完了時にスキップを解除
+
+### data-testid命名例
+```typescript
+// ゲーミフィケーション要素
+'gamification-header'    // ゲーミフィケーションヘッダー
+'profile-avatar'         // プロフィールアバター
+'user-level'            // ユーザーレベル
+'level-indicator'       // レベルプログレスバー
+'xp-counter'            // XPカウンター
+'streak-counter'        // ストリークカウンター
+
+// ルーティン要素
+'routine-item'          // ルーティンアイテム
+'progress-routine-item' // 進捗ルーティンアイテム
+```
+
+## 12. 品質チェック
 
 ### 実装完了時に必ず実行
 1. `npm run type-check` - TypeScript型チェック
@@ -294,3 +321,4 @@ const response = await serverTypedGet('/api/routines', RoutinesGetResponseSchema
 - ts-ignore系コメントが存在しないことを確認
 - Page ComponentでDBクエリ直接呼び出しがないことを確認
 - 基本的な動作確認を実施
+- **追加したdata-testid属性が正しく機能することを確認**

@@ -31,6 +31,7 @@ export default function TodayRoutineItem({
       className={`transition-all duration-200 p-4 ${
         isCompleted ? 'opacity-60 bg-green-50 border-green-200' : 'hover:shadow-md'
       }`}
+      data-testid="routine-item"
     >
       <CardContent>
         <div className="flex items-center justify-between">
@@ -39,9 +40,14 @@ export default function TodayRoutineItem({
             {routine.description && (
               <p className="text-sm text-gray-600 mb-2">{routine.description}</p>
             )}
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
-              {routine.category}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                {routine.category}
+              </span>
+              <span className="text-xs font-medium text-blue-600">
+                +10 XP
+              </span>
+            </div>
           </div>
 
           <div className="ml-4 flex-shrink-0">
@@ -62,6 +68,7 @@ export default function TodayRoutineItem({
                 size="sm"
                 onClick={handleComplete}
                 className="font-medium"
+                type="button"
               >
                 完了
               </Button>

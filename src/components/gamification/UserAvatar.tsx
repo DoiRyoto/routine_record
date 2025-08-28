@@ -24,15 +24,18 @@ export function UserAvatar({
   };
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className}`} data-testid="profile-avatar">
       <Avatar className={sizeClasses[size]}>
         <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold">
           U
         </div>
       </Avatar>
       {showLevel && (
-        <div className="absolute -bottom-1 -right-1 bg-yellow-500 text-white text-xs font-bold rounded-full px-2 py-1 min-w-[24px] text-center">
-          {userProfile.level}
+        <div 
+          className="absolute -bottom-1 -right-1 bg-yellow-500 text-white text-xs font-bold rounded-full px-2 py-1 min-w-[24px] text-center"
+          data-testid="user-level"
+        >
+          Lv.{userProfile.level}
         </div>
       )}
     </div>

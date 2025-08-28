@@ -28,7 +28,7 @@ export function LevelProgressBar({
   };
 
   return (
-    <div className={`space-y-2 ${className}`}>
+    <div className={`space-y-2 ${className}`} data-testid="level-indicator">
       <div className="flex justify-between items-center">
         <span className="text-sm font-medium">Level {level}</span>
         <span className="text-xs text-gray-500">
@@ -38,6 +38,7 @@ export function LevelProgressBar({
       <Progress 
         value={progress} 
         className={sizeClasses[size]}
+        role="progressbar"
       />
       <div className="text-xs text-gray-500">
         Total XP: {totalXP.toLocaleString()}

@@ -1,6 +1,6 @@
 import { badgesHandlers } from './badges';
-import { categoriesHandlers } from './categories';
 import { catchupPlansHandlers } from './catchup-plans';
+import { categoriesHandlers } from './categories';
 import { challengesHandlers } from './challenges';
 import { executionRecordsHandlers } from './execution-records';
 import { gameNotificationsHandlers } from './game-notifications';
@@ -16,8 +16,8 @@ import { xpTransactionsHandlers } from './xp-transactions';
 // 全てのハンドラーを統合
 export const allHandlers = [
   ...badgesHandlers,
-  ...categoriesHandlers,
   ...catchupPlansHandlers,
+  ...categoriesHandlers,
   ...challengesHandlers,
   ...executionRecordsHandlers,
   ...gameNotificationsHandlers,
@@ -34,8 +34,8 @@ export const allHandlers = [
 // 個別export（必要に応じて）
 export {
   badgesHandlers,
-  categoriesHandlers,
   catchupPlansHandlers,
+  categoriesHandlers,
   challengesHandlers,
   executionRecordsHandlers,
   gameNotificationsHandlers,

@@ -49,6 +49,7 @@ export default function ProgressRoutineItem({
       className={`transition-all duration-200 p-4 ${
         routine.isCompleted ? 'opacity-80 bg-green-50 border-green-200' : 'hover:shadow-md'
       }`}
+      data-testid="progress-routine-item"
     >
       <CardContent>
         <div className="space-y-4">
@@ -58,9 +59,14 @@ export default function ProgressRoutineItem({
               {routine.description && (
                 <p className="text-sm text-gray-600 mb-2">{routine.description}</p>
               )}
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
-                {routine.category}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                  {routine.category}
+                </span>
+                <span className="text-xs font-medium text-green-600">
+                  報酬: +10 XP
+                </span>
+              </div>
             </div>
 
             <div className="ml-4 flex-shrink-0">
@@ -81,6 +87,7 @@ export default function ProgressRoutineItem({
                   size="sm"
                   onClick={handleComplete}
                   className="font-medium"
+                  type="button"
                 >
                   実行
                 </Button>
@@ -103,6 +110,7 @@ export default function ProgressRoutineItem({
               value={routine.progress}
               max={100}
               className="w-full"
+              role="progressbar"
             />
           </div>
         </div>

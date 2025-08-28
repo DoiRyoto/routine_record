@@ -48,7 +48,7 @@ export default function DashboardPage({
   return (
     <div className="space-y-6">
       {/* ゲーミフィケーションヘッダー */}
-      <div className="bg-gradient-to-r from-primary-50 via-primary-100 to-primary-50 rounded-xl p-6 border border-primary-200">
+      <div className="bg-gradient-to-r from-primary-50 via-primary-100 to-primary-50 rounded-xl p-6 border border-primary-200" data-testid="gamification-header">
         <div className="flex flex-col md:flex-row items-center gap-6">
           <UserAvatar 
             userProfile={userProfile}
