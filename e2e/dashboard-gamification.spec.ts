@@ -32,7 +32,7 @@ test.describe('Dashboard with Gamification', () => {
       await expect(levelIndicator.locator('[role="progressbar"]')).toBeVisible();
       
       // 現在XPと次レベルまでのXPの確認
-      await expect(levelIndicator.locator('text=/\\d+.*\/.*\\d+.*XP/')).toBeVisible();
+      await expect(levelIndicator.locator('text=/\\d+.*\\/.*\\d+.*XP/')).toBeVisible();
     } else {
     }
   });
@@ -71,7 +71,6 @@ test.describe('Dashboard with Gamification', () => {
     
     // 基本的な要素の確認（h1やメインコンテンツ）
     const heading = page.locator('h1');
-    const headingText = await heading.textContent();
     
     // h1が存在することを確認（内容は問わない）
     await expect(heading).toBeVisible();

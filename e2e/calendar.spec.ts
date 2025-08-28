@@ -117,7 +117,6 @@ test.describe('Calendar Page', () => {
 
   test('should handle calendar view switching if available', async ({ page }) => {
     // ビュー切り替え（月、週、日）の確認
-    const viewButtons = page.locator('button:has-text("月"), button:has-text("週"), button:has-text("日")');
     const monthView = page.locator('button:has-text("月")');
     
     if (await monthView.isVisible()) {

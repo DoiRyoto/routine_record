@@ -127,10 +127,7 @@ test.describe.skip('Profile Page - SKIPPED (Feature Not Implemented)', () => {
     // 実際のエラーハンドリング実装に応じて調整
   });
 
-  test('should update profile data in real-time', async ({ page }) => {
-    // 初期データの確認
-    const initialXP = await page.locator('[data-testid="user-xp"]').textContent();
-    
+  test('should update profile data in real-time', async ({ page: _page }) => {
     // XP追加アクション（他のページでの活動をシミュレート）
     // 実際の実装に応じてAPIコールやユーザーアクションを実行
     

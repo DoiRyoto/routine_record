@@ -15,9 +15,12 @@ export default function Header() {
 
   const navigationItems = [
     { href: '/', label: 'ダッシュボード', icon: '🏠' },
-    { href: '/routines', label: 'ミッション', icon: '🎯' },
+    { href: '/routines', label: 'ルーティン', icon: '📋' },
+    { href: '/missions', label: 'ミッション', icon: '🎯' },
+    { href: '/challenges', label: 'チャレンジ', icon: '🏆' },
     { href: '/calendar', label: 'カレンダー', icon: '📅' },
     { href: '/statistics', label: '統計', icon: '📊' },
+    { href: '/profile', label: 'プロフィール', icon: '👤' },
     { href: '/settings', label: '設定', icon: '⚙️' },
   ] as const;
 
@@ -29,6 +32,7 @@ export default function Header() {
             <Link
               href="/"
               className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+              data-testid="header-logo-link"
             >
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">M</span>
@@ -39,7 +43,7 @@ export default function Header() {
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center space-x-1">
+          <nav className="hidden md:flex items-center space-x-1" data-testid="main-navigation">
             {navigationItems.map((item) => (
               <Link
                 key={item.href}
@@ -49,6 +53,7 @@ export default function Header() {
                     ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 shadow-sm'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800'
                 }`}
+                data-testid={`nav-link-${item.href === '/' ? 'dashboard' : item.href.slice(1)}`}
               >
                 <span className="text-sm">{item.icon}</span>
                 <span>{item.label}</span>
@@ -61,7 +66,7 @@ export default function Header() {
               <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
                 {user?.email?.split('@')[0]}
               </span>
-              <Button onClick={signOut} variant="secondary" size="sm" className="text-xs">
+              <Button onClick={signOut} variant="secondary" size="sm" className="text-xs" data-testid="signout-button">
                 サインアウト
               </Button>
             </div>
@@ -70,6 +75,7 @@ export default function Header() {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors"
               aria-label="メニューを開く"
+              data-testid="mobile-menu-toggle"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -84,7 +90,7 @@ export default function Header() {
         </div>
 
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 dark:border-gray-700 py-3">
+          <div className="md:hidden border-t border-gray-200 dark:border-gray-700 py-3" data-testid="mobile-menu">
             <nav className="flex flex-col space-y-1">
               {navigationItems.map((item) => (
                 <Link
@@ -96,6 +102,7 @@ export default function Header() {
                       ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800'
                   }`}
+                  data-testid={`mobile-nav-link-${item.href === '/' ? 'dashboard' : item.href.slice(1)}`}
                 >
                   <span className="text-base">{item.icon}</span>
                   <span>{item.label}</span>
@@ -113,6 +120,7 @@ export default function Header() {
                   variant="secondary"
                   size="sm"
                   className="w-full mt-2 text-xs"
+                  data-testid="mobile-signout-button"
                 >
                   サインアウト
                 </Button>
