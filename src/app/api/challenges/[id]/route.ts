@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { leaveChallenge, updateChallengeProgress } from '@/lib/db/queries/challenges';
+import { leaveChallenge, updateChallengeProgress, getChallengeLeaderboard } from '@/lib/db/queries/challenges';
 
 export async function DELETE(
   request: NextRequest,
@@ -32,6 +32,39 @@ export async function DELETE(
 
     return NextResponse.json(
       { error: 'チャレンジからの脱退に失敗しました' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id: challengeId } = await params;
+    const { searchParams } = new URL(request.url);
+    const action = searchParams.get('action');
+
+    if (action === 'leaderboard') {
+      const leaderboard = await getChallengeLeaderboard(challengeId);
+      return NextResponse.json(leaderboard);
+    }
+
+    // その他のGET操作があればここに追加
+    return NextResponse.json({ error: '不正なアクションです' }, { status: 400 });
+  } catch (error) {
+    console.error('GET /api/challenges/[id] error:', error);
+    
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: 'チャレンジの取得に失敗しました' },
       { status: 500 }
     );
   }

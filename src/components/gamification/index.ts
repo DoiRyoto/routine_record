@@ -6,6 +6,7 @@ export { StatsCard } from './StatsCard';
 export { TaskCard } from './TaskCard';
 export { ChallengeItem } from './ChallengeItem';
 export { BadgeCollection } from './BadgeCollection';
+export { Leaderboard } from './Leaderboard';
 
 // Type definitions
 export interface StreakData {

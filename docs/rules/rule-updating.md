@@ -25,6 +25,9 @@
 ## ルール文書の種類
 - `frontend.md`: フロントエンド実装ルール
 - `msw-mock-system.md`: MSWモックシステムルール
+- `styling-rule.md`: スタイリングルール
+- `e2e-testing.md`: E2Eテストルール
+- `font-optimization.md`: フォント最適化ルール
 - `rule-updating.md`: このファイル（メタルール）
 - その他: 必要に応じて追加
 

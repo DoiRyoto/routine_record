@@ -11,9 +11,18 @@ import { cn } from '@/lib/ui-utils';
 
 type ChallengeType = 'weekly' | 'monthly' | 'seasonal' | 'special';
 
+interface LeaderboardEntry extends UserChallenge {
+  user: {
+    id: string;
+    displayName: string | null;
+    avatarUrl: string | null;
+  };
+}
+
 interface ChallengesPageProps {
   challenges: Challenge[];
   userChallenges: UserChallenge[];
+  currentUserId?: string;
   onJoinChallenge?: (challengeId: string) => void;
   onLeaveChallenge?: (challengeId: string) => void;
 }
@@ -28,6 +37,7 @@ const typeLabels = {
 export function ChallengesPage({
   challenges,
   userChallenges,
+  currentUserId,
   onJoinChallenge,
   onLeaveChallenge
 }: ChallengesPageProps) {
@@ -44,6 +54,19 @@ export function ChallengesPage({
       onLeaveChallenge(challengeId);
     } else {
       console.warn('Leaving challenge:', challengeId);
+    }
+  };
+
+  const handleShowLeaderboard = async (challengeId: string): Promise<LeaderboardEntry[]> => {
+    try {
+      const response = await fetch(`/api/challenges/${challengeId}?action=leaderboard`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch leaderboard');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching leaderboard:', error);
+      return [];
     }
   };
   const [selectedType, setSelectedType] = useState<ChallengeType | 'all'>('all');
@@ -210,8 +233,10 @@ export function ChallengesPage({
                     key={challenge.id}
                     challenge={challenge}
                     userChallenge={userChallengeMap.get(challenge.id)}
+                    currentUserId={currentUserId}
                     onJoin={handleJoinChallenge}
                     onLeave={handleLeaveChallenge}
+                    onShowLeaderboard={handleShowLeaderboard}
                   />
                 ))}
             </div>
@@ -241,8 +266,10 @@ export function ChallengesPage({
                     key={challenge.id}
                     challenge={challenge}
                     userChallenge={userChallengeMap.get(challenge.id)}
+                    currentUserId={currentUserId}
                     onJoin={handleJoinChallenge}
                     onLeave={handleLeaveChallenge}
+                    onShowLeaderboard={handleShowLeaderboard}
                   />
                 ))}
             </div>
@@ -257,8 +284,10 @@ export function ChallengesPage({
                     key={challenge.id}
                     challenge={challenge}
                     userChallenge={userChallengeMap.get(challenge.id)}
+                    currentUserId={currentUserId}
                     onJoin={handleJoinChallenge}
                     onLeave={handleLeaveChallenge}
+                    onShowLeaderboard={handleShowLeaderboard}
                   />
                 ))}
             </div>

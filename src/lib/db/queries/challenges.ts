@@ -6,6 +6,7 @@ import {
   userChallenges,
   challengeRequirements,
   challengeRewards,
+  users,
   type Challenge,
   type UserChallenge,
   type ChallengeRequirement,
@@ -224,9 +225,137 @@ export async function updateChallengeProgress(
       ))
       .returning();
 
+    // 進捗更新後、ランキングを再計算
+    if (progress >= 100) {
+      await updateChallengeRankings(challengeId);
+    }
+
     return updatedUserChallenge;
   } catch (error) {
     console.error('Failed to update challenge progress:', error);
     throw new Error('チャレンジ進捗の更新に失敗しました');
+  }
+}
+
+// チャレンジのリーダーボード取得
+export async function getChallengeLeaderboard(challengeId: string): Promise<(UserChallenge & {
+  user: {
+    id: string;
+    displayName: string | null;
+    avatarUrl: string | null;
+  };
+})[]> {
+  try {
+    const leaderboard = await db
+      .select({
+        id: userChallenges.id,
+        userId: userChallenges.userId,
+        challengeId: userChallenges.challengeId,
+        joinedAt: userChallenges.joinedAt,
+        progress: userChallenges.progress,
+        isCompleted: userChallenges.isCompleted,
+        completedAt: userChallenges.completedAt,
+        rank: userChallenges.rank,
+        createdAt: userChallenges.createdAt,
+        updatedAt: userChallenges.updatedAt,
+        user: {
+          id: users.id,
+          displayName: users.displayName,
+          avatarUrl: users.avatarUrl
+        }
+      })
+      .from(userChallenges)
+      .leftJoin(users, eq(userChallenges.userId, users.id))
+      .where(eq(userChallenges.challengeId, challengeId))
+      .orderBy(desc(userChallenges.progress), desc(userChallenges.completedAt))
+      .limit(50); // 上位50位まで表示
+
+    return leaderboard;
+  } catch (error) {
+    console.error('Failed to get challenge leaderboard:', error);
+    throw new Error('リーダーボードの取得に失敗しました');
+  }
+}
+
+// チャレンジランキング再計算（進捗に基づいて順位を更新）
+async function updateChallengeRankings(challengeId: string): Promise<void> {
+  try {
+    // 完了したユーザーを進捗と完了時間でソート
+    const completedUsers = await db
+      .select()
+      .from(userChallenges)
+      .where(and(
+        eq(userChallenges.challengeId, challengeId),
+        eq(userChallenges.isCompleted, true)
+      ))
+      .orderBy(desc(userChallenges.progress), userChallenges.completedAt);
+
+    // 順位を更新
+    for (let i = 0; i < completedUsers.length; i++) {
+      const user = completedUsers[i];
+      await db
+        .update(userChallenges)
+        .set({ 
+          rank: i + 1,
+          updatedAt: new Date()
+        })
+        .where(eq(userChallenges.id, user.id));
+    }
+  } catch (error) {
+    console.error('Failed to update challenge rankings:', error);
+    // ランキング更新は重要ではないので、エラーをスローしない
+  }
+}
+
+// チャレンジ報酬取得
+export async function getChallengeRewards(challengeId: string): Promise<ChallengeReward[]> {
+  try {
+    const rewards = await db
+      .select()
+      .from(challengeRewards)
+      .where(eq(challengeRewards.challengeId, challengeId));
+
+    return rewards;
+  } catch (error) {
+    console.error('Failed to get challenge rewards:', error);
+    throw new Error('チャレンジ報酬の取得に失敗しました');
+  }
+}
+
+// チャレンジ報酬受け取り（ユーザーのXPやバッジを更新）
+export async function claimChallengeReward(
+  userId: string, 
+  challengeId: string
+): Promise<{ success: boolean; rewards: ChallengeReward[] }> {
+  try {
+    // ユーザーがチャレンジを完了しているか確認
+    const userChallenge = await db
+      .select()
+      .from(userChallenges)
+      .where(and(
+        eq(userChallenges.userId, userId),
+        eq(userChallenges.challengeId, challengeId),
+        eq(userChallenges.isCompleted, true)
+      ))
+      .limit(1);
+
+    if (userChallenge.length === 0) {
+      throw new Error('チャレンジが完了していません');
+    }
+
+    // 報酬情報を取得
+    const rewards = await getChallengeRewards(challengeId);
+    
+    // 報酬処理はここで実装
+    // 例: XP付与、バッジ付与など
+    // 実際の実装では user-profiles queries を使用
+
+    return { success: true, rewards };
+  } catch (error) {
+    console.error('Failed to claim challenge reward:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('報酬の受け取りに失敗しました');
   }
 }

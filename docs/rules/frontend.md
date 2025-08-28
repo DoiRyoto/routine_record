@@ -322,3 +322,4 @@ const response = await serverTypedGet('/api/routines', RoutinesGetResponseSchema
 - Page ComponentでDBクエリ直接呼び出しがないことを確認
 - 基本的な動作確認を実施
 - **追加したdata-testid属性が正しく機能することを確認**
+- **スタイリングルール（`docs/rules/styling-rule.md`）に従っていることを確認**
