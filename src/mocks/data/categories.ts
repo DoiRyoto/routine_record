@@ -41,6 +41,46 @@ export const mockCategories: Category[] = [
     createdAt: new Date('2024-01-04'),
     updatedAt: new Date('2024-01-04'),
   },
+  {
+    id: '5',
+    userId: 'user2',
+    name: '健康',
+    color: '#4CAF50',
+    isDefault: false,
+    isActive: true,
+    createdAt: new Date('2024-01-05'),
+    updatedAt: new Date('2024-01-05'),
+  },
+  {
+    id: '6',
+    userId: 'user2',
+    name: '趣味',
+    color: '#E91E63',
+    isDefault: false,
+    isActive: true,
+    createdAt: new Date('2024-01-06'),
+    updatedAt: new Date('2024-01-06'),
+  },
+  {
+    id: '7',
+    userId: 'user1',
+    name: '家事',
+    color: '#9C27B0',
+    isDefault: false,
+    isActive: true,
+    createdAt: new Date('2024-01-07'),
+    updatedAt: new Date('2024-01-07'),
+  },
+  {
+    id: '8',
+    userId: 'user1',
+    name: 'メンタルケア',
+    color: '#00BCD4',
+    isDefault: false,
+    isActive: true,
+    createdAt: new Date('2024-01-08'),
+    updatedAt: new Date('2024-01-08'),
+  },
 ];
 
 // モック関数
@@ -55,7 +95,7 @@ export const getMockActiveCategories = (userId: string) =>
 
 export const createMockCategory = (categoryData: Omit<Category, 'id' | 'createdAt' | 'updatedAt'>) => {
   const newCategory: Category = {
-    id: Math.random().toString(36).substr(2, 9),
+    id: Math.random().toString(36).substring(2, 11),
     ...categoryData,
     createdAt: new Date(),
     updatedAt: new Date(),

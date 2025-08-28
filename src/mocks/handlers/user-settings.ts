@@ -35,9 +35,8 @@ export const userSettingsHandlers = [
         theme?: 'light' | 'dark' | 'auto';
         language?: 'ja' | 'en';
         timeFormat?: '12h' | '24h';
-        timezone?: string;
       };
-      const { userId, theme, language, timeFormat, timezone } = body;
+      const { userId, theme, language, timeFormat } = body;
 
       // バリデーション
       if (!userId) {
@@ -52,7 +51,6 @@ export const userSettingsHandlers = [
         theme: theme || 'auto',
         language: language || 'ja',
         timeFormat: timeFormat || '24h',
-        timezone: timezone || 'Asia/Tokyo',
       });
 
       return HttpResponse.json({

@@ -107,6 +107,115 @@ export const UserProfileSchema = z.object({
   updatedAt: z.string().datetime().transform(val => new Date(val)),
 });
 
+// チャレンジスキーマ
+export const ChallengeSchema = z.object({
+  id: z.string().uuid(),
+  title: z.string(),
+  description: z.string(),
+  startDate: z.string().datetime().transform(val => new Date(val)),
+  endDate: z.string().datetime().transform(val => new Date(val)),
+  type: z.enum(['weekly', 'monthly', 'seasonal', 'special']),
+  participants: z.number(),
+  maxParticipants: z.number().nullable(),
+  isActive: z.boolean(),
+  createdAt: z.string().datetime().transform(val => new Date(val)),
+  updatedAt: z.string().datetime().transform(val => new Date(val)),
+});
+
+// ユーザーチャレンジスキーマ
+export const UserChallengeSchema = z.object({
+  id: z.string().uuid(),
+  userId: z.string().uuid(),
+  challengeId: z.string().uuid(),
+  joinedAt: z.string().datetime().transform(val => new Date(val)),
+  completedAt: z.string().datetime().nullable().transform(val => val ? new Date(val) : null),
+  isCompleted: z.boolean(),
+  progress: z.number(),
+  rank: z.number().nullable(),
+  createdAt: z.string().datetime().transform(val => new Date(val)),
+  updatedAt: z.string().datetime().transform(val => new Date(val)),
+});
+
+// バッジスキーマ
+export const BadgeSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  description: z.string(),
+  iconUrl: z.string().nullable(),
+  rarity: z.enum(['common', 'rare', 'epic', 'legendary']),
+  category: z.string(),
+  createdAt: z.string().datetime().transform(val => new Date(val)),
+  updatedAt: z.string().datetime().transform(val => new Date(val)),
+});
+
+// ミッションスキーマ
+export const MissionSchema = z.object({
+  id: z.string().uuid(),
+  title: z.string(),
+  description: z.string(),
+  type: z.enum(['streak', 'count', 'variety', 'consistency']),
+  targetValue: z.number(),
+  xpReward: z.number(),
+  badgeId: z.string().uuid().nullable(),
+  difficulty: z.enum(['easy', 'medium', 'hard', 'extreme']),
+  isActive: z.boolean(),
+  createdAt: z.string().datetime().transform(val => new Date(val)),
+  updatedAt: z.string().datetime().transform(val => new Date(val)),
+});
+
+// ユーザーミッションスキーマ
+export const UserMissionSchema = z.object({
+  id: z.string().uuid(),
+  userId: z.string().uuid(),
+  missionId: z.string().uuid(),
+  progress: z.number(),
+  isCompleted: z.boolean(),
+  startedAt: z.string().datetime().transform(val => new Date(val)),
+  completedAt: z.string().datetime().nullable().transform(val => val ? new Date(val) : null),
+  claimedAt: z.string().datetime().nullable().transform(val => val ? new Date(val) : null),
+  createdAt: z.string().datetime().transform(val => new Date(val)),
+  updatedAt: z.string().datetime().transform(val => new Date(val)),
+});
+
+// XPトランザクションスキーマ
+export const XPTransactionSchema = z.object({
+  id: z.string().uuid(),
+  userId: z.string().uuid(),
+  amount: z.number(),
+  reason: z.string(),
+  sourceType: z.enum(['routine_completion', 'streak_bonus', 'mission_completion', 'challenge_completion', 'daily_bonus', 'achievement_unlock']),
+  sourceId: z.string().uuid().nullable(),
+  createdAt: z.string().datetime().transform(val => new Date(val)),
+});
+
+// ゲーム通知スキーマ
+export const GameNotificationSchema = z.object({
+  id: z.string().uuid(),
+  userId: z.string().uuid(),
+  type: z.enum(['level_up', 'badge_unlocked', 'mission_completed', 'challenge_completed', 'streak_milestone', 'xp_milestone']),
+  title: z.string(),
+  message: z.string(),
+  data: z.string().nullable(),
+  isRead: z.boolean(),
+  createdAt: z.string().datetime().transform(val => new Date(val)),
+});
+
+// 挽回プランスキーマ
+export const CatchupPlanSchema = z.object({
+  id: z.string().uuid(),
+  routineId: z.string().uuid(),
+  userId: z.string().uuid(),
+  targetPeriodStart: z.string().datetime().transform(val => new Date(val)),
+  targetPeriodEnd: z.string().datetime().transform(val => new Date(val)),
+  originalTarget: z.number(),
+  currentProgress: z.number(),
+  remainingTarget: z.number(),
+  suggestedDailyTarget: z.number(),
+  isActive: z.boolean(),
+  createdAt: z.string().datetime().transform(val => new Date(val)),
+  updatedAt: z.string().datetime().transform(val => new Date(val)),
+});
+
 // エンドポイント別レスポンススキーマ
 
 // Routines API
@@ -130,9 +239,38 @@ export const CategoryPostResponseSchema = APIResponseSchema(CategorySchema);
 // User Profiles API
 export const UserProfileGetResponseSchema = APIResponseSchema(UserProfileSchema);
 
-// Challenges API (追加)
-export const ChallengesGetResponseSchema = APIResponseSchema(z.array(z.any())); // Challenge型が定義されるまで暫定
-export const ChallengePostResponseSchema = APIResponseSchema(z.object({ message: z.string() }));
+// Challenges API
+export const ChallengesGetResponseSchema = APIResponseSchema(z.array(ChallengeSchema));
+export const ChallengePostResponseSchema = APIResponseSchema(UserChallengeSchema);
+export const UserChallengesGetResponseSchema = APIResponseSchema(z.array(UserChallengeSchema));
+
+// Badges API
+export const BadgesGetResponseSchema = APIResponseSchema(z.array(BadgeSchema));
+export const BadgePostResponseSchema = APIResponseSchema(BadgeSchema);
+
+// Missions API
+export const MissionsGetResponseSchema = APIResponseSchema(z.array(MissionSchema));
+export const MissionPostResponseSchema = APIResponseSchema(MissionSchema);
+export const UserMissionsGetResponseSchema = APIResponseSchema(z.array(UserMissionSchema));
+export const UserMissionPostResponseSchema = APIResponseSchema(UserMissionSchema);
+
+// XP Transactions API
+export const XPTransactionsGetResponseSchema = APIResponseSchema(z.array(XPTransactionSchema));
+export const XPDailyStatsResponseSchema = APIResponseSchema(z.array(z.object({
+  date: z.string().datetime().transform(val => new Date(val)),
+  totalXP: z.number()
+})));
+export const XPTotalResponseSchema = APIResponseSchema(z.object({
+  totalXP: z.number()
+}));
+
+// Game Notifications API
+export const GameNotificationsGetResponseSchema = APIResponseSchema(z.array(GameNotificationSchema));
+export const GameNotificationPostResponseSchema = APIResponseSchema(GameNotificationSchema);
+
+// Catchup Plans API
+export const CatchupPlansGetResponseSchema = APIResponseSchema(z.array(CatchupPlanSchema));
+export const CatchupPlanPostResponseSchema = APIResponseSchema(CatchupPlanSchema);
 
 // 型推論用のエクスポート
 export type ValidatedRoutine = z.infer<typeof RoutineSchema>;
@@ -140,3 +278,11 @@ export type ValidatedExecutionRecord = z.infer<typeof ExecutionRecordSchema>;
 export type ValidatedUserSetting = z.infer<typeof UserSettingSchema>;
 export type ValidatedCategory = z.infer<typeof CategorySchema>;
 export type ValidatedUserProfile = z.infer<typeof UserProfileSchema>;
+export type ValidatedChallenge = z.infer<typeof ChallengeSchema>;
+export type ValidatedUserChallenge = z.infer<typeof UserChallengeSchema>;
+export type ValidatedBadge = z.infer<typeof BadgeSchema>;
+export type ValidatedMission = z.infer<typeof MissionSchema>;
+export type ValidatedUserMission = z.infer<typeof UserMissionSchema>;
+export type ValidatedXPTransaction = z.infer<typeof XPTransactionSchema>;
+export type ValidatedGameNotification = z.infer<typeof GameNotificationSchema>;
+export type ValidatedCatchupPlan = z.infer<typeof CatchupPlanSchema>;

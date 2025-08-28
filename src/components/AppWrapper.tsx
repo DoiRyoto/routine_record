@@ -19,6 +19,15 @@ export default function AppWrapper({ children }: AppWrapperProps) {
       if (savedTheme === 'dark') {
         document.documentElement.classList.add('dark');
       }
+      
+      // MSW初期化（開発環境のみ）
+      if (process.env.NODE_ENV === 'development') {
+        import('@/mocks/browser').then(({ startWorker }) => {
+          startWorker();
+        }).catch((error) => {
+          console.warn('MSW初期化エラー:', error);
+        });
+      }
     }
   }, []);
 

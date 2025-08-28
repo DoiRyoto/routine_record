@@ -24,29 +24,25 @@ export default function DashboardPage({
   const [routines] = useState(initialRoutines);
   const [executionRecords] = useState(initialExecutionRecords);
 
-  // ゲーミフィケーション用のモックデータ
-  const mockUserProfile: UserProfile = userProfile || {
-    userId: 'user1',
-    level: 8,
-    totalXP: 1650,
-    currentXP: 150,
-    nextLevelXP: 300,
-    streak: 12,
-    longestStreak: 28,
-    totalRoutines: routines.length,
-    totalExecutions: executionRecords.length,
-    joinedAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
-    lastActiveAt: new Date(),
-    createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
-    updatedAt: new Date(),
-  };
+  if (!userProfile) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">ダッシュボード</h1>
+        <div className="text-center py-8">
+          <p className="text-gray-500 dark:text-gray-400">
+            ユーザープロフィールを読み込めませんでした
+          </p>
+        </div>
+      </div>
+    );
+  }
 
 
-  const mockStreakData = {
-    current: 12,
-    longest: 28,
-    freezeCount: 1,
-    lastActiveDate: new Date(),
+  const streakData = {
+    current: userProfile.streak,
+    longest: userProfile.longestStreak,
+    freezeCount: 1, // この値はスキーマに存在しないため、後で追加またはハードコード
+    lastActiveDate: userProfile.lastActiveAt,
   };
 
   return (
@@ -55,29 +51,29 @@ export default function DashboardPage({
       <div className="bg-gradient-to-r from-primary-50 via-primary-100 to-primary-50 rounded-xl p-6 border border-primary-200">
         <div className="flex flex-col md:flex-row items-center gap-6">
           <UserAvatar 
-            userProfile={mockUserProfile}
+            userProfile={userProfile}
             size="lg"
             showLevel={true}
           />
           
           <div className="flex-1 space-y-4">
             <LevelProgressBar
-              level={mockUserProfile.level}
-              currentXP={mockUserProfile.currentXP}
-              nextLevelXP={mockUserProfile.nextLevelXP}
-              totalXP={mockUserProfile.totalXP}
+              level={userProfile.level}
+              currentXP={userProfile.currentXP}
+              nextLevelXP={userProfile.nextLevelXP}
+              totalXP={userProfile.totalXP}
               size="md"
             />
             
             <div className="flex items-center gap-6">
               <ExperiencePoints 
-                value={mockUserProfile.totalXP}
+                value={userProfile.totalXP}
                 variant="badge"
                 size="md"
               />
               
               <StreakDisplay
-                streakData={mockStreakData}
+                streakData={streakData}
                 variant="compact"
                 size="md"
               />
@@ -91,7 +87,7 @@ export default function DashboardPage({
         routines={routines}
         executionRecords={executionRecords}
         userSettings={userSettings}
-        userProfile={mockUserProfile}
+        userProfile={userProfile}
       />
     </div>
   );

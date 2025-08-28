@@ -1,15 +1,32 @@
-import { UserSettingWithTimezone } from '../../lib/db/queries/user-settings';
+import type { UserSetting } from '@/lib/db/schema';
 
-export const mockUserSettings: UserSettingWithTimezone[] = [
+export const mockUserSettings: UserSetting[] = [
   {
     id: '1',
     userId: 'user1',
     theme: 'auto',
     language: 'ja',
     timeFormat: '24h',
-    timezone: 'Asia/Tokyo',
     createdAt: new Date('2024-01-01'),
     updatedAt: new Date('2024-01-15'),
+  },
+  {
+    id: '2',
+    userId: 'user2',
+    theme: 'dark',
+    language: 'en',
+    timeFormat: '12h',
+    createdAt: new Date('2024-01-10'),
+    updatedAt: new Date('2024-01-20'),
+  },
+  {
+    id: '3',
+    userId: 'user3',
+    theme: 'light',
+    language: 'ja',
+    timeFormat: '24h',
+    createdAt: new Date('2024-01-05'),
+    updatedAt: new Date('2024-01-05'),
   },
 ];
 
@@ -24,13 +41,12 @@ export const getMockOrCreateUserSettings = (userId: string) => {
   }
 
   // デフォルト設定で新規作成
-  const newSettings: UserSettingWithTimezone = {
-    id: Math.random().toString(36).substr(2, 9),
+  const newSettings: UserSetting = {
+    id: Math.random().toString(36).substring(2, 11),
     userId,
     theme: 'auto',
     language: 'ja',
     timeFormat: '24h',
-    timezone: 'Asia/Tokyo',
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -41,7 +57,7 @@ export const getMockOrCreateUserSettings = (userId: string) => {
 
 export const updateMockUserSettings = (
   userId: string,
-  updates: Partial<UserSettingWithTimezone>
+  updates: Partial<UserSetting>
 ) => {
   const index = mockUserSettings.findIndex((settings) => settings.userId === userId);
   if (index !== -1) {
@@ -56,10 +72,10 @@ export const updateMockUserSettings = (
 };
 
 export const createMockUserSettings = (
-  settingsData: Omit<UserSettingWithTimezone, 'id' | 'createdAt' | 'updatedAt'>
+  settingsData: Omit<UserSetting, 'id' | 'createdAt' | 'updatedAt'>
 ) => {
-  const newSettings: UserSettingWithTimezone = {
-    id: Math.random().toString(36).substr(2, 9),
+  const newSettings: UserSetting = {
+    id: Math.random().toString(36).substring(2, 11),
     ...settingsData,
     createdAt: new Date(),
     updatedAt: new Date(),

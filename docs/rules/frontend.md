@@ -177,6 +177,34 @@ theme: 'system', // schema に存在しない値
 
 ### よくある型エラーと解決方法
 
+#### Mockデータの誤用（重要）
+```typescript
+// ❌ 間違い - データが取得できない場合にMockデータを使用
+const mockUserProfile: UserProfile = userProfile || {
+  userId: 'user1',
+  level: 8,
+  // ...
+};
+
+// ❌ 間違い - Page ComponentでAPI実装の代わりにmockDataを返す
+async function getProfileData(userId?: string) {
+  // 現在はモックデータを返す（API実装まで）
+  const mockProfile = { userId, level: 1, /* ... */ };
+  return { userProfile: mockProfile };
+}
+
+// ✅ 正しい - データが取得できない場合は適切なエラー表示
+if (!userProfile) {
+  return <ErrorComponent message="ユーザープロフィールを読み込めませんでした" />;
+}
+
+// ✅ 正しい - API Routes経由でデータ取得
+const userProfileResponse = await serverTypedGet(
+  `/api/user-profiles?userId=${user.id}`, 
+  UserProfileGetResponseSchema
+);
+```
+
 #### ExecutionRecord の使い分け
 ```typescript
 // データベース挿入時

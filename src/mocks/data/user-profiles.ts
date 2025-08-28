@@ -1,38 +1,6 @@
 import type { UserProfile, UserBadge, Badge, XPTransaction } from '@/lib/db/schema';
 
-// モックバッジデータ
-export const mockBadges: Badge[] = [
-  {
-    id: 'badge1',
-    name: '習慣マスター',
-    description: '10個のルーティンを完了',
-    iconUrl: '/badges/habit-master.png',
-    rarity: 'rare',
-    category: '実績',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: 'badge2',
-    name: 'ストリークキング',
-    description: '30日連続実行',
-    iconUrl: '/badges/streak-king.png',
-    rarity: 'epic',
-    category: 'ストリーク',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: 'badge3',
-    name: '伝説の継続者',
-    description: '100日連続実行',
-    iconUrl: '/badges/legendary-streak.png',
-    rarity: 'legendary',
-    category: 'ストリーク',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-];
+import { mockBadges } from './badges';
 
 export const mockUserBadges: (UserBadge & { badge: Badge })[] = [
   {
@@ -79,6 +47,36 @@ export const mockUserProfiles: UserProfile[] = [
     lastActiveAt: new Date(),
     createdAt: new Date(),
     updatedAt: new Date(),
+  },
+  {
+    userId: 'user2',
+    level: 5,
+    totalXP: 680,
+    currentXP: 80,
+    nextLevelXP: 200,
+    streak: 12,
+    longestStreak: 20,
+    totalRoutines: 8,
+    totalExecutions: 95,
+    joinedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+    lastActiveAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
+    createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+    updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
+  },
+  {
+    userId: 'user3',
+    level: 25,
+    totalXP: 8750,
+    currentXP: 150,
+    nextLevelXP: 1200,
+    streak: 89,
+    longestStreak: 156,
+    totalRoutines: 32,
+    totalExecutions: 1247,
+    joinedAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
+    lastActiveAt: new Date(Date.now() - 30 * 60 * 1000),
+    createdAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
+    updatedAt: new Date(Date.now() - 30 * 60 * 1000),
   },
 ];
 
