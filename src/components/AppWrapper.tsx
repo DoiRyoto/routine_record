@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 
 import Layout from '@/components/Layout/Layout';
 import { SnackbarProvider } from '@/context/SnackbarContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 interface AppWrapperProps {
   children: React.ReactNode;
@@ -15,11 +16,6 @@ export default function AppWrapper({ children }: AppWrapperProps) {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark') {
-        document.documentElement.classList.add('dark');
-      }
-      
       // MSW初期化（開発環境のみ）
       if (process.env.NODE_ENV === 'development') {
         import('@/mocks/browser').then(({ startWorker }) => {
@@ -36,12 +32,18 @@ export default function AppWrapper({ children }: AppWrapperProps) {
   const isPublicPage = publicPages.includes(pathname);
 
   if (isPublicPage) {
-    return <SnackbarProvider>{children}</SnackbarProvider>;
+    return (
+      <ThemeProvider>
+        <SnackbarProvider>{children}</SnackbarProvider>
+      </ThemeProvider>
+    );
   }
 
   return (
-    <SnackbarProvider>
-      <Layout>{children}</Layout>
-    </SnackbarProvider>
+    <ThemeProvider>
+      <SnackbarProvider>
+        <Layout>{children}</Layout>
+      </SnackbarProvider>
+    </ThemeProvider>
   );
 }

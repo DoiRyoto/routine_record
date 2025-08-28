@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 
 // RoutineContext is no longer needed
 import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import type { Routine, InsertRoutine } from '@/lib/db/schema';
@@ -95,15 +96,12 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
         <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
           ミッション名 *
         </label>
-        <input
+        <Input
           type="text"
           name="name"
           value={formData.name}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
-                     bg-white border-gray-300 text-gray-900 placeholder-gray-500
-                     dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:placeholder-slate-400"
           placeholder="例: 朝の運動"
         />
       </div>
@@ -147,40 +145,18 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
         <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
           ミッションタイプ *
         </label>
-        <div className="relative">
-          <select
-            name="goalType"
-            value={formData.goalType}
-            onChange={handleChange}
-            className="
-              w-full px-3 py-2 pr-10 border rounded-md 
-              focus:outline-none focus:ring-2 focus:ring-blue-500 
-              appearance-none cursor-pointer
-              bg-white border-gray-300 text-gray-900
-              dark:bg-slate-700 dark:border-slate-600 dark:text-white
-            "
-          >
-            <option value="frequency_based">頻度ベース（○回/期間）</option>
-            <option value="schedule_based">スケジュールベース（特定日実行）</option>
-          </select>
-
-          {/* カスタム矢印アイコン */}
-          <div
-            className="
-            absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none
-            text-gray-500 dark:text-slate-400
-          "
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </div>
-        </div>
+        <Select
+          value={formData.goalType}
+          onValueChange={(value) => setFormData(prev => ({ ...prev, goalType: value as 'frequency_based' | 'schedule_based' }))}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="frequency_based">頻度ベース（○回/期間）</SelectItem>
+            <SelectItem value="schedule_based">スケジュールベース（特定日実行）</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* 頻度ベースの設定 */}
@@ -193,36 +169,31 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
               <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
                 期間 *
               </label>
-              <select
-                name="targetPeriod"
+              <Select
                 value={formData.targetPeriod}
-                onChange={handleChange}
-                className="
-                  w-full px-3 py-2 border rounded-md 
-                  focus:outline-none focus:ring-2 focus:ring-blue-500
-                  bg-white border-gray-300 text-gray-900
-                  dark:bg-slate-700 dark:border-slate-600 dark:text-white
-                "
+                onValueChange={(value) => setFormData(prev => ({ ...prev, targetPeriod: value as 'weekly' | 'monthly' | 'daily' }))}
               >
-                <option value="weekly">週</option>
-                <option value="monthly">月</option>
-                <option value="daily">日</option>
-              </select>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="weekly">週</SelectItem>
+                  <SelectItem value="monthly">月</SelectItem>
+                  <SelectItem value="daily">日</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             
             <div>
               <Label htmlFor="targetCount">目標回数 *</Label>
-              <input
+              <Input
                 id="targetCount"
                 type="number"
-                value={formData.targetCount}
+                value={formData.targetCount.toString()}
                 onChange={(e) => handleTargetCountChange(parseInt(e.target.value) || 1)}
                 min="1"
                 max="50"
                 step="1"
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
-                           bg-white border-gray-300 text-gray-900
-                           dark:bg-slate-700 dark:border-slate-600 dark:text-white"
               />
             </div>
           </div>
@@ -242,31 +213,20 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
             <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
               繰り返しパターン *
             </label>
-            <div className="relative">
-              <select
-                name="recurrenceType"
-                value={formData.recurrenceType}
-                onChange={handleChange}
-                className="
-                  w-full px-3 py-2 pr-10 border rounded-md 
-                  focus:outline-none focus:ring-2 focus:ring-blue-500 
-                  appearance-none cursor-pointer
-                  bg-white border-gray-300 text-gray-900
-                  dark:bg-slate-700 dark:border-slate-600 dark:text-white
-                "
-              >
-                <option value="daily">毎日</option>
-                <option value="weekly">週間</option>
-                <option value="monthly">月間</option>
-                <option value="custom">カスタム</option>
-              </select>
-
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500 dark:text-slate-400">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
-            </div>
+            <Select
+              value={formData.recurrenceType}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, recurrenceType: value as 'daily' | 'weekly' | 'monthly' | 'custom' }))}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="daily">毎日</SelectItem>
+                <SelectItem value="weekly">週間</SelectItem>
+                <SelectItem value="monthly">月間</SelectItem>
+                <SelectItem value="custom">カスタム</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           
           <div className="text-sm text-gray-600 dark:text-gray-300">
@@ -344,16 +304,13 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
               <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
                 日付（1-31）
               </label>
-              <input
+              <Input
                 type="number"
                 name="dayOfMonth"
-                value={formData.dayOfMonth}
+                value={formData.dayOfMonth.toString()}
                 onChange={handleChange}
                 min="1"
                 max="31"
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
-                           bg-white border-gray-300 text-gray-900
-                           dark:bg-slate-700 dark:border-slate-600 dark:text-white"
               />
             </div>
           )}
@@ -364,41 +321,43 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
                 <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
                   第○週（-1は最終週）
                 </label>
-                <select
-                  name="weekOfMonth"
-                  value={formData.weekOfMonth}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
-                             bg-white border-gray-300 text-gray-900
-                             dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+                <Select
+                  value={formData.weekOfMonth.toString()}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, weekOfMonth: parseInt(value) }))}
                 >
-                  <option value="1">第1週</option>
-                  <option value="2">第2週</option>
-                  <option value="3">第3週</option>
-                  <option value="4">第4週</option>
-                  <option value="-1">最終週</option>
-                </select>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">第1週</SelectItem>
+                    <SelectItem value="2">第2週</SelectItem>
+                    <SelectItem value="3">第3週</SelectItem>
+                    <SelectItem value="4">第4週</SelectItem>
+                    <SelectItem value="-1">最終週</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
                   曜日
                 </label>
-                <select
-                  name="dayOfWeek"
-                  value={formData.dayOfWeek}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
-                             bg-white border-gray-300 text-gray-900
-                             dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+                <Select
+                  value={formData.dayOfWeek.toString()}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, dayOfWeek: parseInt(value) }))}
                 >
-                  <option value="0">日曜日</option>
-                  <option value="1">月曜日</option>
-                  <option value="2">火曜日</option>
-                  <option value="3">水曜日</option>
-                  <option value="4">木曜日</option>
-                  <option value="5">金曜日</option>
-                  <option value="6">土曜日</option>
-                </select>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">日曜日</SelectItem>
+                    <SelectItem value="1">月曜日</SelectItem>
+                    <SelectItem value="2">火曜日</SelectItem>
+                    <SelectItem value="3">水曜日</SelectItem>
+                    <SelectItem value="4">木曜日</SelectItem>
+                    <SelectItem value="5">金曜日</SelectItem>
+                    <SelectItem value="6">土曜日</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           )}
@@ -411,16 +370,13 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
             <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
               間隔（日）
             </label>
-            <input
+            <Input
               type="number"
               name="recurrenceInterval"
-              value={formData.recurrenceInterval}
+              value={formData.recurrenceInterval.toString()}
               onChange={handleChange}
               min="1"
               max="365"
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
-                         bg-white border-gray-300 text-gray-900
-                         dark:bg-slate-700 dark:border-slate-600 dark:text-white"
               placeholder="例: 3（3日おき）"
             />
           </div>
@@ -428,14 +384,11 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
             <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
               開始日
             </label>
-            <input
+            <Input
               type="date"
               name="startDate"
               value={formData.startDate}
               onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
-                         bg-white border-gray-300 text-gray-900
-                         dark:bg-slate-700 dark:border-slate-600 dark:text-white"
             />
           </div>
         </div>

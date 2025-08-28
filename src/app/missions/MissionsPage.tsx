@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 
 import { TaskCard, StatsCard } from '@/components/gamification';
 import { Card } from '@/components/ui/Card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import type { Mission, UserMission } from '@/lib/db/schema';
 
@@ -146,40 +147,48 @@ export function MissionsPage({
         <div className="flex flex-wrap gap-4 items-center">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-text-secondary">種類:</span>
-            <select 
+            <Select
               value={filters.type || ''}
-              onChange={(e) => handleFilterChange({ 
+              onValueChange={(value) => handleFilterChange({ 
                 ...filters, 
-                type: e.target.value as MissionType | undefined || undefined 
+                type: value as MissionType | undefined || undefined 
               })}
-              className="px-3 py-1 border border-gray-300 rounded-md text-sm"
             >
-              <option value="">全て</option>
-              {Object.entries(missionTypeLabels).map(([key, label]) => (
-                <option key={key} value={key}>{label}</option>
-              ))}
-            </select>
+              <SelectTrigger className="w-32">
+                <SelectValue placeholder="全て" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">全て</SelectItem>
+                {Object.entries(missionTypeLabels).map(([key, label]) => (
+                  <SelectItem key={key} value={key}>{label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-text-secondary">難易度:</span>
-            <select
+            <Select
               value={filters.difficulty || ''}
-              onChange={(e) => handleFilterChange({
+              onValueChange={(value) => handleFilterChange({
                 ...filters,
-                difficulty: e.target.value as MissionDifficulty | undefined || undefined
+                difficulty: value as MissionDifficulty | undefined || undefined
               })}
-              className="px-3 py-1 border border-gray-300 rounded-md text-sm"
             >
-              <option value="">全て</option>
-              {Object.entries(difficultyLabels).map(([key, label]) => (
-                <option key={key} value={key}>
-                  <span className={difficultyColors[key as MissionDifficulty]}>
-                    {label}
-                  </span>
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-32">
+                <SelectValue placeholder="全て" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">全て</SelectItem>
+                {Object.entries(difficultyLabels).map(([key, label]) => (
+                  <SelectItem key={key} value={key}>
+                    <span className={difficultyColors[key as MissionDifficulty]}>
+                      {label}
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {(filters.type || filters.difficulty) && (

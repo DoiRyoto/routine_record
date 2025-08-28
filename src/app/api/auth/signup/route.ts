@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { db } from '@/lib/db';
-import { users, userSettings } from '@/lib/db/schema';
+import { users, userSettings, userProfiles, categories, gameNotifications } from '@/lib/db/schema';
 import { supabaseAdmin } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
@@ -93,7 +93,60 @@ export async function POST(request: NextRequest) {
         timeFormat: '24h',
       });
 
-      // デフォルトカテゴリの自動作成は削除
+      // ユーザープロフィール（ゲーミフィケーション）の初期データを作成
+      await db.insert(userProfiles).values({
+        userId: data.user.id,
+        level: 1,
+        totalXP: 0,
+        currentXP: 0,
+        nextLevelXP: 100,
+        streak: 0,
+        longestStreak: 0,
+        totalRoutines: 0,
+        totalExecutions: 0,
+        joinedAt: new Date(),
+        lastActiveAt: new Date(),
+      });
+
+      // デフォルトカテゴリを作成
+      const defaultCategories = [
+        { name: '健康', color: '#4CAF50' },
+        { name: '学習', color: '#2196F3' },
+        { name: '仕事', color: '#FF9800' },
+        { name: '趣味', color: '#E91E63' },
+      ];
+
+      for (const category of defaultCategories) {
+        await db.insert(categories).values({
+          userId: data.user.id,
+          name: category.name,
+          color: category.color,
+          isDefault: true,
+          isActive: true,
+        });
+      }
+
+      // TODO: 初心者向けミッション自動開始（missionsテーブルにデータが必要）
+      // 現在は無効なmissionIdでエラーになるため一時的にコメントアウト
+      // await db.insert(userMissions).values({
+      //   userId: data.user.id,
+      //   missionId: 'valid-uuid-here', // 実際のmissionのUUIDが必要
+      //   progress: 0,
+      //   isCompleted: false,
+      //   startedAt: new Date(),
+      //   completedAt: null,
+      //   claimedAt: null,
+      // });
+
+      // ウェルカム通知を作成
+      await db.insert(gameNotifications).values({
+        userId: data.user.id,
+        type: 'level_up',
+        title: 'ルーチン記録へようこそ！',
+        message: '習慣化の旅が始まります。最初のルーティンを作成してみましょう！',
+        data: JSON.stringify({ welcomeMessage: true, level: 1 }),
+        isRead: false,
+      });
     } catch (settingsError) {
       console.error('User settings creation failed:', settingsError);
       // データベースエラーの場合、Supabaseのユーザーを削除

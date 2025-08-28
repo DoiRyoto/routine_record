@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { getActiveChallenges, joinChallenge, createChallenge } from '@/lib/db/queries/challenges';
+import { createChallenge, getActiveChallenges, joinChallenge } from '@/lib/db/queries/challenges';
 import { createUserProfile, getUserProfile } from '@/lib/db/queries/user-profiles';
 
 export async function GET() {
@@ -9,10 +9,7 @@ export async function GET() {
     return NextResponse.json(challenges);
   } catch (error) {
     console.error('GET /api/challenges error:', error);
-    return NextResponse.json(
-      { error: 'チャレンジの取得に失敗しました' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'チャレンジの取得に失敗しました' }, { status: 500 });
   }
 }
 
@@ -24,10 +21,7 @@ export async function POST(request: NextRequest) {
     switch (action) {
       case 'join':
         if (!userId || !challengeId) {
-          return NextResponse.json(
-            { error: 'userIdとchallengeIdが必要です' },
-            { status: 400 }
-          );
+          return NextResponse.json({ error: 'userIdとchallengeIdが必要です' }, { status: 400 });
         }
 
         // ユーザープロフィールが存在しない場合は作成
@@ -42,7 +36,7 @@ export async function POST(request: NextRequest) {
             streak: 0,
             longestStreak: 0,
             totalRoutines: 0,
-            totalExecutions: 0
+            totalExecutions: 0,
           });
         }
 
@@ -51,10 +45,7 @@ export async function POST(request: NextRequest) {
 
       case 'create':
         if (!challengeData) {
-          return NextResponse.json(
-            { error: 'challengeDataが必要です' },
-            { status: 400 }
-          );
+          return NextResponse.json({ error: 'challengeDataが必要です' }, { status: 400 });
         }
 
         const { requirements = [], rewards = [], ...challenge } = challengeData;
@@ -62,24 +53,15 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(newChallenge);
 
       default:
-        return NextResponse.json(
-          { error: '不正なアクションです' },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: '不正なアクションです' }, { status: 400 });
     }
   } catch (error) {
     console.error('POST /api/challenges error:', error);
-    
+
     if (error instanceof Error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    return NextResponse.json(
-      { error: 'チャレンジの処理に失敗しました' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'チャレンジの処理に失敗しました' }, { status: 500 });
   }
 }

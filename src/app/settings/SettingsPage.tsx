@@ -6,6 +6,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
+import { useTheme } from '@/context/ThemeContext';
 import { apiClient } from '@/lib/api-client/endpoints';
 import type { UserSetting } from '@/lib/db/schema';
 
@@ -20,6 +21,7 @@ export default function SettingsPage({
   const [isSaved, setIsSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [showResetDialog, setShowResetDialog] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,7 +80,14 @@ export default function SettingsPage({
               <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-200">
                 テーマ
               </label>
-              <Select value={formData.theme} onValueChange={(value: 'auto' | 'light' | 'dark') => setFormData(prev => ({ ...prev, theme: value }))}>
+              <Select 
+                value={formData.theme} 
+                onValueChange={(value: 'auto' | 'light' | 'dark') => {
+                  setFormData(prev => ({ ...prev, theme: value }));
+                  // リアルタイムでテーマを適用
+                  setTheme(value);
+                }}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -88,6 +97,9 @@ export default function SettingsPage({
                   <SelectItem value="auto">自動</SelectItem>
                 </SelectContent>
               </Select>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                現在のテーマ: {theme === 'auto' ? '自動' : theme === 'light' ? 'ライト' : 'ダーク'}
+              </p>
             </div>
 
             <div>

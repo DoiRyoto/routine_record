@@ -26,7 +26,7 @@ const FormLabel = React.forwardRef<
   <FormPrimitive.Label
     ref={ref}
     className={cn(
-      'text-sm font-medium text-gray-900 peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+      'text-sm font-medium text-gray-900 dark:text-gray-100 peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
       className
     )}
     {...props}
@@ -41,7 +41,7 @@ const FormControl = React.forwardRef<
   <FormPrimitive.Control
     ref={ref}
     className={cn(
-      'flex h-9 w-full rounded-md border border-gray-200 bg-white px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-300 disabled:cursor-not-allowed disabled:opacity-50',
+      'flex h-9 w-full rounded-md border border-gray-200 bg-white px-3 py-1 text-sm text-gray-900 shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-300 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-400 dark:focus-visible:ring-blue-400',
       className
     )}
     {...props}
@@ -55,7 +55,7 @@ const FormMessage = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <FormPrimitive.Message
     ref={ref}
-    className={cn('text-sm font-medium text-red-600', className)}
+    className={cn('text-sm font-medium text-red-600 dark:text-red-400', className)}
     {...props}
   >
     {children}
@@ -79,7 +79,7 @@ const FormSubmit = React.forwardRef<
   <FormPrimitive.Submit
     ref={ref}
     className={cn(
-      'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-300 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white shadow hover:bg-blue-700 h-9 px-4 py-2',
+      'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-300 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white shadow hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus-visible:ring-blue-400 h-9 px-4 py-2',
       className
     )}
     {...props}

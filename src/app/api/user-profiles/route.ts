@@ -38,7 +38,8 @@ export async function GET(request: NextRequest) {
       // const streakData = await getStreakData(userId); // Temporarily removed
 
       return NextResponse.json({
-        userProfile: {
+        success: true,
+        data: {
           ...userProfile,
           badges
         },
@@ -46,7 +47,10 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return NextResponse.json(userProfile);
+    return NextResponse.json({
+      success: true,
+      data: userProfile
+    });
   } catch (error) {
     console.error('GET /api/user-profiles error:', error);
     return NextResponse.json(
@@ -75,11 +79,17 @@ export async function POST(request: NextRequest) {
           totalExecutions: 0,
           ...data
         });
-        return NextResponse.json(newProfile);
+        return NextResponse.json({
+          success: true,
+          data: newProfile
+        });
 
       case 'update':
         const updatedProfile = await updateUserProfile(userId, data);
-        return NextResponse.json(updatedProfile);
+        return NextResponse.json({
+          success: true,
+          data: updatedProfile
+        });
 
       case 'addXP':
         const { amount, reason, sourceType, sourceId } = data;
@@ -91,7 +101,10 @@ export async function POST(request: NextRequest) {
         }
 
         const xpResult = await addXP(userId, amount, reason, sourceType, sourceId);
-        return NextResponse.json(xpResult);
+        return NextResponse.json({
+          success: true,
+          data: xpResult
+        });
 
       case 'updateStreak':
         const { streak } = data;
@@ -103,11 +116,17 @@ export async function POST(request: NextRequest) {
         }
 
         const updatedStreakProfile = await updateStreak(userId, streak);
-        return NextResponse.json(updatedStreakProfile);
+        return NextResponse.json({
+          success: true,
+          data: updatedStreakProfile
+        });
 
       case 'updateStats':
         const statsProfile = await updateUserStats(userId, data);
-        return NextResponse.json(statsProfile);
+        return NextResponse.json({
+          success: true,
+          data: statsProfile
+        });
 
       default:
         return NextResponse.json(
