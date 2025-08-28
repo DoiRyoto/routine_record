@@ -79,7 +79,7 @@ export const catchupPlansHandlers = [
         currentProgress?: number;
         remainingTarget?: number;
         suggestedDailyTarget?: number;
-        [key: string]: any;
+        [key: string]: unknown;
       };
       
       const { action, planId, ...planData } = body;
@@ -118,11 +118,11 @@ export const catchupPlansHandlers = [
             );
           }
 
-          const updateData: any = { ...planData };
-          if (updateData.targetPeriodStart) {
+          const updateData: Record<string, unknown> = { ...planData };
+          if (updateData.targetPeriodStart && typeof updateData.targetPeriodStart === 'string') {
             updateData.targetPeriodStart = new Date(updateData.targetPeriodStart);
           }
-          if (updateData.targetPeriodEnd) {
+          if (updateData.targetPeriodEnd && typeof updateData.targetPeriodEnd === 'string') {
             updateData.targetPeriodEnd = new Date(updateData.targetPeriodEnd);
           }
           

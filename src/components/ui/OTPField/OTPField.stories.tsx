@@ -38,7 +38,7 @@ export const Default: Story = {
             onChange={setValue}
           />
         </div>
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-gray">
           入力値: {value || '（なし）'}
         </div>
       </div>
@@ -64,7 +64,7 @@ export const FourDigits: Story = {
             onChange={setValue}
           />
         </div>
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-gray">
           入力値: {value || '（なし）'}
         </div>
       </div>
@@ -111,7 +111,7 @@ export const AuthenticationFlow: Story = {
           <div className="space-y-4">
             <div className="text-center">
               <h2 className="text-xl font-semibold">認証コード送信</h2>
-              <p className="text-gray-600 text-sm mt-2">
+              <p className="text-gray text-sm mt-2">
                 メールアドレスに認証コードを送信します
               </p>
             </div>
@@ -124,13 +124,13 @@ export const AuthenticationFlow: Story = {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@example.com"
-                className="w-full h-9 px-3 py-1 rounded-md border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-300"
+                className="w-full h-9 px-3 py-1 rounded-md border border-gray focus:outline-none focus:ring-1 focus:ring-blue-300"
               />
             </div>
             <button
               onClick={handleSendCode}
               disabled={!email || isLoading}
-              className="w-full h-9 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-9 px-4 py-2 bg-blue text-white rounded-md hover:bg-blue disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? '送信中...' : '認証コードを送信'}
             </button>
@@ -141,7 +141,7 @@ export const AuthenticationFlow: Story = {
           <div className="space-y-4">
             <div className="text-center">
               <h2 className="text-xl font-semibold">認証コード入力</h2>
-              <p className="text-gray-600 text-sm mt-2">
+              <p className="text-gray text-sm mt-2">
                 {email} に送信されたコードを入力してください
               </p>
             </div>
@@ -155,13 +155,13 @@ export const AuthenticationFlow: Story = {
             <button
               onClick={handleVerifyCode}
               disabled={otp.length !== 6 || isLoading}
-              className="w-full h-9 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-9 px-4 py-2 bg-blue text-white rounded-md hover:bg-blue disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? '認証中...' : '認証する'}
             </button>
             <button
               onClick={() => setStep(1)}
-              className="w-full text-sm text-gray-600 hover:text-gray-800"
+              className="w-full text-sm text-gray hover:text-gray"
             >
               メールアドレスを変更する
             </button>
@@ -171,12 +171,12 @@ export const AuthenticationFlow: Story = {
         {step === 3 && (
           <div className="text-center space-y-4">
             <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
-              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <svg className="w-8 h-8 text-green" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="m9 12 2 2 4-4" />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold text-green-600">認証完了！</h2>
-            <p className="text-gray-600">
+            <h2 className="text-xl font-semibold text-green">認証完了！</h2>
+            <p className="text-gray">
               ミッション管理アプリへようこそ
             </p>
             <button
@@ -185,7 +185,7 @@ export const AuthenticationFlow: Story = {
                 setEmail('');
                 setOtp('');
               }}
-              className="text-sm text-blue-600 hover:text-blue-800"
+              className="text-sm text-blue hover:text-blue"
             >
               最初からやり直す
             </button>

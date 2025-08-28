@@ -82,7 +82,7 @@ export function ProfilePage({
   return (
     <div className="container mx-auto px-4 py-6 space-y-6">
       {/* プロフィールヘッダー */}
-      <Card className="p-6 bg-gradient-to-br from-primary-50 to-primary-100 border-primary-200">
+      <Card className="p-6 bg-blue dark:bg-dark-blue text-blue dark:text-blue border-blue dark:border-dark-blue">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
           {/* アバターセクション */}
           <div className="flex-shrink-0 text-center">

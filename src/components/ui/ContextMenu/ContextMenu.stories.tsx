@@ -22,14 +22,14 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <ContextMenu>
-      <ContextMenuTrigger className="flex h-32 w-64 items-center justify-center rounded-md border border-dashed border-gray-300 text-sm">
+      <ContextMenuTrigger className="flex h-32 w-64 items-center justify-center rounded-md border border-dashed border-gray text-sm">
         右クリックでメニューを表示
       </ContextMenuTrigger>
       <ContextMenuContent className="w-48">
         <ContextMenuItem>ミッションを編集</ContextMenuItem>
         <ContextMenuItem>記録を追加</ContextMenuItem>
         <ContextMenuItem>統計を表示</ContextMenuItem>
-        <ContextMenuItem className="text-red-600">削除</ContextMenuItem>
+        <ContextMenuItem className="text-red">削除</ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>
   ),
@@ -40,10 +40,10 @@ export const MissionCard: Story = {
     <ContextMenu>
       <ContextMenuTrigger>
         <div className="p-4 bg-white rounded-lg border shadow-sm cursor-pointer hover:shadow-md transition-shadow">
-          <h3 className="font-semibold text-gray-900">毎日の読書</h3>
-          <p className="text-sm text-gray-600 mt-1">30分間の読書習慣</p>
+          <h3 className="font-semibold text-gray">毎日の読書</h3>
+          <p className="text-sm text-gray mt-1">30分間の読書習慣</p>
           <div className="mt-2 flex items-center">
-            <div className="text-sm text-green-600 font-medium">7日連続達成</div>
+            <div className="text-sm text-green font-medium">7日連続達成</div>
           </div>
         </div>
       </ContextMenuTrigger>
@@ -52,7 +52,7 @@ export const MissionCard: Story = {
         <ContextMenuItem>✅ 今日完了にする</ContextMenuItem>
         <ContextMenuItem>📊 進捗を確認</ContextMenuItem>
         <ContextMenuItem>📅 スケジュール変更</ContextMenuItem>
-        <ContextMenuItem className="text-red-600">🗑️ 削除</ContextMenuItem>
+        <ContextMenuItem className="text-red">🗑️ 削除</ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>
   ),

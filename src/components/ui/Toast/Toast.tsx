@@ -24,17 +24,15 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const toastVariants = cva(
-  'group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full',
+  'group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-xl border p-4 pr-8 shadow-2xl backdrop-blur-md transition-all duration-300 data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full',
   {
     variants: {
       variant: {
-        default: 'border bg-white text-gray-900',
-        destructive:
-          'destructive group border-red-500 bg-red-500 text-white',
-        success:
-          'border-green-500 bg-green-500 text-white',
-        warning:
-          'border-orange-500 bg-orange-500 text-white',
+        default: 'border-gray/20 bg-white/95 text-gray backdrop-blur-md dark:border-gray/10 dark:bg-black/90 dark:text-white',
+        destructive: 'destructive group border-red/50 bg-red/90 text-white backdrop-blur-md shadow-red/20',
+        success: 'border-green/50 bg-green/90 text-white backdrop-blur-md shadow-green/20',
+        warning: 'border-orange/50 bg-orange/90 text-white backdrop-blur-md shadow-orange/20',
+        info: 'border-blue/50 bg-blue/90 text-white backdrop-blur-md shadow-blue/20',
       },
     },
     defaultVariants: {
@@ -65,7 +63,7 @@ const ToastAction = React.forwardRef<
   <ToastPrimitives.Action
     ref={ref}
     className={cn(
-      'inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-white transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-red-100/40 group-[.destructive]:hover:border-red-50 group-[.destructive]:hover:bg-red-50 group-[.destructive]:hover:text-red-900 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600',
+      'inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-white transition-colors hover:bg-gray focus:outline-none focus:ring-2 focus:ring-gray focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-red group-[.destructive]:hover:border-red group-[.destructive]:hover:bg-red group-[.destructive]:hover:text-red group-[.destructive]:focus:ring-red group-[.destructive]:focus:ring-red',
       className
     )}
     {...props}
@@ -80,7 +78,7 @@ const ToastClose = React.forwardRef<
   <ToastPrimitives.Close
     ref={ref}
     className={cn(
-      'absolute right-2 top-2 rounded-md p-1 text-gray-500 opacity-0 transition-opacity hover:text-gray-900 focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600',
+      'absolute right-2 top-2 rounded-md p-1 text-gray opacity-0 transition-opacity hover:text-gray focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red group-[.destructive]:hover:text-red group-[.destructive]:focus:ring-red group-[.destructive]:focus:ring-red',
       className
     )}
     toast-close=""

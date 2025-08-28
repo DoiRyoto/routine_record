@@ -36,15 +36,15 @@ export default function TodayRoutineItem({
       <CardContent>
         <div className="flex items-center justify-between">
           <div className="flex-1">
-            <h3 className="font-semibold text-gray-900 text-base mb-1">{routine.name}</h3>
+            <h3 className="font-semibold text-gray text-base mb-1">{routine.name}</h3>
             {routine.description && (
-              <p className="text-sm text-gray-600 mb-2">{routine.description}</p>
+              <p className="text-sm text-gray mb-2">{routine.description}</p>
             )}
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue text-blue">
                 {routine.category}
               </span>
-              <span className="text-xs font-medium text-blue-600">
+              <span className="text-xs font-medium text-blue">
                 +10 XP
               </span>
             </div>
@@ -52,7 +52,7 @@ export default function TodayRoutineItem({
 
           <div className="ml-4 flex-shrink-0">
             {isCompleted ? (
-              <div className="flex items-center text-green-600 font-medium">
+              <div className="flex items-center text-green font-medium">
                 <svg className="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"

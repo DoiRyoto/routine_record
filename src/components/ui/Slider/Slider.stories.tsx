@@ -22,7 +22,7 @@ export const Default: Story = {
       <div>
         <Label>実行時間（分）</Label>
         <Slider defaultValue={[30]} max={120} step={5} className="mt-2" />
-        <div className="flex justify-between text-xs text-gray-500 mt-1">
+        <div className="flex justify-between text-xs text-gray mt-1">
           <span>0分</span>
           <span>60分</span>
           <span>120分</span>

@@ -7,7 +7,6 @@ import { Card } from '@/components/ui/Card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/Dialog';
 import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
 import type { ExecutionRecord, Routine } from '@/lib/db/schema';
-
 // Local interface for calendar display
 interface CalendarData {
   date: string;
@@ -145,9 +144,9 @@ export default function Calendar({ routines, executionRecords, userSettings }: P
   if (!isMounted) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">カレンダー</h1>
+        <h1 className="text-2xl font-bold text-gray dark:text-gray">カレンダー</h1>
         <div className="text-center py-8">
-          <p className="text-gray-500">読み込み中...</p>
+          <p className="text-gray">読み込み中...</p>
         </div>
       </div>
     );
@@ -156,14 +155,14 @@ export default function Calendar({ routines, executionRecords, userSettings }: P
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">カレンダー</h1>
+        <h1 className="text-2xl font-bold text-gray dark:text-gray">カレンダー</h1>
 
         <div className="flex items-center space-x-4">
           <Button onClick={() => navigateMonth('prev')} variant="secondary" size="sm">
             ←
           </Button>
 
-          <h2 className="text-lg font-medium text-gray-900 dark:text-white">
+          <h2 className="text-lg font-medium text-gray dark:text-gray">
             {currentDate.getFullYear()}年 {monthNames[currentDate.getMonth()]}
           </h2>
 
@@ -178,7 +177,7 @@ export default function Calendar({ routines, executionRecords, userSettings }: P
           {weekDays.map((day) => (
             <div
               key={day}
-              className="p-2 text-center text-sm font-medium text-gray-600 dark:text-gray-300"
+              className="p-2 text-center text-sm font-medium text-gray dark:text-gray"
             >
               {day}
             </div>
@@ -198,18 +197,18 @@ export default function Calendar({ routines, executionRecords, userSettings }: P
               role="button"
               aria-label={`${day.date}の予定を表示`}
               className={`min-h-[80px] p-1 border rounded cursor-pointer transition-colors ${
-                day.isCurrentMonth ? 'border-gray-200 dark:border-gray-700' : 'opacity-50'
+                day.isCurrentMonth ? 'border-gray dark:border-gray' : 'opacity-50'
               } ${
                 day.isToday
-                  ? 'bg-blue-50 border-blue-300 dark:bg-blue-900 dark:border-blue-600'
-                  : 'hover:bg-gray-50 dark:hover:bg-gray-700'
+                  ? 'bg-blue border-blue-300 dark:bg-dark-blue dark:border-blue'
+                  : 'hover:bg-gray dark:hover:bg-gray'
               } ${day.isCurrentMonth ? 'hover:shadow-md' : ''}`}
             >
               <div
                 className={`text-sm font-medium mb-1 ${
                   day.isToday
-                    ? 'text-blue-600 dark:text-blue-200'
-                    : 'text-gray-700 dark:text-gray-300'
+                    ? 'text-blue dark:text-blue'
+                    : 'text-gray dark:text-gray'
                 }`}
               >
                 {day.dayNumber}
@@ -222,7 +221,7 @@ export default function Calendar({ routines, executionRecords, userSettings }: P
                   .map((routine, routineIndex) => (
                     <div
                       key={routineIndex}
-                      className="text-xs px-1 py-0.5 rounded truncate bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                      className="text-xs px-1 py-0.5 rounded truncate bg-green text-green dark:bg-green dark:text-green"
                       title={routine.routineName}
                     >
                       {routine.routineName}
@@ -230,7 +229,7 @@ export default function Calendar({ routines, executionRecords, userSettings }: P
                   ))}
 
                 {day.routines.filter((routine) => routine.isCompleted).length > 3 && (
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                  <div className="text-xs text-gray dark:text-gray">
                     +{day.routines.filter((routine) => routine.isCompleted).length - 3}件
                   </div>
                 )}
@@ -249,12 +248,12 @@ export default function Calendar({ routines, executionRecords, userSettings }: P
         {selectedDay && (
           <div className="space-y-4">
             {selectedDay.routines.filter((routine) => routine.isCompleted).length === 0 ? (
-              <p className="text-gray-500 dark:text-gray-400 text-center py-4">
+              <p className="text-gray dark:text-gray text-center py-4">
                 この日には実行されたミッションがありません
               </p>
             ) : (
               <div className="space-y-3">
-                <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                <p className="text-sm text-gray dark:text-gray mb-3">
                   実行されたミッション（
                   {selectedDay.routines.filter((routine) => routine.isCompleted).length}件）
                 </p>
@@ -263,9 +262,9 @@ export default function Calendar({ routines, executionRecords, userSettings }: P
                   .map((routine, index) => (
                     <div
                       key={index}
-                      className="flex items-center p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
+                      className="flex items-center p-3 rounded-lg bg-green dark:bg-green border border-green dark:border-green"
                     >
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green flex items-center justify-center mr-3">
                         <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                           <path
                             fillRule="evenodd"
@@ -275,7 +274,7 @@ export default function Calendar({ routines, executionRecords, userSettings }: P
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-green-800 dark:text-green-200">
+                        <p className="text-sm font-medium text-green dark:text-green">
                           {routine.routineName}
                         </p>
                       </div>

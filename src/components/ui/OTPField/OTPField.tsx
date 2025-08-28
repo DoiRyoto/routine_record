@@ -78,10 +78,10 @@ const OTPField = React.forwardRef<HTMLDivElement, OTPFieldProps>(
             onPaste={handlePaste}
             disabled={disabled}
             className={cn(
-              'h-12 w-12 rounded-md border border-gray-300 text-center text-lg font-medium',
-              'focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200',
+              'h-12 w-12 rounded-md border border-gray text-center text-lg font-medium',
+              'focus:border-blue focus:outline-none focus:ring-2 focus:ring-blue-200',
               'disabled:cursor-not-allowed disabled:opacity-50',
-              otp[index] && 'border-blue-500'
+              otp[index] && 'border-blue'
             )}
           />
         ))}

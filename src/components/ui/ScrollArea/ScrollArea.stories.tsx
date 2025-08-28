@@ -50,7 +50,7 @@ export const HorizontalScroll: Story = {
         {Array.from({ length: 20 }).map((_, i) => (
           <div
             key={i}
-            className="shrink-0 rounded-md bg-gradient-to-br from-blue-500 to-green-500 h-24 w-32 flex items-center justify-center text-white font-semibold"
+            className="shrink-0 rounded-md bg-blue h-24 w-32 flex items-center justify-center text-white font-semibold"
           >
             ミッション {i + 1}
           </div>
@@ -84,14 +84,14 @@ export const MissionProgress: Story = {
               <div className="flex justify-between items-start mb-2">
                 <div>
                   <h4 className="font-medium text-sm">{mission.name}</h4>
-                  <p className="text-xs text-gray-500">{mission.category}</p>
+                  <p className="text-xs text-gray">{mission.category}</p>
                 </div>
                 <span className={`px-2 py-1 text-xs rounded-full ${
                   mission.status === 'complete' 
-                    ? 'bg-green-100 text-green-700' 
+                    ? 'bg-green text-green' 
                     : mission.status === 'active' 
-                    ? 'bg-blue-100 text-blue-700' 
-                    : 'bg-orange-100 text-orange-700'
+                    ? 'bg-blue text-blue' 
+                    : 'bg-orange text-orange'
                 }`}>
                   {mission.status === 'complete' 
                     ? '完了' 
@@ -102,20 +102,20 @@ export const MissionProgress: Story = {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex-1 mr-3">
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray rounded-full h-2">
                     <div 
                       className={`h-2 rounded-full ${
                         mission.status === 'complete' 
-                          ? 'bg-green-500' 
+                          ? 'bg-green' 
                           : mission.status === 'active' 
-                          ? 'bg-blue-500' 
-                          : 'bg-orange-500'
+                          ? 'bg-blue' 
+                          : 'bg-orange'
                       }`}
                       style={{ width: `${(mission.progress / mission.total) * 100}%` }}
                     />
                   </div>
                 </div>
-                <span className="text-xs text-gray-600">
+                <span className="text-xs text-gray">
                   {mission.progress}/{mission.total}
                 </span>
               </div>
@@ -149,12 +149,12 @@ export const MissionHistory: Story = {
           ].map((entry, index) => (
             <div key={index} className="flex items-center space-x-3 text-sm">
               <div className="flex flex-col min-w-0">
-                <div className="font-medium text-gray-900 truncate">{entry.mission}</div>
-                <div className="text-gray-500 text-xs">
+                <div className="font-medium text-gray truncate">{entry.mission}</div>
+                <div className="text-gray text-xs">
                   {entry.date} {entry.time} • {entry.duration}
                 </div>
               </div>
-              <div className="flex-shrink-0 w-3 h-3 bg-green-400 rounded-full" />
+              <div className="flex-shrink-0 w-3 h-3 bg-green rounded-full" />
             </div>
           ))}
         </div>

@@ -84,9 +84,9 @@ export default function RoutineList({
   if (!isMounted) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">ミッション管理</h1>
+        <h1 className="text-2xl font-bold text-gray">ミッション管理</h1>
         <div className="text-center py-8">
-          <p className="text-gray-500">読み込み中...</p>
+          <p className="text-gray">読み込み中...</p>
         </div>
       </div>
     );
@@ -95,7 +95,7 @@ export default function RoutineList({
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">ミッション管理</h1>
+        <h1 className="text-2xl font-bold text-gray">ミッション管理</h1>
 
         <Button
           onClick={() => {
@@ -114,8 +114,8 @@ export default function RoutineList({
           onClick={() => setFilter('all')}
           className={`px-3 py-1 rounded-full text-sm transition-colors ${
             filter === 'all'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+              ? 'bg-blue text-white'
+              : 'bg-gray text-gray hover:bg-gray'
           }`}
         >
           すべて ({routines.length})
@@ -124,8 +124,8 @@ export default function RoutineList({
           onClick={() => setFilter('active')}
           className={`px-3 py-1 rounded-full text-sm transition-colors ${
             filter === 'active'
-              ? 'bg-green-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+              ? 'bg-green text-white'
+              : 'bg-gray text-gray hover:bg-gray'
           }`}
         >
           アクティブ ({routines.filter((r) => r.isActive).length})
@@ -134,8 +134,8 @@ export default function RoutineList({
           onClick={() => setFilter('inactive')}
           className={`px-3 py-1 rounded-full text-sm transition-colors ${
             filter === 'inactive'
-              ? 'bg-red-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+              ? 'bg-red text-white'
+              : 'bg-gray text-gray hover:bg-gray'
           }`}
         >
           非アクティブ ({routines.filter((r) => !r.isActive).length})
@@ -146,8 +146,8 @@ export default function RoutineList({
             onClick={() => setFilter(category)}
             className={`px-3 py-1 rounded-full text-sm transition-colors ${
               filter === category
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                ? 'bg-purple text-white'
+                : 'bg-gray text-gray hover:bg-gray'
             }`}
           >
             {category} ({routines.filter((r) => r.category === category).length})
@@ -156,7 +156,7 @@ export default function RoutineList({
       </div>
 
       {filteredRoutines.length === 0 ? (
-        <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+        <div className="text-center py-12 text-gray">
           {filter === 'all' ? 'ミッションがありません' : `${filter}のミッションがありません`}
         </div>
       ) : (
@@ -164,17 +164,17 @@ export default function RoutineList({
           {filteredRoutines.map((routine) => (
             <div
               key={routine.id}
-              className={`p-6 rounded-lg border bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 ${
+              className={`p-6 rounded-lg border bg-white border-gray ${
                 !routine.isActive ? 'opacity-60' : ''
               }`}
             >
               <div className="flex items-start justify-between mb-3">
-                <h3 className="font-medium text-gray-900 dark:text-white">{routine.name}</h3>
+                <h3 className="font-medium text-gray">{routine.name}</h3>
                 <span
                   className={`px-2 py-1 text-xs rounded-full ${
                     routine.isActive
-                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                      : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                      ? 'bg-green text-green'
+                      : 'bg-red text-red'
                   }`}
                 >
                   {routine.isActive ? 'アクティブ' : '非アクティブ'}
@@ -182,24 +182,24 @@ export default function RoutineList({
               </div>
 
               {routine.description && (
-                <p className="text-sm mb-3 text-gray-600 dark:text-gray-300">
+                <p className="text-sm mb-3 text-gray">
                   {routine.description}
                 </p>
               )}
 
               <div className="space-y-2 mb-4">
-                <span className="inline-block px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                <span className="inline-block px-2 py-1 text-xs rounded-full bg-blue text-blue">
                   {routine.category}
                 </span>
 
-                <div className="text-sm text-gray-600 dark:text-gray-300">
+                <div className="text-sm text-gray">
                   {routine.goalType === 'frequency_based' 
                     ? `目標: ${routine.targetPeriod === 'weekly' ? '週' : routine.targetPeriod === 'monthly' ? '月' : '日'}${routine.targetCount || 1}回`
                     : `スケジュール: ${routine.recurrenceType === 'daily' ? '毎日' : routine.recurrenceType === 'weekly' ? '週間' : '月間'}`
                   }
                 </div>
 
-                <div className="text-xs text-gray-500 dark:text-gray-400">
+                <div className="text-xs text-gray">
                   作成日: {formatDateInUserTimezone(routine.createdAt, userSettings?.timezone)}
                 </div>
               </div>

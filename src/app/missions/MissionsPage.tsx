@@ -207,7 +207,7 @@ export function MissionsPage({
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="all" className="relative">
             全て
-            <span className="ml-2 px-2 py-0.5 bg-gray-200 text-gray-700 rounded-full text-xs">
+            <span className="ml-2 px-2 py-0.5 bg-gray text-gray rounded-full text-xs">
               {stats.total}
             </span>
           </TabsTrigger>

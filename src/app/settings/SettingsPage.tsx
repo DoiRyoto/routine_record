@@ -69,15 +69,15 @@ export default function SettingsPage({
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">設定</h1>
+      <h1 className="text-2xl font-bold text-gray dark:text-gray">設定</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
-          <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">表示設定</h2>
+          <h2 className="text-lg font-medium mb-4 text-gray dark:text-gray">表示設定</h2>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-200">
+              <label className="block text-sm font-medium mb-2 text-gray dark:text-gray">
                 テーマ
               </label>
               <Select 
@@ -97,24 +97,24 @@ export default function SettingsPage({
                   <SelectItem value="auto">自動</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-xs text-gray dark:text-gray mt-1">
                 現在のテーマ: {theme === 'auto' ? '自動' : theme === 'light' ? 'ライト' : 'ダーク'}
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-200">
+              <label className="block text-sm font-medium mb-2 text-gray dark:text-gray">
                 言語
               </label>
               <div className="relative">
                 <select
                   value={formData.language}
                   onChange={(e) => handleChange('language', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg 
-                           bg-white text-gray-900 
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                           dark:bg-gray-700 dark:border-gray-600 dark:text-white
-                           dark:focus:ring-blue-400 dark:focus:border-blue-400
+                  className="w-full px-4 py-3 border border-gray rounded-lg 
+                           bg-white text-gray 
+                           focus:outline-none focus:ring-2 focus:ring-blue focus:border-blue
+                           dark:bg-dark-gray dark:border-dark-gray dark:text-gray
+                           dark:focus:ring-blue dark:focus:border-blue
                            appearance-none cursor-pointer transition-colors"
                 >
                   <option value="ja">日本語</option>
@@ -122,7 +122,7 @@ export default function SettingsPage({
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <svg
-                    className="w-5 h-5 text-gray-400 dark:text-gray-300"
+                    className="w-5 h-5 text-gray dark:text-gray"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -139,18 +139,18 @@ export default function SettingsPage({
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-200">
+              <label className="block text-sm font-medium mb-2 text-gray dark:text-gray">
                 時刻表示形式
               </label>
               <div className="relative">
                 <select
                   value={formData.timeFormat}
                   onChange={(e) => handleChange('timeFormat', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg 
-                           bg-white text-gray-900 
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                           dark:bg-gray-700 dark:border-gray-600 dark:text-white
-                           dark:focus:ring-blue-400 dark:focus:border-blue-400
+                  className="w-full px-4 py-3 border border-gray rounded-lg 
+                           bg-white text-gray 
+                           focus:outline-none focus:ring-2 focus:ring-blue focus:border-blue
+                           dark:bg-dark-gray dark:border-dark-gray dark:text-gray
+                           dark:focus:ring-blue dark:focus:border-blue
                            appearance-none cursor-pointer transition-colors"
                 >
                   <option value="12h">12時間表示</option>
@@ -158,7 +158,7 @@ export default function SettingsPage({
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <svg
-                    className="w-5 h-5 text-gray-400 dark:text-gray-300"
+                    className="w-5 h-5 text-gray dark:text-gray"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -183,7 +183,7 @@ export default function SettingsPage({
 
           <div className="flex items-center space-x-4">
             {isSaved && (
-              <span className="text-sm text-green-600 dark:text-green-400">✓ 保存しました</span>
+              <span className="text-sm text-green dark:text-green-400">✓ 保存しました</span>
             )}
             <Button type="submit" disabled={saving}>
               {saving ? '保存中...' : '設定を保存'}
@@ -203,7 +203,7 @@ export default function SettingsPage({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setShowResetDialog(false)}>キャンセル</AlertDialogCancel>
-            <AlertDialogAction onClick={handleResetConfirm} className="bg-red-600 hover:bg-red-700">
+            <AlertDialogAction onClick={handleResetConfirm} className="bg-red hover:bg-red">
               リセット
             </AlertDialogAction>
           </AlertDialogFooter>

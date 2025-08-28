@@ -10,7 +10,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray dark:bg-dark-gray">
       <Header />
       <main className="container mx-auto px-4 py-6">{children}</main>
     </div>

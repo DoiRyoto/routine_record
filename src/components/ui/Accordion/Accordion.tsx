@@ -13,7 +13,7 @@ const AccordionItem = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AccordionPrimitive.Item
     ref={ref}
-    className={cn('border-b border-gray-200', className)}
+    className={cn('border-b border-gray', className)}
     {...props}
   />
 ));
@@ -34,7 +34,7 @@ const AccordionTrigger = React.forwardRef<
     >
       {children}
       <svg
-        className="h-4 w-4 shrink-0 text-gray-500 transition-transform duration-200"
+        className="h-4 w-4 shrink-0 text-gray transition-transform duration-200"
         fill="none"
         stroke="currentColor"
         strokeWidth="2"

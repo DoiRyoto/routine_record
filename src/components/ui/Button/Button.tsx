@@ -6,21 +6,28 @@ import * as React from 'react';
 import { cn } from '@/lib/ui-utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-60 disabled:saturate-50 active:scale-95',
   {
     variants: {
       variant: {
-        primary: 'bg-blue-600 text-white shadow hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600',
-        secondary: 'bg-green-600 text-white shadow hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600',
-        outline: 'border border-gray-300 bg-white hover:bg-gray-50 text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700',
-        ghost: 'hover:bg-gray-100 text-gray-900 dark:hover:bg-gray-800 dark:text-gray-100',
-        danger: 'bg-red-600 text-white shadow hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600',
+        primary: 'bg-blue text-white shadow-lg hover:shadow-xl hover:bg-dark-blue transform hover:-translate-y-0.5',
+        secondary: 'bg-green text-white shadow-lg hover:shadow-xl hover:bg-dark-green transform hover:-translate-y-0.5',
+        outline: 'border-2 border-blue bg-transparent text-blue hover:bg-blue hover:text-white shadow-md hover:shadow-lg',
+        ghost: 'bg-transparent text-gray hover:bg-gray hover:text-white',
+        danger: 'bg-red text-white shadow-lg hover:shadow-xl hover:bg-dark-red transform hover:-translate-y-0.5',
+        success: 'bg-green text-white shadow-lg hover:shadow-xl hover:bg-dark-green transform hover:-translate-y-0.5',
+        warning: 'bg-orange text-white shadow-lg hover:shadow-xl hover:bg-dark-orange transform hover:-translate-y-0.5',
+        info: 'bg-teal text-white shadow-lg hover:shadow-xl hover:bg-dark-teal transform hover:-translate-y-0.5',
       },
       size: {
-        sm: 'h-8 rounded-md px-3 text-xs',
-        default: 'h-9 px-4 py-2',
-        lg: 'h-10 rounded-md px-8',
-        icon: 'h-9 w-9',
+        xs: 'h-7 px-2 text-xs rounded-md',
+        sm: 'h-8 px-3 text-sm rounded-md',
+        default: 'h-10 px-4 text-sm',
+        lg: 'h-12 px-6 text-base',
+        xl: 'h-14 px-8 text-lg',
+        icon: 'h-10 w-10 p-0',
+        'icon-sm': 'h-8 w-8 p-0 rounded-md',
+        'icon-lg': 'h-12 w-12 p-0',
       },
     },
     defaultVariants: {

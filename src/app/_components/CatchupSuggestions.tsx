@@ -42,7 +42,7 @@ export default function CatchupSuggestions({ routines, executionRecords, userSet
         <Card>
           <div className="flex items-center gap-2 mb-4">
             <span className="text-2xl">💡</span>
-            <h2 className="text-lg font-medium text-gray-900 dark:text-white">
+            <h2 className="text-lg font-medium text-gray dark:text-gray">
               今日の挽回ミッション
             </h2>
           </div>
@@ -56,7 +56,7 @@ export default function CatchupSuggestions({ routines, executionRecords, userSet
               >
                 <p className="text-sm text-yellow-800 dark:text-yellow-200">
                   {suggestion}
-                  <span className="ml-2 text-xs font-medium text-yellow-600">
+                  <span className="ml-2 text-xs font-medium text-yellow">
                     ボーナス +5 XP
                   </span>
                 </p>
@@ -71,7 +71,7 @@ export default function CatchupSuggestions({ routines, executionRecords, userSet
         <Card>
           <div className="flex items-center gap-2 mb-4">
             <span className="text-2xl">🚨</span>
-            <h2 className="text-lg font-medium text-gray-900 dark:text-white">
+            <h2 className="text-lg font-medium text-gray dark:text-gray">
               挽回が必要なミッション
             </h2>
           </div>
@@ -84,18 +84,18 @@ export default function CatchupSuggestions({ routines, executionRecords, userSet
               >
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white">
+                    <h3 className="font-medium text-gray dark:text-gray">
                       {analysis.routine.name}
                     </h3>
-                    <span className="inline-block px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 mt-1">
+                    <span className="inline-block px-2 py-1 text-xs rounded-full bg-blue text-blue dark:bg-dark-blue dark:text-blue-200 mt-1">
                       {analysis.routine.category}
                     </span>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <div className="text-sm font-medium text-gray dark:text-gray">
                       {analysis.currentProgress}/{analysis.targetCount}回
                     </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                    <div className="text-xs text-gray dark:text-gray">
                       残り{analysis.remainingDays}日
                     </div>
                   </div>
@@ -103,37 +103,37 @@ export default function CatchupSuggestions({ routines, executionRecords, userSet
 
                 {/* 進捗バー */}
                 <div className="mb-3">
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div className="w-full bg-gray dark:bg-gray rounded-full h-2">
                     <div
                       className={`h-2 rounded-full transition-all duration-300 ${
                         analysis.currentProgress / analysis.targetCount >= 0.8
-                          ? 'bg-green-500'
+                          ? 'bg-green'
                           : analysis.currentProgress / analysis.targetCount >= 0.5
-                          ? 'bg-yellow-500'
-                          : 'bg-red-500'
+                          ? 'bg-yellow'
+                          : 'bg-red'
                       }`}
                       style={{
                         width: `${Math.min((analysis.currentProgress / analysis.targetCount) * 100, 100)}%`,
                       }}
                     />
                   </div>
-                  <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                  <div className="text-xs text-gray dark:text-gray mt-1">
                     進捗: {Math.round((analysis.currentProgress / analysis.targetCount) * 100)}%
                   </div>
                 </div>
 
                 {/* ステータスメッセージ */}
-                <div className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                <div className="text-sm text-gray dark:text-gray mb-3">
                   {getCatchupProgressMessage(analysis)}
                 </div>
 
                 {/* 推奨アクション */}
                 {analysis.remainingTarget > 0 && (
-                  <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border">
-                    <div className="text-sm font-medium text-gray-900 dark:text-white mb-1">
+                  <div className="bg-white dark:bg-gray p-3 rounded-lg border">
+                    <div className="text-sm font-medium text-gray dark:text-gray mb-1">
                       推奨アクション:
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="text-sm text-gray dark:text-gray">
                       残り{analysis.remainingDays}日で{analysis.remainingTarget}回実行
                       （1日あたり約{analysis.suggestedDailyTarget}回）
                     </div>

@@ -44,7 +44,7 @@ export const LoginForm: Story = {
       <div className="w-80 space-y-4 p-6 border rounded-lg">
         <div className="text-center mb-6">
           <h2 className="text-xl font-semibold">ログイン</h2>
-          <p className="text-gray-600 text-sm mt-2">
+          <p className="text-gray text-sm mt-2">
             ミッション管理アプリにログインしてください
           </p>
         </div>
@@ -58,7 +58,7 @@ export const LoginForm: Story = {
             value={formData.email}
             onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
             placeholder="your@example.com"
-            className="w-full h-9 px-3 py-1 rounded-md border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-300"
+            className="w-full h-9 px-3 py-1 rounded-md border border-gray focus:outline-none focus:ring-1 focus:ring-blue-300"
           />
         </div>
         
@@ -73,7 +73,7 @@ export const LoginForm: Story = {
           />
         </div>
         
-        <button className="w-full h-9 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+        <button className="w-full h-9 px-4 py-2 bg-blue text-white rounded-md hover:bg-blue">
           ログイン
         </button>
       </div>
@@ -87,10 +87,10 @@ export const PasswordStrength: Story = {
     
     const getPasswordStrength = (pwd: string) => {
       if (pwd.length === 0) return { strength: 0, text: '', color: '' };
-      if (pwd.length < 6) return { strength: 1, text: '弱い', color: 'text-red-600' };
+      if (pwd.length < 6) return { strength: 1, text: '弱い', color: 'text-red' };
       if (pwd.length < 8) return { strength: 2, text: '普通', color: 'text-orange-600' };
       if (pwd.length < 12 && /[A-Z]/.test(pwd) && /[0-9]/.test(pwd)) {
-        return { strength: 3, text: '強い', color: 'text-green-600' };
+        return { strength: 3, text: '強い', color: 'text-green' };
       }
       if (pwd.length >= 12 && /[A-Z]/.test(pwd) && /[0-9]/.test(pwd) && /[!@#$%^&*]/.test(pwd)) {
         return { strength: 4, text: 'とても強い', color: 'text-green-700' };
@@ -121,27 +121,27 @@ export const PasswordStrength: Story = {
                 {strength.text}
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-gray rounded-full h-2">
               <div
                 className={`h-2 rounded-full transition-all duration-300 ${
-                  strength.strength === 1 ? 'bg-red-500 w-1/4' :
-                  strength.strength === 2 ? 'bg-orange-500 w-2/4' :
-                  strength.strength === 3 ? 'bg-green-500 w-3/4' :
-                  strength.strength === 4 ? 'bg-green-600 w-full' : 'w-0'
+                  strength.strength === 1 ? 'bg-red w-1/4' :
+                  strength.strength === 2 ? 'bg-orange w-2/4' :
+                  strength.strength === 3 ? 'bg-green w-3/4' :
+                  strength.strength === 4 ? 'bg-green w-full' : 'w-0'
                 }`}
               />
             </div>
-            <div className="text-xs text-gray-600 space-y-1">
-              <div className={password.length >= 8 ? 'text-green-600' : ''}>
+            <div className="text-xs text-gray space-y-1">
+              <div className={password.length >= 8 ? 'text-green' : ''}>
                 ✓ 8文字以上
               </div>
-              <div className={/[A-Z]/.test(password) ? 'text-green-600' : ''}>
+              <div className={/[A-Z]/.test(password) ? 'text-green' : ''}>
                 ✓ 大文字を含む
               </div>
-              <div className={/[0-9]/.test(password) ? 'text-green-600' : ''}>
+              <div className={/[0-9]/.test(password) ? 'text-green' : ''}>
                 ✓ 数字を含む
               </div>
-              <div className={/[!@#$%^&*]/.test(password) ? 'text-green-600' : ''}>
+              <div className={/[!@#$%^&*]/.test(password) ? 'text-green' : ''}>
                 ✓ 記号を含む
               </div>
             </div>
@@ -167,7 +167,7 @@ export const PasswordConfirmation: Story = {
       <div className="w-80 space-y-4">
         <div className="text-center mb-4">
           <h3 className="text-lg font-semibold">パスワードを設定</h3>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray">
             アカウント作成の最終ステップです
           </p>
         </div>
@@ -194,12 +194,12 @@ export const PasswordConfirmation: Story = {
             className={showMismatch ? 'border-red-300 focus:ring-red-300' : ''}
           />
           {showMismatch && (
-            <p className="mt-1 text-sm text-red-600">
+            <p className="mt-1 text-sm text-red">
               パスワードが一致しません
             </p>
           )}
           {passwordsMatch && (
-            <p className="mt-1 text-sm text-green-600">
+            <p className="mt-1 text-sm text-green">
               ✓ パスワードが一致しています
             </p>
           )}
@@ -207,7 +207,7 @@ export const PasswordConfirmation: Story = {
         
         <button
           disabled={!passwordsMatch}
-          className="w-full h-9 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full h-9 px-4 py-2 bg-blue text-white rounded-md hover:bg-blue disabled:opacity-50 disabled:cursor-not-allowed"
         >
           アカウントを作成
         </button>

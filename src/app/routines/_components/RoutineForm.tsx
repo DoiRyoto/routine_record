@@ -93,7 +93,7 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
+        <label className="block text-sm font-medium mb-1 text-gray dark:text-gray">
           ミッション名 *
         </label>
         <Input
@@ -107,7 +107,7 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
+        <label className="block text-sm font-medium mb-1 text-gray dark:text-gray">
           説明
         </label>
         <textarea
@@ -115,15 +115,15 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
           value={formData.description}
           onChange={handleChange}
           rows={3}
-          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 
-                     bg-white border-gray-300 text-gray-900 placeholder-gray-500
-                     dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:placeholder-slate-400"
+          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue 
+                     bg-white border-gray text-gray placeholder-gray0
+                     dark:bg-dark-gray dark:border-dark-gray dark:text-gray dark:placeholder-gray"
           placeholder="ミッションの詳細説明..."
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-slate-200">
+        <label className="block text-sm font-medium mb-2 text-gray dark:text-gray">
           カテゴリー *
         </label>
         <Select value={formData.category} onValueChange={handleCategoryChange}>
@@ -142,7 +142,7 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
+        <label className="block text-sm font-medium mb-1 text-gray dark:text-gray">
           ミッションタイプ *
         </label>
         <Select
@@ -161,12 +161,12 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
 
       {/* 頻度ベースの設定 */}
       {formData.goalType === 'frequency_based' && (
-        <div className="space-y-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-          <h3 className="font-medium text-gray-900 dark:text-white">頻度目標設定</h3>
+        <div className="space-y-4 p-4 bg-blue dark:bg-dark-blue/20 rounded-lg">
+          <h3 className="font-medium text-gray dark:text-gray">頻度目標設定</h3>
           
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
+              <label className="block text-sm font-medium mb-1 text-gray dark:text-gray">
                 期間 *
               </label>
               <Select
@@ -198,7 +198,7 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
             </div>
           </div>
           
-          <div className="text-sm text-gray-600 dark:text-gray-300">
+          <div className="text-sm text-gray dark:text-gray">
             例：「週に3回」「月に5回」など、期間内で達成したい実行回数を設定
           </div>
         </div>
@@ -206,11 +206,11 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
 
       {/* スケジュールベースの設定 */}
       {formData.goalType === 'schedule_based' && (
-        <div className="space-y-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-          <h3 className="font-medium text-gray-900 dark:text-white">スケジュール設定</h3>
+        <div className="space-y-4 p-4 bg-green dark:bg-green rounded-lg">
+          <h3 className="font-medium text-gray dark:text-gray">スケジュール設定</h3>
           
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
+            <label className="block text-sm font-medium mb-1 text-gray dark:text-gray">
               繰り返しパターン *
             </label>
             <Select
@@ -229,7 +229,7 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
             </Select>
           </div>
           
-          <div className="text-sm text-gray-600 dark:text-gray-300">
+          <div className="text-sm text-gray dark:text-gray">
             例：「毎日」「毎週月水金」「第一月曜」など、特定のスケジュールで実行
           </div>
         </div>
@@ -238,7 +238,7 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
       {/* スケジュールベースの詳細設定 */}
       {formData.goalType === 'schedule_based' && formData.recurrenceType === 'weekly' && (
         <div>
-          <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-slate-200">
+          <label className="block text-sm font-medium mb-2 text-gray dark:text-gray">
             曜日選択
           </label>
           <div className="grid grid-cols-7 gap-2">
@@ -249,8 +249,8 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
                 className={`
                   p-2 text-sm rounded-md border transition-colors
                   ${formData.daysOfWeek.includes(index)
-                    ? 'bg-blue-500 text-white border-blue-500'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 dark:bg-slate-700 dark:text-white dark:border-slate-600 dark:hover:bg-slate-600'
+                    ? 'bg-blue text-white border-blue'
+                    : 'bg-white text-gray border-gray hover:bg-gray dark:bg-dark-gray dark:text-gray dark:border-dark-gray dark:hover:bg-dark-gray'
                   }
                 `}
                 onClick={() => {
@@ -270,7 +270,7 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
       {formData.goalType === 'schedule_based' && formData.recurrenceType === 'monthly' && (
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-slate-200">
+            <label className="block text-sm font-medium mb-2 text-gray dark:text-gray">
               月間繰り返し種類
             </label>
             <div className="flex space-x-4">
@@ -283,7 +283,7 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
                   onChange={handleChange}
                   className="mr-2"
                 />
-                <span className="text-gray-700 dark:text-slate-200">月の特定日</span>
+                <span className="text-gray dark:text-gray">月の特定日</span>
               </label>
               <label className="flex items-center">
                 <input
@@ -294,14 +294,14 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
                   onChange={handleChange}
                   className="mr-2"
                 />
-                <span className="text-gray-700 dark:text-slate-200">第○曜日</span>
+                <span className="text-gray dark:text-gray">第○曜日</span>
               </label>
             </div>
           </div>
 
           {formData.monthlyType === 'day_of_month' && (
             <div>
-              <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
+              <label className="block text-sm font-medium mb-1 text-gray dark:text-gray">
                 日付（1-31）
               </label>
               <Input
@@ -318,7 +318,7 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
           {formData.monthlyType === 'day_of_week' && (
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
+                <label className="block text-sm font-medium mb-1 text-gray dark:text-gray">
                   第○週（-1は最終週）
                 </label>
                 <Select
@@ -338,7 +338,7 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
                 </Select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
+                <label className="block text-sm font-medium mb-1 text-gray dark:text-gray">
                   曜日
                 </label>
                 <Select
@@ -367,7 +367,7 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
       {formData.goalType === 'schedule_based' && formData.recurrenceType === 'custom' && (
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
+            <label className="block text-sm font-medium mb-1 text-gray dark:text-gray">
               間隔（日）
             </label>
             <Input
@@ -381,7 +381,7 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-slate-200">
+            <label className="block text-sm font-medium mb-1 text-gray dark:text-gray">
               開始日
             </label>
             <Input
@@ -403,7 +403,7 @@ export default function RoutineForm({ routine, onSubmit, onCancel }: RoutineForm
           onChange={handleChange}
           className="mr-2"
         />
-        <label className="text-sm text-gray-700 dark:text-slate-200">アクティブ</label>
+        <label className="text-sm text-gray dark:text-gray">アクティブ</label>
       </div>
 
       <div className="flex justify-end space-x-3 pt-4">

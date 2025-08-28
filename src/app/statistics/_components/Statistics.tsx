@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { Card } from '@/components/ui/Card';
 import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
 import type { ExecutionRecord, Routine } from '@/lib/db/schema';
-
 // Local interface for statistics display
 interface StatisticsData {
   routineId: string;
@@ -144,9 +143,9 @@ export default function Statistics({ routines, executionRecords, userSettings }:
   if (!isMounted) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">統計</h1>
+        <h1 className="text-2xl font-bold text-gray">統計</h1>
         <div className="text-center py-8">
-          <p className="text-gray-500">読み込み中...</p>
+          <p className="text-gray">読み込み中...</p>
         </div>
       </div>
     );
@@ -154,51 +153,51 @@ export default function Statistics({ routines, executionRecords, userSettings }:
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">統計</h1>
+      <h1 className="text-2xl font-bold text-gray">統計</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>
           <div className="text-center">
-            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+            <div className="text-3xl font-bold text-blue">
               {overallStats.totalRoutines}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">アクティブルーチン</div>
+            <div className="text-sm text-gray">アクティブルーチン</div>
           </div>
         </Card>
 
         <Card>
           <div className="text-center">
-            <div className="text-3xl font-bold text-green-600 dark:text-green-400">
+            <div className="text-3xl font-bold text-green">
               {overallStats.totalExecutions}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">総実行回数</div>
+            <div className="text-sm text-gray">総実行回数</div>
           </div>
         </Card>
 
         <Card>
           <div className="text-center">
-            <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+            <div className="text-3xl font-bold text-purple">
               {overallStats.uniqueExecutedRoutines}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">実行済みルーチン</div>
+            <div className="text-sm text-gray">実行済みルーチン</div>
           </div>
         </Card>
 
         <Card>
           <div className="text-center">
-            <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">
+            <div className="text-3xl font-bold text-orange">
               {overallStats.averageExecutionsPerDay}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">1日平均実行数</div>
+            <div className="text-sm text-gray">1日平均実行数</div>
           </div>
         </Card>
       </div>
 
       <Card>
-        <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">ルーチン別統計</h2>
+        <h2 className="text-xl font-bold mb-6 text-gray">ルーチン別統計</h2>
 
         {statisticsData.length === 0 ? (
-          <p className="text-center py-8 text-gray-500 dark:text-gray-400">
+          <p className="text-center py-8 text-gray">
             統計データがありません
           </p>
         ) : (
@@ -206,17 +205,17 @@ export default function Statistics({ routines, executionRecords, userSettings }:
             {statisticsData.map((stat) => (
               <div
                 key={stat.routineId}
-                className="p-4 rounded-lg border bg-gray-50 border-gray-200 dark:bg-gray-700 dark:border-gray-600"
+                className="p-4 rounded-lg border bg-gray border-gray"
               >
                 <div className="flex items-start justify-between mb-3">
-                  <h3 className="font-medium text-gray-900 dark:text-white">{stat.routineName}</h3>
+                  <h3 className="font-medium text-gray">{stat.routineName}</h3>
                   <span
                     className={`px-2 py-1 text-xs rounded-full ${
                       stat.completionRate >= 80
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                        ? 'bg-green text-green'
                         : stat.completionRate >= 50
-                          ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                          : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                          ? 'bg-yellow text-yellow'
+                          : 'bg-red text-red'
                     }`}
                   >
                     達成率 {stat.completionRate}%
@@ -225,23 +224,23 @@ export default function Statistics({ routines, executionRecords, userSettings }:
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
-                    <div className="font-medium text-gray-600 dark:text-gray-300">総実行回数</div>
-                    <div className="text-lg font-bold text-gray-900 dark:text-white">
+                    <div className="font-medium text-gray">総実行回数</div>
+                    <div className="text-lg font-bold text-gray">
                       {stat.totalExecutions}回
                     </div>
                   </div>
 
                   <div>
-                    <div className="font-medium text-gray-600 dark:text-gray-300">連続実行</div>
-                    <div className="text-lg font-bold text-gray-900 dark:text-white">
+                    <div className="font-medium text-gray">連続実行</div>
+                    <div className="text-lg font-bold text-gray">
                       {stat.streak}日
                     </div>
                   </div>
 
                   {stat.averageDuration && (
                     <div>
-                      <div className="font-medium text-gray-600 dark:text-gray-300">平均時間</div>
-                      <div className="text-lg font-bold text-gray-900 dark:text-white">
+                      <div className="font-medium text-gray">平均時間</div>
+                      <div className="text-lg font-bold text-gray">
                         {stat.averageDuration}分
                       </div>
                     </div>
@@ -249,8 +248,8 @@ export default function Statistics({ routines, executionRecords, userSettings }:
 
                   {stat.lastExecuted && (
                     <div>
-                      <div className="font-medium text-gray-600 dark:text-gray-300">最終実行</div>
-                      <div className="text-lg font-bold text-gray-900 dark:text-white">
+                      <div className="font-medium text-gray">最終実行</div>
+                      <div className="text-lg font-bold text-gray">
                         {formatDateInUserTimezone(stat.lastExecuted, userSettings?.timezone, {
                           month: 'short',
                           day: 'numeric',

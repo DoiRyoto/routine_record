@@ -20,8 +20,8 @@ export function StatsCard({
   className = ''
 }: StatsCardProps) {
   const variantClasses = {
-    default: 'border-gray-200',
-    primary: 'border-blue-200 bg-blue-50',
+    default: 'border-gray',
+    primary: 'border-blue-200 bg-blue',
     success: 'border-green-200 bg-green-50',
     warning: 'border-yellow-200 bg-yellow-50',
     danger: 'border-red-200 bg-red-50'
@@ -30,12 +30,12 @@ export function StatsCard({
   return (
     <Card className={`p-4 ${variantClasses[variant]} ${className}`}>
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-medium text-gray-500">{title}</h3>
+        <h3 className="text-sm font-medium text-gray">{title}</h3>
         {icon && <div className="text-lg">{icon}</div>}
       </div>
       <div className="text-2xl font-bold mb-1">{value}</div>
       {subtitle && (
-        <p className="text-xs text-gray-500">{subtitle}</p>
+        <p className="text-xs text-gray">{subtitle}</p>
       )}
     </Card>
   );

@@ -146,28 +146,56 @@ export default function RoutinesPage({
   );
 
   return (
-    <div className="space-y-6">
-      <RoutineList
-        routines={routines}
-        userSettings={userSettings}
-        onEdit={(routine) => {
-          // 更新可能なフィールドのみを抽出
-          const updateFields = {
-            name: routine.name,
-            description: routine.description,
-            category: routine.category,
-            goalType: routine.goalType,
-            targetCount: routine.targetCount,
-            targetPeriod: routine.targetPeriod,
-            recurrenceType: routine.recurrenceType,
-            recurrenceInterval: routine.recurrenceInterval,
-            isActive: routine.isActive,
-          };
-          handleUpdateRoutine(routine.id, updateFields);
-        }}
-        onDelete={handleDeleteRoutine}
-        onAdd={handleAddRoutine}
-      />
+    <div className="min-h-screen bg-gradient-to-br from-white via-green/5 to-teal/10 dark:from-black dark:via-green/5 dark:to-teal/10">
+      <div className="container mx-auto px-4 py-8">
+        {/* ページヘッダー */}
+        <div className="mb-8">
+          <div className="bg-gradient-to-r from-green/90 to-teal/90 text-white rounded-2xl p-6 shadow-xl backdrop-blur-md border border-white/20 dark:border-white/10">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold">
+                  ルーチン管理
+                </h1>
+                <p className="text-white/80">
+                  習慣を作って、継続的な成長を目指しましょう
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ルーチンリスト */}
+        <div className="bg-white/60 dark:bg-black/40 backdrop-blur-md rounded-2xl border border-white/20 dark:border-white/10 shadow-xl overflow-hidden">
+          <div className="p-6">
+            <RoutineList
+              routines={routines}
+              userSettings={userSettings}
+              onEdit={(routine) => {
+                // 更新可能なフィールドのみを抽出
+                const updateFields = {
+                  name: routine.name,
+                  description: routine.description,
+                  category: routine.category,
+                  goalType: routine.goalType,
+                  targetCount: routine.targetCount,
+                  targetPeriod: routine.targetPeriod,
+                  recurrenceType: routine.recurrenceType,
+                  recurrenceInterval: routine.recurrenceInterval,
+                  isActive: routine.isActive,
+                };
+                handleUpdateRoutine(routine.id, updateFields);
+              }}
+              onDelete={handleDeleteRoutine}
+              onAdd={handleAddRoutine}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

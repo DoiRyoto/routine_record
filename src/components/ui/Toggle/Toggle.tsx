@@ -8,13 +8,13 @@ import * as React from 'react';
 import { cn } from '@/lib/ui-utils';
 
 const toggleVariants = cva(
-  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-300 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-blue-100 data-[state=on]:text-blue-900',
+  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-gray hover:text-gray focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-blue data-[state=on]:text-blue',
   {
     variants: {
       variant: {
         default: 'bg-transparent',
         outline:
-          'border border-gray-200 bg-transparent shadow-sm hover:bg-gray-100 hover:text-gray-900',
+          'border border-gray bg-transparent shadow-sm hover:bg-gray hover:text-gray',
       },
       size: {
         default: 'h-9 px-3',

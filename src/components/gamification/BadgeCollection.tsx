@@ -31,10 +31,10 @@ export function BadgeCollection({
   const remainingCount = badges.length - maxDisplay;
 
   const rarityColors = {
-    common: 'border-gray-300 bg-gray-50',
-    rare: 'border-blue-300 bg-blue-50',
-    epic: 'border-purple-300 bg-purple-50',
-    legendary: 'border-yellow-300 bg-yellow-50'
+    common: 'border-gray bg-gray',
+    rare: 'border-blue bg-blue',
+    epic: 'border-purple bg-purple',
+    legendary: 'border-yellow bg-yellow'
   };
 
   // 実際のsize使用例（将来的に実装予定）
@@ -45,7 +45,7 @@ export function BadgeCollection({
     <Card className={`p-4 ${className}`}>
       <h3 className="font-medium mb-4">{title}</h3>
       {shouldShowEmpty ? (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-gray">
           <div className="text-4xl mb-2">🏆</div>
           <p>まだバッジを獲得していません</p>
         </div>
@@ -73,13 +73,13 @@ export function BadgeCollection({
                   {userBadge.badge.name}
                 </div>
                 {userBadge.isNew && (
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full" />
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-red dark:bg-dark-red rounded-full" />
                 )}
               </div>
             ))}
           </div>
           {remainingCount > 0 && (
-            <div className="text-center text-sm text-gray-500">
+            <div className="text-center text-sm text-gray">
               他 {remainingCount} 個のバッジ
             </div>
           )}

@@ -39,7 +39,7 @@ export const missionsHandlers = [
     try {
       const body = await request.json() as {
         action: string;
-        [key: string]: any;
+        [key: string]: unknown;
       };
       
       const { action } = body;
@@ -54,7 +54,7 @@ export const missionsHandlers = [
 
         case 'getMission':
           const { missionId } = body;
-          if (!missionId) {
+          if (!missionId || typeof missionId !== 'string') {
             return HttpResponse.json(
               { error: 'missionIdが必要です' },
               { status: 400 }

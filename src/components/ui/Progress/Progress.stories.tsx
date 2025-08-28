@@ -27,7 +27,7 @@ export const Default: Story = {
     <div className="w-60">
       <div className="mb-2 text-sm font-medium">今日のミッション進捗</div>
       <Progress value={args.value} />
-      <div className="mt-1 text-xs text-gray-600">{args.value}% 完了</div>
+      <div className="mt-1 text-xs text-gray">{args.value}% 完了</div>
     </div>
   ),
 };
@@ -40,7 +40,7 @@ export const Low: Story = {
     <div className="w-60">
       <div className="mb-2 text-sm font-medium">週間ミッション進捗</div>
       <Progress value={args.value} />
-      <div className="mt-1 text-xs text-gray-600">{args.value}% 完了</div>
+      <div className="mt-1 text-xs text-gray">{args.value}% 完了</div>
     </div>
   ),
 };
@@ -53,7 +53,7 @@ export const Medium: Story = {
     <div className="w-60">
       <div className="mb-2 text-sm font-medium">月間ミッション進捗</div>
       <Progress value={args.value} />
-      <div className="mt-1 text-xs text-gray-600">{args.value}% 完了</div>
+      <div className="mt-1 text-xs text-gray">{args.value}% 完了</div>
     </div>
   ),
 };
@@ -66,7 +66,7 @@ export const High: Story = {
     <div className="w-60">
       <div className="mb-2 text-sm font-medium">年間目標進捗</div>
       <Progress value={args.value} />
-      <div className="mt-1 text-xs text-gray-600">{args.value}% 完了</div>
+      <div className="mt-1 text-xs text-gray">{args.value}% 完了</div>
     </div>
   ),
 };
@@ -79,7 +79,7 @@ export const Complete: Story = {
     <div className="w-60">
       <div className="mb-2 text-sm font-medium">読書ミッション</div>
       <Progress value={args.value} />
-      <div className="mt-1 text-xs text-green-600 font-medium">
+      <div className="mt-1 text-xs text-green font-medium">
         🎉 {args.value}% 達成！おめでとうございます！
       </div>
     </div>
@@ -92,21 +92,21 @@ export const MultipleProgress: Story = {
       <div className="w-60">
         <div className="mb-2 flex justify-between text-sm">
           <span className="font-medium">運動ミッション</span>
-          <span className="text-gray-600">3/5 完了</span>
+          <span className="text-gray">3/5 完了</span>
         </div>
         <Progress value={60} />
       </div>
       <div className="w-60">
         <div className="mb-2 flex justify-between text-sm">
           <span className="font-medium">読書ミッション</span>
-          <span className="text-gray-600">2/3 完了</span>
+          <span className="text-gray">2/3 完了</span>
         </div>
         <Progress value={67} />
       </div>
       <div className="w-60">
         <div className="mb-2 flex justify-between text-sm">
           <span className="font-medium">学習ミッション</span>
-          <span className="text-gray-600">1/4 完了</span>
+          <span className="text-gray">1/4 完了</span>
         </div>
         <Progress value={25} />
       </div>

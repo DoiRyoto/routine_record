@@ -54,7 +54,7 @@ export const LoginForm: Story = {
     <Form className="w-80 space-y-4">
       <div className="text-center mb-6">
         <h2 className="text-xl font-semibold">ログイン</h2>
-        <p className="text-gray-600 text-sm mt-2">
+        <p className="text-gray text-sm mt-2">
           アカウントにログインしてください
         </p>
       </div>
@@ -102,7 +102,7 @@ export const MissionForm: Story = {
     <Form className="w-96 space-y-4">
       <div className="text-center mb-6">
         <h2 className="text-lg font-semibold">新しいミッション</h2>
-        <p className="text-gray-600 text-sm mt-1">
+        <p className="text-gray text-sm mt-1">
           日々の習慣を作りましょう
         </p>
       </div>
@@ -162,7 +162,7 @@ export const MissionForm: Story = {
       <div className="flex gap-3">
         <button 
           type="button"
-          className="flex-1 h-9 px-4 py-2 text-sm font-medium rounded-md border border-gray-300 bg-white hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-blue-300"
+          className="flex-1 h-9 px-4 py-2 text-sm font-medium rounded-md border border-gray bg-white hover:bg-gray focus:outline-none focus:ring-1 focus:ring-blue-300"
         >
           キャンセル
         </button>

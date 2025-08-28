@@ -21,7 +21,7 @@ export const Default: Story = {
         <Label htmlFor="mission-name">ミッション名</Label>
         <input
           id="mission-name"
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          className="mt-1 block w-full px-3 py-2 border border-gray rounded-md shadow-sm focus:outline-none focus:ring-blue focus:border-blue"
           placeholder="例: 毎朝の読書"
         />
       </div>
@@ -33,12 +33,12 @@ export const Required: Story = {
   render: () => (
     <div>
       <Label htmlFor="email">
-        メールアドレス <span className="text-red-500">*</span>
+        メールアドレス <span className="text-red">*</span>
       </Label>
       <input
         id="email"
         type="email"
-        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        className="mt-1 block w-full px-3 py-2 border border-gray rounded-md shadow-sm focus:outline-none focus:ring-blue focus:border-blue"
         placeholder="example@email.com"
       />
     </div>

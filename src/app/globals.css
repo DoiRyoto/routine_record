@@ -5,22 +5,64 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* ライト色変数 */
+  --blue: hsl(210, 35%, 75%);
+  --green: hsl(140, 30%, 75%);
+  --red: hsl(0, 35%, 75%);
+  --yellow: hsl(45, 40%, 75%);
+  --purple: hsl(270, 35%, 75%);
+  --orange: hsl(25, 40%, 75%);
+  --pink: hsl(330, 30%, 75%);
+  --teal: hsl(180, 30%, 75%);
+  --indigo: hsl(240, 35%, 75%);
+  --gray: hsl(200, 15%, 75%);
+  
+  /* 濃い色変数 */
+  --deep-blue: hsl(210, 35%, 25%);
+  --deep-green: hsl(140, 30%, 25%);
+  --deep-red: hsl(0, 35%, 25%);
+  --deep-yellow: hsl(45, 40%, 25%);
+  --deep-purple: hsl(270, 35%, 25%);
+  --deep-orange: hsl(25, 40%, 25%);
+  --deep-pink: hsl(330, 30%, 25%);
+  --deep-teal: hsl(180, 30%, 25%);
+  --deep-indigo: hsl(240, 35%, 25%);
+  --deep-gray: hsl(200, 15%, 25%);
 }
 
 :root.dark {
   --background: #0a0a0a;
   --foreground: #ededed;
+  
+  /* ダークモードでは値はそのまま（CSS variablesの値は変えない） */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-japanese: var(--font-noto-sans-jp);
+  --font-english: var(--font-roboto);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-noto-sans-jp), var(--font-roboto), system-ui, -apple-system, sans-serif;
+  font-display: swap;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* パフォーマンス最適化のためのフォント読み込み */
+@font-face {
+  font-family: 'Noto Sans JP';
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-display: swap;
+}
+

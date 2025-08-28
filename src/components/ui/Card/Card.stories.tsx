@@ -32,8 +32,8 @@ export const Default: Story = {
       </CardHeader>
       <CardContent>
         <p>今週の進捗: 5/7日完了</p>
-        <div className="mt-2 h-2 bg-gray-200 rounded">
-          <div className="h-2 bg-green-600 rounded" style={{ width: '71%' }} />
+        <div className="mt-2 h-2 bg-gray rounded">
+          <div className="h-2 bg-green rounded" style={{ width: '71%' }} />
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">

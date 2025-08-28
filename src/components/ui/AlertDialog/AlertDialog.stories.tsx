@@ -27,7 +27,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <AlertDialog>
-      <AlertDialogTrigger className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+      <AlertDialogTrigger className="bg-red text-white px-4 py-2 rounded hover:bg-red">
         ミッションを削除
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -39,7 +39,7 @@ export const Default: Story = {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>キャンセル</AlertDialogCancel>
-          <AlertDialogAction className="bg-red-600 hover:bg-red-700">
+          <AlertDialogAction className="bg-red hover:bg-red">
             削除する
           </AlertDialogAction>
         </AlertDialogFooter>

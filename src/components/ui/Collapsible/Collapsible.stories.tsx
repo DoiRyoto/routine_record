@@ -126,7 +126,7 @@ export const MissionCategories: Story = {
           className="space-y-2"
         >
           <div className="flex items-center justify-between space-x-4">
-            <h4 className="text-sm font-semibold text-blue-700">
+            <h4 className="text-sm font-semibold text-blue">
               学習・成長 (1/2)
             </h4>
             <CollapsibleTrigger asChild>
@@ -144,7 +144,7 @@ export const MissionCategories: Story = {
             </CollapsibleTrigger>
           </div>
           <CollapsibleContent className="space-y-2">
-            <div className="rounded-md border bg-blue-50 px-4 py-3 text-sm">
+            <div className="rounded-md border bg-blue px-4 py-3 text-sm">
               ✅ 英語学習 (30分)
             </div>
             <div className="rounded-md border px-4 py-3 text-sm">

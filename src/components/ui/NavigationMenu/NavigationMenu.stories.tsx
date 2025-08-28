@@ -36,13 +36,13 @@ const ListItem = React.forwardRef<
         <a
           ref={ref}
           className={cn(
-            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900',
+            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray hover:text-gray focus:bg-gray focus:text-gray',
             className
           )}
           {...props}
         >
           <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-gray-600">
+          <p className="line-clamp-2 text-sm leading-snug text-gray">
             {children}
           </p>
         </a>
@@ -63,13 +63,13 @@ export const Default: Story = {
               <li className="row-span-3">
                 <NavigationMenuLink asChild>
                   <Link
-                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-blue-500/20 to-blue-700/20 p-6 no-underline outline-none focus:shadow-md"
+                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-blue p-6 no-underline outline-none focus:shadow-md"
                     href="/"
                   >
                     <div className="mb-2 mt-4 text-lg font-medium">
                       ダッシュボード
                     </div>
-                    <p className="text-sm leading-tight text-gray-600">
+                    <p className="text-sm leading-tight text-gray">
                       今日のミッション進捗と統計を確認できます
                     </p>
                   </Link>

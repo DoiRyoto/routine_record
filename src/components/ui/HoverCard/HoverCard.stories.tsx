@@ -31,11 +31,11 @@ export const Default: Story = {
         <div className="flex justify-between space-x-4">
           <div className="space-y-1">
             <h4 className="text-sm font-semibold">朝のジョギング</h4>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray">
               毎日30分間のジョギングで健康的な体づくりを目指します。
             </p>
             <div className="flex items-center pt-2">
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray">
                 進捗率: 75% ・ 継続日数: 12日
               </span>
             </div>
@@ -55,7 +55,7 @@ export const WithAvatar: Story = {
       <HoverCardContent className="w-80">
         <div className="flex justify-between space-x-4">
           <Avatar>
-            <div className="flex h-full w-full items-center justify-center bg-blue-100 text-blue-600">
+            <div className="flex h-full w-full items-center justify-center bg-blue text-blue">
               山
             </div>
           </Avatar>
@@ -70,7 +70,7 @@ export const WithAvatar: Story = {
                 <rect width="20" height="14" x="2" y="3" rx="2" ry="2"/>
                 <path d="m22 3-10 6L2 3"/>
               </svg>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray">
                 2024年3月から参加
               </span>
             </div>
@@ -86,9 +86,9 @@ export const MissionProgress: Story = {
     <div className="flex gap-4">
       <HoverCard>
         <HoverCardTrigger asChild>
-          <div className="cursor-pointer rounded-lg border p-3 hover:bg-gray-50">
+          <div className="cursor-pointer rounded-lg border p-3 hover:bg-gray">
             <div className="text-sm font-medium">運動ミッション</div>
-            <div className="text-xs text-gray-500">3/5 完了</div>
+            <div className="text-xs text-gray">3/5 完了</div>
           </div>
         </HoverCardTrigger>
         <HoverCardContent>
@@ -97,26 +97,26 @@ export const MissionProgress: Story = {
             <div className="space-y-1 text-sm">
               <div className="flex justify-between">
                 <span>ジョギング</span>
-                <span className="text-green-600">✓</span>
+                <span className="text-green">✓</span>
               </div>
               <div className="flex justify-between">
                 <span>筋トレ</span>
-                <span className="text-green-600">✓</span>
+                <span className="text-green">✓</span>
               </div>
               <div className="flex justify-between">
                 <span>ストレッチ</span>
-                <span className="text-green-600">✓</span>
+                <span className="text-green">✓</span>
               </div>
               <div className="flex justify-between">
                 <span>ウォーキング</span>
-                <span className="text-gray-400">-</span>
+                <span className="text-gray">-</span>
               </div>
               <div className="flex justify-between">
                 <span>ヨガ</span>
-                <span className="text-gray-400">-</span>
+                <span className="text-gray">-</span>
               </div>
             </div>
-            <div className="pt-2 text-xs text-gray-500">
+            <div className="pt-2 text-xs text-gray">
               達成率: 60%
             </div>
           </div>
@@ -125,9 +125,9 @@ export const MissionProgress: Story = {
 
       <HoverCard>
         <HoverCardTrigger asChild>
-          <div className="cursor-pointer rounded-lg border p-3 hover:bg-gray-50">
+          <div className="cursor-pointer rounded-lg border p-3 hover:bg-gray">
             <div className="text-sm font-medium">学習ミッション</div>
-            <div className="text-xs text-gray-500">1/3 完了</div>
+            <div className="text-xs text-gray">1/3 完了</div>
           </div>
         </HoverCardTrigger>
         <HoverCardContent>
@@ -136,18 +136,18 @@ export const MissionProgress: Story = {
             <div className="space-y-1 text-sm">
               <div className="flex justify-between">
                 <span>英語学習</span>
-                <span className="text-green-600">✓</span>
+                <span className="text-green">✓</span>
               </div>
               <div className="flex justify-between">
                 <span>読書</span>
-                <span className="text-gray-400">-</span>
+                <span className="text-gray">-</span>
               </div>
               <div className="flex justify-between">
                 <span>プログラミング</span>
-                <span className="text-gray-400">-</span>
+                <span className="text-gray">-</span>
               </div>
             </div>
-            <div className="pt-2 text-xs text-gray-500">
+            <div className="pt-2 text-xs text-gray">
               達成率: 33%
             </div>
           </div>

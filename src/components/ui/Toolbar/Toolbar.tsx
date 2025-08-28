@@ -12,7 +12,7 @@ const Toolbar = React.forwardRef<
   <ToolbarPrimitive.Root
     ref={ref}
     className={cn(
-      'flex min-h-[2.5rem] items-center space-x-1 rounded-md border border-gray-200 bg-white p-1.5',
+      'flex min-h-[2.5rem] items-center space-x-1 rounded-md border border-gray bg-white p-1.5',
       className
     )}
     {...props}
@@ -26,7 +26,7 @@ const ToolbarSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToolbarPrimitive.Separator
     ref={ref}
-    className={cn('mx-2 h-4 w-px bg-gray-200', className)}
+    className={cn('mx-2 h-4 w-px bg-gray', className)}
     {...props}
   />
 ));
@@ -39,7 +39,7 @@ const ToolbarLink = React.forwardRef<
   <ToolbarPrimitive.Link
     ref={ref}
     className={cn(
-      'inline-flex items-center justify-center rounded-sm px-3 py-1.5 text-sm font-medium transition-colors hover:bg-blue-50 hover:text-blue-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-300 disabled:pointer-events-none disabled:opacity-50',
+      'inline-flex items-center justify-center rounded-sm px-3 py-1.5 text-sm font-medium transition-colors hover:bg-blue hover:text-blue focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue disabled:pointer-events-none disabled:opacity-50',
       className
     )}
     {...props}
@@ -54,7 +54,7 @@ const ToolbarButton = React.forwardRef<
   <ToolbarPrimitive.Button
     ref={ref}
     className={cn(
-      'inline-flex items-center justify-center rounded-sm px-3 py-1.5 text-sm font-medium transition-colors hover:bg-blue-50 hover:text-blue-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-300 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-blue-100 data-[state=on]:text-blue-900',
+      'inline-flex items-center justify-center rounded-sm px-3 py-1.5 text-sm font-medium transition-colors hover:bg-blue hover:text-blue focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-blue data-[state=on]:text-blue',
       className
     )}
     {...props}
@@ -81,7 +81,7 @@ const ToolbarToggleItem = React.forwardRef<
   <ToolbarPrimitive.ToggleItem
     ref={ref}
     className={cn(
-      'inline-flex items-center justify-center rounded-sm px-3 py-1.5 text-sm font-medium transition-colors hover:bg-blue-50 hover:text-blue-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-300 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-blue-100 data-[state=on]:text-blue-900',
+      'inline-flex items-center justify-center rounded-sm px-3 py-1.5 text-sm font-medium transition-colors hover:bg-blue hover:text-blue focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-blue data-[state=on]:text-blue',
       'first:rounded-l-md last:rounded-r-md',
       className
     )}
