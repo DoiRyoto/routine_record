@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 interface User {
@@ -45,7 +46,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onSave }
         </div>
         
         <div>
-          <img src={user?.avatarUrl} alt="アバター" />
+          <Image src={user?.avatarUrl || '/default-avatar.png'} alt="アバター" width={64} height={64} />
           <label htmlFor="avatar">アバター画像</label>
           <input
             id="avatar"

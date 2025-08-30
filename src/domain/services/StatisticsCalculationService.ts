@@ -357,7 +357,7 @@ export class StatisticsCalculationService {
       executionRecords = executionRecords.filter(record => record.routineId === routineId);
     }
 
-    const result: TimeSeriesData[] = [];
+    const _result: TimeSeriesData[] = [];
     const dayMap = new Map<string, { executions: number; duration: number }>();
 
     executionRecords.forEach(record => {
@@ -376,7 +376,7 @@ export class StatisticsCalculationService {
     })).sort((a, b) => a.date.localeCompare(b.date));
   }
 
-  async calculateComparison(userId: string, period: string): Promise<ComparisonData> {
+  async calculateComparison(userId: string, _period: string): Promise<ComparisonData> {
     const executionRecords = await this.executionRecordRepository.getByUserId(userId);
     
     // Simplified comparison calculation
@@ -473,7 +473,7 @@ export class StatisticsCalculationService {
       if (timezone && timezone !== 'UTC') {
         return date.toLocaleDateString('sv-SE', { timeZone: timezone });
       }
-    } catch (error) {
+    } catch {
       // Fall back to UTC if timezone is invalid
     }
     return date.toISOString().split('T')[0];

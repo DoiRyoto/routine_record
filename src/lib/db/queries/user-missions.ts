@@ -27,7 +27,7 @@ export interface UserMissionPagination {
 export async function getUserMissions(
   userId: string, 
   filters?: UserMissionFilters,
-  pagination?: UserMissionPagination
+  _pagination?: UserMissionPagination
 ): Promise<(UserMission & { mission: Mission; badge?: Badge | null })[]> {
   try {
     // Build where conditions

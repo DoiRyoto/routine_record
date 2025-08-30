@@ -168,7 +168,7 @@ export class DrizzleRoutineRepository implements IRoutineRepository {
     }
   }
 
-  async findScheduledForDate(userId: UserId, date: Date): Promise<Routine[]> {
+  async findScheduledForDate(userId: UserId, _date: Date): Promise<Routine[]> {
     // Simplified implementation - returns all schedule-based routines
     try {
       const result = await db

@@ -55,28 +55,28 @@ export function useCompleteRoutine(options: UseCompleteRoutineOptions = {}): Use
 
       return result;
     } catch (err) {
-      let error: Error;
+      let caughtError: Error;
 
       if (err instanceof Error) {
         // ネットワークエラーの場合はメッセージを分かりやすくする
         if (err.message.includes('fetch')) {
-          error = new Error('ネットワークエラーが発生しました');
+          caughtError = new Error('ネットワークエラーが発生しました');
         } else {
-          error = err;
+          caughtError = err;
         }
       } else {
-        error = new Error('不明なエラーが発生しました');
+        caughtError = new Error('不明なエラーが発生しました');
       }
 
-      setError(error);
+      setError(caughtError);
 
       // エラーコールバック実行
       if (options.onError) {
-        options.onError(error);
+        options.onError(caughtError);
       }
 
       // エラーを再スロー
-      throw error;
+      throw caughtError;
     } finally {
       setIsCompleting(false);
     }

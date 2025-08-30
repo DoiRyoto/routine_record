@@ -78,7 +78,7 @@ export function useDashboardData(): UseDashboardDataReturn {
       }
 
       // JSON パース
-      const [userResult, routinesResult, statisticsResult, notificationsResult] = await Promise.all([
+      const [userResult, _routinesResult, statisticsResult, notificationsResult] = await Promise.all([
         userResponse.json(),
         routinesResponse.json(),
         statisticsResponse.json(),

@@ -68,7 +68,7 @@ function validateQueryParams(searchParams: URLSearchParams) {
   // challengeIdのバリデーション（基本的な形式チェック）
   if (challengeId) {
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    const uuidLikeRegex = /^[0-9a-f\-]+$/i; // UUID風の文字列（数字、英字、ハイフンのみ）
+    const uuidLikeRegex = /^[0-9a-f-]+$/i; // UUID風の文字列（数字、英字、ハイフンのみ）
     
     if (challengeId.trim() === '' || challengeId.length < 3) {
       return 'challengeId パラメータが無効です。3文字以上の値を指定してください';

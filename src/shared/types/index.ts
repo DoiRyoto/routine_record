@@ -82,12 +82,12 @@ export interface ApiResponse<T> {
 // Helper for creating API responses
 export const createApiResponse = <T>(
   data: T,
-  success: boolean = true,
+  isSuccess: boolean = true,
   error?: ApiResponse<T>['error']
 ): ApiResponse<T> => ({
-  success,
-  data: success ? data : undefined,
-  error: !success ? error : undefined,
+  success: isSuccess,
+  data: isSuccess ? data : undefined,
+  error: !isSuccess ? error : undefined,
   metadata: {
     timestamp: new Date(),
     version: '1.0',

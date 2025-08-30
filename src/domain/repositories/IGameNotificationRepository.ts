@@ -1,4 +1,4 @@
-import { GameNotification, NotificationType } from '../entities/GameNotification';
+import { GameNotification } from '../entities/GameNotification';
 import { GameNotificationId } from '../valueObjects/GameNotificationId';
 import { UserId } from '../valueObjects/UserId';
 

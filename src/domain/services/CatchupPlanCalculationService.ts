@@ -296,7 +296,7 @@ export class CatchupPlanCalculationService {
     try {
       const routine = await this.routineRepository.findById(routineId);
       return routine && routine.userId === userId;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -346,7 +346,7 @@ export class CatchupPlanCalculationService {
     return { isValid: true };
   }
 
-  public async handleMissingRoutineData(routineId: string): Promise<CatchupPlanInput['routine']> {
+  public async handleMissingRoutineData(_routineId: string): Promise<CatchupPlanInput['routine']> {
     // Return a mock routine or throw error
     throw new Error('Routine not found');
   }

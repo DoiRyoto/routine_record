@@ -12,7 +12,7 @@ export interface AuthResult {
   error: NextResponse | null;
 }
 
-export async function authenticateRequest(request: NextRequest): Promise<AuthResult> {
+export async function authenticateRequest(_request: NextRequest): Promise<AuthResult> {
   try {
     // Create Supabase client
     const cookieStore = cookies();

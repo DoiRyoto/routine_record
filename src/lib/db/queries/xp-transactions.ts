@@ -232,7 +232,7 @@ export async function getXPSummary(
       .where(and(...whereConditions));
 
     // 総XP計算
-    const totalXP = transactions.reduce((sum, t) => sum + t.amount, 0);
+    const totalXP = transactions.reduce((total, t) => total + t.amount, 0);
 
     // ソース別集計
     const breakdown: Record<string, number> = {};

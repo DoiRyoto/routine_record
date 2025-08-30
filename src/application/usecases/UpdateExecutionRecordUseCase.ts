@@ -1,6 +1,6 @@
 import { ExecutionRecord } from '../../domain/entities/ExecutionRecord';
 import { IExecutionRecordRepository } from '../../domain/repositories/IExecutionRecordRepository';
-import { ExecutionRecordId, UserId, RoutineId } from '../../domain/valueObjects';
+import { ExecutionRecordId, UserId } from '../../domain/valueObjects';
 import { 
   ExecutionRecordNotFoundError,
   ExecutionRecordAccessForbiddenError

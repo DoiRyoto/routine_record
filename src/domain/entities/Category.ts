@@ -31,7 +31,7 @@ export class Category {
   }
 
   // 静的バリデーションメソッド
-  public static validateCategoryData(name: string, color?: string): void {
+  public static validateCategoryData(name: string, _color?: string): void {
     if (!name || name.trim() === '') {
       throw new CategoryNameEmptyError();
     }

@@ -1,5 +1,5 @@
 import { UserMission } from '../../domain/entities/UserMission';
-import { MissionNotFoundException, MissionRewardGrantException } from '../../domain/exceptions/MissionProgressExceptions';
+import { MissionNotFoundException } from '../../domain/exceptions/MissionProgressExceptions';
 import { IGameNotificationRepository } from '../../domain/repositories/IGameNotificationRepository';
 import { IMissionRepository } from '../../domain/repositories/IMissionRepository';
 import { IUserBadgeRepository } from '../../domain/repositories/IUserBadgeRepository';

@@ -42,11 +42,39 @@
       "mcp__ide__getDiagnostics",
       "mcp__serena__read_memory",
       "Bash(timeout 30s npm run test:e2e -- --grep \"should display dashboard\")",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(chmod:*)",
+      "Bash(./test-notification.sh:*)",
+      "Bash(cat:*)"
     ],
     "defaultMode": "acceptEdits",
-    "additionalDirectories": [
-      "C:\\c\\Users\\d1210\\Desktop"
+    "additionalDirectories": []
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/doi-ryoto/Desktop/Programming/routine_record/.claude/notification-handler.sh"
+          },
+          {
+            "type": "command",
+            "command": "/Users/doi-ryoto/Desktop/Programming/routine_record/.claude/advanced-notification-handler.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/doi-ryoto/Desktop/Programming/routine_record/.claude/rules-validation.sh"
+          }
+        ]
+      }
     ]
   }
 }
