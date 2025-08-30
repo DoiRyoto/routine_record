@@ -6,13 +6,13 @@
 
 ## 前提条件
 
-- `docs/tasks/{要件名}-tasks.md` が存在する
+- `docs/tsumiki/tasks/{要件名}-tasks.md` が存在する
 - kairo-tasksコマンドによってタスクファイルが作成済みである
 
 ## 実行内容
 
 1. **タスクファイルの確認**
-   - `docs/tasks/{要件名}-tasks.md` を読み込み
+   - `docs/tsumiki/tasks/{要件名}-tasks.md` を読み込み
 
 2. **出力フォーマット例との比較**
    - kairo-tasksの出力フォーマット例を確認

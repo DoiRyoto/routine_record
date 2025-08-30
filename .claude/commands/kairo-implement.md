@@ -4,7 +4,7 @@
 分割されたタスクを順番に、またはユーザが指定したタスクを実装する。既存のTDDコマンドを活用して品質の高い実装を行う。
 
 ## 前提条件
-- `docs/tasks/{要件名}-tasks.md` にタスク一覧が存在する
+- `docs/tsumiki/tasks/{要件名}-tasks.md` にタスク一覧が存在する
 - ユーザがタスクの実装を承認している
 - 既存のTDDコマンドが利用可能である
 - 実装用のワークスペースが設定されている
@@ -21,7 +21,8 @@
    - 未完了の依存タスクがある場合は警告
 
 3. **実装ディレクトリの準備**
-   - 現在のワークスペースで作業を行う
+   - `docs/tsumiki/implementation/{要件名}/TASK-{ID}/` ディレクトリを作成
+   - `docs/tsumiki/implementation/` ディレクトリが存在しない場合は自動作成
    - 必要に応じてディレクトリ構造を確認
 
 4. **実装タイプの判定**
@@ -209,7 +210,7 @@ $ claude code kairo-implement --status
 
 ```
 ✅ Step 1/6: 要件定義 完了
-   ファイル: /implementation/{要件名}/TASK-101/requirements.md
+   ファイル: docs/tsumiki/implementation/{要件名}/TASK-101/tdd-requirements.md
 
 🏃 Step 2/6: テストケース作成 実行中...
 ```

@@ -44,6 +44,7 @@
 
 7. **ファイルの作成**
    - `docs/tsumiki/design/{要件名}/` ディレクトリに以下を作成：
+     - `docs/tsumiki/design/` ディレクトリが存在しない場合は自動作成
      - `architecture.md` - アーキテクチャ概要
      - `dataflow.md` - データフロー図
      - `interfaces.ts` - TypeScript型定義
