@@ -1,4 +1,4 @@
-import { and, desc, eq, isNull, like, count, sql } from 'drizzle-orm';
+import { and, desc, eq, isNull } from 'drizzle-orm';
 
 import type { Routine } from '@/lib/db/schema';
 

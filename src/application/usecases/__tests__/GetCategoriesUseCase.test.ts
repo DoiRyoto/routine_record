@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { GetCategoriesUseCase } from '../GetCategoriesUseCase';
-import { ICategoryRepository } from '../../../domain/repositories/ICategoryRepository';
+
 import { Category } from '../../../domain/entities/Category';
+import { ICategoryRepository } from '../../../domain/repositories/ICategoryRepository';
 import { CategoryId, UserId } from '../../../domain/valueObjects';
 import { GetCategoriesDto } from '../../dtos/GetCategoriesDto';
+import { GetCategoriesUseCase } from '../GetCategoriesUseCase';
 
 // Mock repository
 const mockCategoryRepository: ICategoryRepository = {

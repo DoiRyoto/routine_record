@@ -1,6 +1,7 @@
 import { describe, it, expect } from '@jest/globals';
-import { Level } from '../Level';
+
 import { InvalidLevelError } from '../../../shared/types/GamificationErrors';
+import { Level } from '../Level';
 
 describe('Level', () => {
   describe('正常系テストケース', () => {

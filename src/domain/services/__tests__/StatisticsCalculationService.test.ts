@@ -1,8 +1,9 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { StatisticsCalculationService } from '../StatisticsCalculationService';
-import { IExecutionRecordRepository } from '../../repositories/IExecutionRecordRepository';
+
 import { ICategoryRepository } from '../../repositories/ICategoryRepository';
+import { IExecutionRecordRepository } from '../../repositories/IExecutionRecordRepository';
 import { IRoutineRepository } from '../../repositories/IRoutineRepository';
+import { StatisticsCalculationService } from '../StatisticsCalculationService';
 
 describe('StatisticsCalculationService', () => {
   let service: StatisticsCalculationService;

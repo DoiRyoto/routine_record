@@ -8,9 +8,10 @@
  */
 
 import { NextRequest } from 'next/server';
+
 import { POST as signinPOST } from '../signin/route';
-import { POST as signupPOST } from '../signup/route';
 import { POST as signoutPOST } from '../signout/route';
+import { POST as signupPOST } from '../signup/route';
 
 // Supabase モックセットアップ
 jest.mock('@/lib/supabase/server', () => ({

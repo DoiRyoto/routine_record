@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { authenticateRequest, createErrorResponse } from '@/lib/api/auth-helper';
 import {
   getDashboardStatistics,

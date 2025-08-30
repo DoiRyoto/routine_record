@@ -40,9 +40,13 @@
       "mcp__serena__write_memory",
       "mcp__serena__search_for_pattern",
       "mcp__ide__getDiagnostics",
-      "mcp__serena__read_memory"
+      "mcp__serena__read_memory",
+      "Bash(timeout 30s npm run test:e2e -- --grep \"should display dashboard\")",
+      "Bash(test:*)"
     ],
     "defaultMode": "acceptEdits",
-    "additionalDirectories": ["C:\\c\\Users\\d1210\\Desktop"]
+    "additionalDirectories": [
+      "C:\\c\\Users\\d1210\\Desktop"
+    ]
   }
 }

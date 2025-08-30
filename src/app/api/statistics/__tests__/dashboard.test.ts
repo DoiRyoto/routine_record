@@ -8,6 +8,7 @@
  */
 
 import { NextRequest } from 'next/server';
+
 import { GET } from '../dashboard/route';
 
 // Supabase モックセットアップ

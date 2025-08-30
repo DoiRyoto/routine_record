@@ -1,12 +1,12 @@
 import { ICategoryRepository } from '../../domain/repositories/ICategoryRepository';
 import { CategoryId, UserId } from '../../domain/valueObjects';
-import { DeleteCategoryDto } from '../dtos/DeleteCategoryDto';
 import { 
   DefaultCategoryModificationError,
   CategoryInUseError,
   CategoryAccessForbiddenError,
   CategoryNotFoundError
 } from '../../shared/types/CategoryErrors';
+import { DeleteCategoryDto } from '../dtos/DeleteCategoryDto';
 
 export class DeleteCategoryUseCase {
   constructor(

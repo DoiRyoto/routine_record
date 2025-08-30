@@ -2,7 +2,7 @@
 
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
-import { Toast, ToastClose } from '@/components/ui/Toast';
+import { Toast } from '@/components/ui/Toast';
 
 interface SnackbarMessage {
   id: string;
@@ -122,11 +122,10 @@ export function SnackbarProvider({ children }: { children: React.ReactNode }) {
           }}
         >
           <Toast 
-            variant={message.type}
-          >
-            {message.message}
-            <ToastClose onClick={() => closeSnackbar(message.id)} />
-          </Toast>
+            message={message.message}
+            type={message.type}
+            onClose={() => closeSnackbar(message.id)}
+          />
         </div>
       ))}
     </SnackbarContext.Provider>

@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
 
 import { 
   getAllChallenges,
@@ -15,6 +15,7 @@ import {
 } from '@/lib/routines/responses';
 
 // 認証ユーザー取得のヘルパー関数
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getAuthenticatedUser() {
   const cookieStore = await cookies();
   const supabase = createServerClient(

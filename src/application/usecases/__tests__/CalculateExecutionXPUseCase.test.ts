@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
+
 import { CalculateExecutionXPUseCase } from '../CalculateExecutionXPUseCase';
 import { ProcessLevelUpUseCase } from '../ProcessLevelUpUseCase';
 

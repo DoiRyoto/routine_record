@@ -1,15 +1,16 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { DeleteCategoryUseCase } from '../DeleteCategoryUseCase';
-import { ICategoryRepository } from '../../../domain/repositories/ICategoryRepository';
+
 import { Category } from '../../../domain/entities/Category';
+import { ICategoryRepository } from '../../../domain/repositories/ICategoryRepository';
 import { CategoryId, UserId } from '../../../domain/valueObjects';
-import { DeleteCategoryDto } from '../../dtos/DeleteCategoryDto';
 import { 
   DefaultCategoryModificationError,
   CategoryInUseError,
   CategoryAccessForbiddenError,
   CategoryNotFoundError
 } from '../../../shared/types/CategoryErrors';
+import { DeleteCategoryDto } from '../../dtos/DeleteCategoryDto';
+import { DeleteCategoryUseCase } from '../DeleteCategoryUseCase';
 
 // Mock repository
 const mockCategoryRepository: ICategoryRepository = {

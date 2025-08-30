@@ -1,9 +1,7 @@
-import { StatisticsCalculationService } from '@/domain/services/StatisticsCalculationService';
-
 // Mock implementations for the database queries
 // In a real implementation, these would interact directly with the database
 
-export async function getDashboardStatistics(userId: string, options: any = {}) {
+export async function getDashboardStatistics(_userId: string, _options: any = {}) {
   // This is a mock implementation that returns the expected structure
   // The real implementation would be handled by the service layer
   return {
@@ -16,7 +14,7 @@ export async function getDashboardStatistics(userId: string, options: any = {}) 
   };
 }
 
-export async function getWeeklyProgress(userId: string) {
+export async function getWeeklyProgress(_userId: string) {
   return [
     { date: '2024-01-16', executions: 3, duration: 85 },
     { date: '2024-01-15', executions: 2, duration: 55 },
@@ -28,7 +26,7 @@ export async function getWeeklyProgress(userId: string) {
   ];
 }
 
-export async function getMonthlyProgress(userId: string) {
+export async function getMonthlyProgress(_userId: string) {
   return [
     { week: '2024-W03', executions: 15, duration: 420 },
     { week: '2024-W02', executions: 12, duration: 350 },
@@ -37,7 +35,7 @@ export async function getMonthlyProgress(userId: string) {
   ];
 }
 
-export async function getCategoryDistribution(userId: string) {
+export async function getCategoryDistribution(_userId: string) {
   return [
     {
       categoryId: 'health',
@@ -63,7 +61,7 @@ export async function getCategoryDistribution(userId: string) {
   ];
 }
 
-export async function getPerformanceMetrics(userId: string) {
+export async function getPerformanceMetrics(_userId: string) {
   return {
     averageExecutionTime: 30.0,
     longestStreak: 23,
@@ -72,7 +70,7 @@ export async function getPerformanceMetrics(userId: string) {
   };
 }
 
-export async function getRoutineStatistics(userId: string, routineId?: string) {
+export async function getRoutineStatistics(_userId: string, _routineId?: string) {
   if (routineId && routineId === 'non-existent-routine') {
     return [];
   }
@@ -94,7 +92,7 @@ export async function getRoutineStatistics(userId: string, routineId?: string) {
   ];
 }
 
-export async function getRoutineTimeSeries(userId: string, routineId?: string) {
+export async function getRoutineTimeSeries(_userId: string, _routineId?: string) {
   return [
     { date: '2024-01-16', executions: 1, duration: 30 },
     { date: '2024-01-15', executions: 1, duration: 25 },
@@ -102,7 +100,7 @@ export async function getRoutineTimeSeries(userId: string, routineId?: string) {
   ];
 }
 
-export async function getRoutinePatterns(userId: string, routineId?: string) {
+export async function getRoutinePatterns(_userId: string, _routineId?: string) {
   return {
     weekdayDistribution: {
       monday: 8, tuesday: 7, wednesday: 6, thursday: 9,
@@ -114,7 +112,7 @@ export async function getRoutinePatterns(userId: string, routineId?: string) {
   };
 }
 
-export async function getRoutineComparison(userId: string, routineId?: string) {
+export async function getRoutineComparison(_userId: string, _routineId?: string) {
   return {
     previousPeriod: {
       totalExecutions: 38,

@@ -8,9 +8,11 @@
  */
 
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
+
 import { db } from '@/lib/db';
-import * as catchupQueries from '../catchup-plans';
 import { catchupPlans } from '@/lib/db/schema';
+
+import * as catchupQueries from '../catchup-plans';
 
 // Mock database
 jest.mock('@/lib/db', () => ({
@@ -437,7 +439,7 @@ describe('Catchup Plans Database Queries', () => {
         where: jest.fn().mockReturnThis(),
         returning: jest.fn().mockResolvedValue([{
           id: planId,
-          userId: userId,
+          userId,
           currentProgress: newProgress,
           remainingTarget: 5, // Recalculated
           suggestedDailyTarget: 1,
@@ -556,7 +558,7 @@ describe('Catchup Plans Database Queries', () => {
         where: jest.fn().mockReturnThis(),
         returning: jest.fn().mockResolvedValue([{
           id: planId,
-          userId: userId,
+          userId,
           ...updates,
           updatedAt: new Date()
         }])
@@ -627,7 +629,7 @@ describe('Catchup Plans Database Queries', () => {
         where: jest.fn().mockReturnThis(),
         returning: jest.fn().mockResolvedValue([{
           id: planId,
-          userId: userId,
+          userId,
           isActive: false,
           updatedAt: new Date()
         }])
@@ -691,7 +693,7 @@ describe('Catchup Plans Database Queries', () => {
         where: jest.fn().mockReturnThis(),
         returning: jest.fn().mockResolvedValue([{
           id: planId,
-          userId: userId
+          userId
         }])
       };
 

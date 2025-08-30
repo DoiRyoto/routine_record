@@ -6,11 +6,12 @@
  */
 
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { GetStatisticsUseCase } from '../GetStatisticsUseCase';
-import { StatisticsCalculationService } from '../../../domain/services/StatisticsCalculationService';
-import { IExecutionRecordRepository } from '../../../domain/repositories/IExecutionRecordRepository';
+
 import { ICategoryRepository } from '../../../domain/repositories/ICategoryRepository';
+import { IExecutionRecordRepository } from '../../../domain/repositories/IExecutionRecordRepository';
 import { IRoutineRepository } from '../../../domain/repositories/IRoutineRepository';
+import { StatisticsCalculationService } from '../../../domain/services/StatisticsCalculationService';
+import { GetStatisticsUseCase } from '../GetStatisticsUseCase';
 
 // Mock dependencies
 const mockExecutionRecordRepository: jest.Mocked<IExecutionRecordRepository> = {

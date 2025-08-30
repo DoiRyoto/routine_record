@@ -1,10 +1,11 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { GetGameNotificationsUseCase } from '../GetGameNotificationsUseCase';
-import { IGameNotificationRepository } from '../../../domain/repositories/IGameNotificationRepository';
+
 import { GameNotification } from '../../../domain/entities/GameNotification';
+import { IGameNotificationRepository } from '../../../domain/repositories/IGameNotificationRepository';
 import { UserId } from '../../../domain/valueObjects/UserId';
-import { GetGameNotificationsDto } from '../../dtos/GetGameNotificationsDto';
 import { NotificationNotFoundError } from '../../../shared/types/GamificationErrors';
+import { GetGameNotificationsDto } from '../../dtos/GetGameNotificationsDto';
+import { GetGameNotificationsUseCase } from '../GetGameNotificationsUseCase';
 
 describe('GetGameNotificationsUseCase', () => {
   let useCase: GetGameNotificationsUseCase;

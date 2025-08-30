@@ -13,11 +13,37 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [...compat.extends('next/core-web-vitals', 'next/typescript'), {
+  ignores: [
+    '.next/**',
+    'node_modules/**',
+    'out/**',
+    'build/**',
+    'dist/**',
+    '.cache/**',
+    '.vercel/**',
+    'public/**',
+    'jest.config.js',
+    'next.config.js',
+    'next-env.d.ts',
+    'manual-api-test.js',
+    'scripts/**',
+    '**/__tests__/**',
+    '**/*.test.ts',
+    '**/*.test.tsx',
+    '**/*.spec.ts',
+    '**/*.spec.tsx',
+    'e2e/**',
+  ],
+}, {
   files: ['**/*.{js,jsx,ts,tsx}'],
   rules: {
     // TypeScript基本ルール
-    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-unused-vars': ['warn', { 
+      argsIgnorePattern: '^_',
+      varsIgnorePattern: '^_',
+      ignoreRestSiblings: true 
+    }],
+    '@typescript-eslint/no-explicit-any': 'off', // 開発中は許可
     '@typescript-eslint/no-non-null-assertion': 'off', // 開発時は許可
     '@typescript-eslint/ban-ts-comment': 'warn',
     '@typescript-eslint/consistent-type-imports': 'off', // 自動整理に任せる

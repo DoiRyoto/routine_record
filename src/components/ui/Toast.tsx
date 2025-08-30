@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 export interface ToastProps {
   message: string;
@@ -75,7 +75,6 @@ export function Toast({
 }
 
 // Toast manager context for global toast management
-import { createContext, useContext, ReactNode } from 'react';
 
 interface ToastContextType {
   showToast: (message: string, type?: 'success' | 'error' | 'info') => void;

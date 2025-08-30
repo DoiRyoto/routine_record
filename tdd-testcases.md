@@ -1,721 +1,233 @@
-# TASK-203: ルーチン管理画面実装 - テストケース定義
+# TASK-004: 既存コマンド互換性の確保 - テストケース
 
-## テストケース概要
-- **対象タスク**: TASK-203 ルーチン管理画面実装
-- **テスト対象**: ルーチン一覧表示、CRUD操作、頻度ベース検証、カテゴリ管理統合
-- **テストフレームワーク**: Jest, React Testing Library, Playwright (E2E)
+## テスト対象
 
-## 1. コンポーネントテスト (React Testing Library)
+変更されたkairosコマンドファイル：
+1. `.claude/commands/kairo-requirements.md`
+2. `.claude/commands/kairo-design.md`
+3. `.claude/commands/kairo-tasks.md`
 
-### 1.1 RoutinesPage コンポーネント
+## 単体テストケース
 
-#### TC-203-001: 初期表示テスト
-```typescript
-describe('RoutinesPage - Initial Render', () => {
-  test('認証済みユーザーのルーチン一覧を表示する', async () => {
-    // Given: モックデータとしてルーチン一覧を準備
-    const mockRoutines = [
-      { id: 1, name: '朝の散歩', category: 'エクササイズ', frequency: 'daily', isActive: true },
-      { id: 2, name: '英語学習', category: '学習', frequency: 'weekly', isActive: false }
-    ];
-    
-    // When: ページをレンダリング
-    render(<RoutinesPage />);
-    
-    // Then: ルーチン一覧が表示される
-    expect(screen.getByText('朝の散歩')).toBeInTheDocument();
-    expect(screen.getByText('英語学習')).toBeInTheDocument();
-    expect(screen.getByText('ルーチン管理')).toBeInTheDocument();
-  });
+### TC-001: コマンドファイル構造の検証
 
-  test('ローディング状態を正しく表示する', () => {
-    render(<RoutinesPage />);
-    expect(screen.getByTestId('routines-skeleton')).toBeInTheDocument();
-  });
+**テスト概要**: 変更後もコマンドファイルの基本構造が維持されている
 
-  test('空状態を正しく表示する', async () => {
-    mockAPI.getRoutines.mockResolvedValue([]);
-    render(<RoutinesPage />);
-    
-    expect(screen.getByText('まだルーチンがありません')).toBeInTheDocument();
-    expect(screen.getByText('最初のルーチンを作成')).toBeInTheDocument();
-  });
-});
+#### TC-001-1: ファイル名の確認
+```bash
+# kairo-requirementsファイル存在確認
+test -f .claude/commands/kairo-requirements.md
+echo "kairo-requirements.md: $?"
+
+# kairo-designファイル存在確認  
+test -f .claude/commands/kairo-design.md
+echo "kairo-design.md: $?"
+
+# kairo-tasksファイル存在確認
+test -f .claude/commands/kairo-tasks.md  
+echo "kairo-tasks.md: $?"
 ```
+**期待結果**: 全て0（存在する）
 
-#### TC-203-002: ルーチン表示テスト
-```typescript
-describe('RoutineCard Display', () => {
-  test('アクティブなルーチンを正しく表示する', () => {
-    const activeRoutine = {
-      id: 1, name: '朝の散歩', category: 'エクササイズ', 
-      frequency: 'daily', isActive: true
-    };
-    
-    render(<RoutineCard routine={activeRoutine} />);
-    
-    expect(screen.getByTestId('routine-active-badge')).toBeInTheDocument();
-    expect(screen.getByText('実行')).toBeInTheDocument();
-  });
+#### TC-001-2: 基本セクション構造の確認
+```bash
+# kairo-requirements.mdの必須セクション確認
+grep -q "## 目的" .claude/commands/kairo-requirements.md && echo "✅ 目的" || echo "❌ 目的"
+grep -q "## 前提条件" .claude/commands/kairo-requirements.md && echo "✅ 前提条件" || echo "❌ 前提条件"
+grep -q "## 実行内容" .claude/commands/kairo-requirements.md && echo "✅ 実行内容" || echo "❌ 実行内容"
+grep -q "## 出力フォーマット例" .claude/commands/kairo-requirements.md && echo "✅ 出力フォーマット例" || echo "❌ 出力フォーマット例"
 
-  test('非アクティブなルーチンを正しく表示する', () => {
-    const inactiveRoutine = {
-      id: 2, name: '英語学習', category: '学習', 
-      frequency: 'weekly', isActive: false
-    };
-    
-    render(<RoutineCard routine={inactiveRoutine} />);
-    
-    expect(screen.getByTestId('routine-inactive-badge')).toBeInTheDocument();
-    expect(screen.queryByText('実行')).not.toBeInTheDocument();
-    expect(screen.getByText('復元')).toBeInTheDocument();
-  });
-});
+# kairo-design.mdの必須セクション確認
+grep -q "## 目的" .claude/commands/kairo-design.md && echo "✅ 目的" || echo "❌ 目的"
+grep -q "## 前提条件" .claude/commands/kairo-design.md && echo "✅ 前提条件" || echo "❌ 前提条件" 
+grep -q "## 実行内容" .claude/commands/kairo-design.md && echo "✅ 実行内容" || echo "❌ 実行内容"
+
+# kairo-tasks.mdの必須セクション確認
+grep -q "## 目的" .claude/commands/kairo-tasks.md && echo "✅ 目的" || echo "❌ 目的"
+grep -q "## 前提条件" .claude/commands/kairo-tasks.md && echo "✅ 前提条件" || echo "❌ 前提条件"
+grep -q "## 実行内容" .claude/commands/kairo-tasks.md && echo "✅ 実行内容" || echo "❌ 実行内容"
 ```
+**期待結果**: 全セクションで「✅」が表示される
 
-### 1.2 RoutineForm コンポーネント
+### TC-002: 出力フォーマットの検証
 
-#### TC-203-003: フォームバリデーションテスト
-```typescript
-describe('RoutineForm - Validation', () => {
-  test('必須フィールドのバリデーションが動作する', async () => {
-    render(<RoutineForm />);
-    
-    const submitButton = screen.getByText('保存');
-    fireEvent.click(submitButton);
-    
-    await waitFor(() => {
-      expect(screen.getByText('ルーチン名は必須です')).toBeInTheDocument();
-      expect(screen.getByText('カテゴリを選択してください')).toBeInTheDocument();
-    });
-  });
+#### TC-002-1: 要件定義書フォーマット確認
+```bash
+# EARS記法の保持確認
+grep -q "### 通常要件" .claude/commands/kairo-requirements.md && echo "✅ 通常要件" || echo "❌ 通常要件"
+grep -q "### 条件付き要件" .claude/commands/kairo-requirements.md && echo "✅ 条件付き要件" || echo "❌ 条件付き要件"
+grep -q "### 状態要件" .claude/commands/kairo-requirements.md && echo "✅ 状態要件" || echo "❌ 状態要件"
+grep -q "### オプション要件" .claude/commands/kairo-requirements.md && echo "✅ オプション要件" || echo "❌ オプション要件"
+grep -q "### 制約要件" .claude/commands/kairo-requirements.md && echo "✅ 制約要件" || echo "❌ 制約要件"
 
-  test('名前の文字数制限バリデーションが動作する', async () => {
-    render(<RoutineForm />);
-    
-    const nameInput = screen.getByLabelText('ルーチン名');
-    fireEvent.change(nameInput, { target: { value: 'あ'.repeat(101) } });
-    fireEvent.blur(nameInput);
-    
-    await waitFor(() => {
-      expect(screen.getByText('ルーチン名は100文字以内で入力してください')).toBeInTheDocument();
-    });
-  });
-});
+# ユーザストーリー形式の確認
+grep -q "## ユーザストーリー" .claude/commands/kairo-requirements.md && echo "✅ ユーザストーリー" || echo "❌ ユーザストーリー"
 ```
+**期待結果**: EARS記法の全セクションが保持されている
 
-## コンポーネント単体テスト
+#### TC-002-2: 設計文書フォーマット確認  
+```bash
+# 設計文書の必須ファイル確認
+grep -q "architecture.md" .claude/commands/kairo-design.md && echo "✅ architecture.md" || echo "❌ architecture.md"
+grep -q "dataflow.md" .claude/commands/kairo-design.md && echo "✅ dataflow.md" || echo "❌ dataflow.md"
+grep -q "interfaces.ts" .claude/commands/kairo-design.md && echo "✅ interfaces.ts" || echo "❌ interfaces.ts"
+grep -q "database-schema.sql" .claude/commands/kairo-design.md && echo "✅ database-schema.sql" || echo "❌ database-schema.sql"
+grep -q "api-endpoints.md" .claude/commands/kairo-design.md && echo "✅ api-endpoints.md" || echo "❌ api-endpoints.md"
 
-### 1. Dashboard Page テスト
-
-#### 1.1 基本レンダリングテスト
-
-```typescript
-describe('Dashboard Page', () => {
-  it('認証済みユーザーでダッシュボードが正常に表示される', async () => {
-    // Given: 認証済みユーザーとモックデータ
-    const mockUser = createMockUser({ id: 'user123', level: 5, totalXp: 2500 });
-    const mockDashboardData = createMockDashboardData();
-    
-    // When: ダッシュボードページをレンダリング
-    render(<Dashboard />, { 
-      wrapper: ({ children }) => (
-        <AuthProvider user={mockUser}>
-          <MockApiProvider data={mockDashboardData}>
-            {children}
-          </MockApiProvider>
-        </AuthProvider>
-      )
-    });
-    
-    // Then: 基本要素が表示される
-    expect(screen.getByRole('heading', { name: 'ダッシュボード' })).toBeInTheDocument();
-    expect(screen.getByTestId('user-status-card')).toBeInTheDocument();
-    expect(screen.getByTestId('today-progress-card')).toBeInTheDocument();
-    expect(screen.getByTestId('quick-actions-section')).toBeInTheDocument();
-  });
-
-  it('未認証ユーザーはサインインページにリダイレクトされる', async () => {
-    // Given: 未認証状態
-    const mockPush = jest.fn();
-    jest.spyOn(require('next/navigation'), 'useRouter').mockReturnValue({
-      push: mockPush
-    });
-    
-    // When: ダッシュボードページにアクセス
-    render(<Dashboard />, {
-      wrapper: ({ children }) => (
-        <AuthProvider user={null}>{children}</AuthProvider>
-      )
-    });
-    
-    // Then: サインインページにリダイレクト
-    expect(mockPush).toHaveBeenCalledWith('/auth/signin');
-  });
-
-  it('ローディング中はスケルトンUIが表示される', async () => {
-    // Given: ローディング状態のモック
-    jest.spyOn(require('@/hooks/useDashboardData'), 'useDashboardData')
-      .mockReturnValue({ data: null, loading: true, error: null });
-    
-    // When: ダッシュボードページをレンダリング
-    render(<Dashboard />);
-    
-    // Then: スケルトンUIが表示される
-    expect(screen.getByTestId('dashboard-skeleton')).toBeInTheDocument();
-    expect(screen.getByTestId('user-status-skeleton')).toBeInTheDocument();
-    expect(screen.getByTestId('progress-skeleton')).toBeInTheDocument();
-  });
-});
+# Mermaid図の確認
+grep -q "mermaid" .claude/commands/kairo-design.md && echo "✅ Mermaid図" || echo "❌ Mermaid図"
 ```
+**期待結果**: 設計文書の全構成要素が保持されている
 
-#### 1.2 データ表示テスト
+#### TC-002-3: タスク定義書フォーマット確認
+```bash
+# タスク形式の確認
+grep -q "タスクID" .claude/commands/kairo-tasks.md && echo "✅ タスクID" || echo "❌ タスクID"
+grep -q "タスクタイプ" .claude/commands/kairo-tasks.md && echo "✅ タスクタイプ" || echo "❌ タスクタイプ"
+grep -q "TDD" .claude/commands/kairo-tasks.md && echo "✅ TDD" || echo "❌ TDD"
+grep -q "DIRECT" .claude/commands/kairo-tasks.md && echo "✅ DIRECT" || echo "❌ DIRECT"
 
-```typescript
-describe('Dashboard Data Display', () => {
-  it('ユーザーステータスカードが正しく表示される', async () => {
-    // Given: ユーザーデータ
-    const mockUser = {
-      id: 'user123',
-      name: 'テストユーザー',
-      level: 8,
-      totalXp: 4200,
-      currentLevelXp: 200,
-      nextLevelXp: 500
-    };
-    
-    // When: ダッシュボードをレンダリング
-    render(<Dashboard />, {
-      wrapper: createMockWrapper({ user: mockUser })
-    });
-    
-    // Then: ユーザー情報が正しく表示される
-    expect(screen.getByText('レベル 8')).toBeInTheDocument();
-    expect(screen.getByText('4,200 XP')).toBeInTheDocument();
-    expect(screen.getByText('テストユーザー')).toBeInTheDocument();
-    
-    // XPプログレスバーの確認
-    const progressBar = screen.getByRole('progressbar');
-    expect(progressBar).toHaveAttribute('aria-valuenow', '66.67'); // 200/300 = 66.67%
-  });
-
-  it('本日の進捗が正しく表示される', async () => {
-    // Given: 本日の進捗データ
-    const mockTodayProgress = {
-      completedRoutines: 3,
-      totalRoutines: 5,
-      todayXp: 150,
-      currentStreak: 7,
-      completionRate: 60
-    };
-    
-    // When: ダッシュボードをレンダリング
-    render(<Dashboard />, {
-      wrapper: createMockWrapper({ todayProgress: mockTodayProgress })
-    });
-    
-    // Then: 進捗情報が正しく表示される
-    expect(screen.getByText('3 / 5 完了')).toBeInTheDocument();
-    expect(screen.getByText('60%')).toBeInTheDocument();
-    expect(screen.getByText('150 XP 獲得')).toBeInTheDocument();
-    expect(screen.getByText('7日連続')).toBeInTheDocument();
-  });
-
-  it('最近の実績（バッジ・ミッション）が表示される', async () => {
-    // Given: 実績データ
-    const mockAchievements = {
-      recentBadges: [
-        { id: 'badge1', name: '3日連続達成', iconUrl: '/badge1.png' },
-        { id: 'badge2', name: '早起き習慣', iconUrl: '/badge2.png' }
-      ],
-      activeMissions: [
-        { id: 'mission1', title: '週5回運動', progress: 3, target: 5 },
-        { id: 'mission2', title: '毎日読書', progress: 2, target: 7 }
-      ]
-    };
-    
-    // When: ダッシュボードをレンダリング
-    render(<Dashboard />, {
-      wrapper: createMockWrapper({ achievements: mockAchievements })
-    });
-    
-    // Then: 実績が表示される
-    expect(screen.getByText('3日連続達成')).toBeInTheDocument();
-    expect(screen.getByText('早起き習慣')).toBeInTheDocument();
-    expect(screen.getByText('週5回運動')).toBeInTheDocument();
-    expect(screen.getByText('3 / 5')).toBeInTheDocument(); // ミッション進捗
-  });
-});
+# 依存関係記述の確認
+grep -q "依存タスク" .claude/commands/kairo-tasks.md && echo "✅ 依存タスク" || echo "❌ 依存タスク"
 ```
+**期待結果**: タスク定義の全要素が保持されている
 
-#### 1.3 インタラクション機能テスト
+### TC-003: パラメータ処理の検証
 
-```typescript
-describe('Dashboard Interactions', () => {
-  it('ルーチン完了ボタンをクリックしてXP獲得ができる', async () => {
-    // Given: 未完了のルーチン
-    const mockRoutines = [
-      { id: 'routine1', name: '朝の運動', completed: false, xpReward: 50 }
-    ];
-    const mockCompleteRoutine = jest.fn().mockResolvedValue({ success: true, xpGained: 50 });
-    
-    // When: ダッシュボードをレンダリング
-    render(<Dashboard />, {
-      wrapper: createMockWrapper({ 
-        todayRoutines: mockRoutines,
-        completeRoutine: mockCompleteRoutine 
-      })
-    });
-    
-    // ルーチン完了ボタンをクリック
-    const completeButton = screen.getByRole('button', { name: '朝の運動を完了' });
-    await user.click(completeButton);
-    
-    // Then: 完了処理が呼ばれ、XP獲得通知が表示される
-    expect(mockCompleteRoutine).toHaveBeenCalledWith('routine1');
-    expect(screen.getByText('50 XP獲得！')).toBeInTheDocument();
-  });
-
-  it('新しいルーチン作成リンクが機能する', async () => {
-    // Given: ダッシュボードのレンダリング
-    const mockPush = jest.fn();
-    jest.spyOn(require('next/navigation'), 'useRouter').mockReturnValue({ push: mockPush });
-    
-    render(<Dashboard />);
-    
-    // When: 新しいルーチン作成ボタンをクリック
-    const createButton = screen.getByRole('link', { name: '新しいルーチンを作成' });
-    await user.click(createButton);
-    
-    // Then: ルーチン作成ページに遷移
-    expect(createButton).toHaveAttribute('href', '/routines/create');
-  });
-
-  it('ナビゲーションリンクが正常に動作する', async () => {
-    // Given: ダッシュボードのレンダリング
-    render(<Dashboard />);
-    
-    // Then: ナビゲーションリンクが存在し、正しいhrefを持つ
-    expect(screen.getByRole('link', { name: 'ルーチン管理' })).toHaveAttribute('href', '/routines');
-    expect(screen.getByRole('link', { name: '統計' })).toHaveAttribute('href', '/statistics');
-    expect(screen.getByRole('link', { name: '設定' })).toHaveAttribute('href', '/settings');
-  });
-
-  it('完了後にリアルタイムで画面が更新される', async () => {
-    // Given: ルーチン完了前後のデータ
-    const mockCompleteRoutine = jest.fn().mockResolvedValue({ 
-      success: true, 
-      xpGained: 50,
-      newLevel: 6 
-    });
-    
-    const { rerender } = render(<Dashboard />, {
-      wrapper: createMockWrapper({ 
-        user: { level: 5, totalXp: 2450 },
-        completeRoutine: mockCompleteRoutine 
-      })
-    });
-    
-    // When: ルーチンを完了
-    const completeButton = screen.getByRole('button', { name: '朝の運動を完了' });
-    await user.click(completeButton);
-    
-    // Then: レベル・XP・進捗が更新される
-    await waitFor(() => {
-      expect(screen.getByText('レベル 6')).toBeInTheDocument();
-      expect(screen.getByText('2,500 XP')).toBeInTheDocument();
-    });
-  });
-});
+#### TC-003-1: プレースホルダー確認
+```bash
+# {要件名}プレースホルダーの確認
+grep -c "{要件名}" .claude/commands/kairo-requirements.md
+grep -c "{要件名}" .claude/commands/kairo-design.md  
+grep -c "{要件名}" .claude/commands/kairo-tasks.md
 ```
+**期待結果**: 各ファイルで適切な回数のプレースホルダーが存在する
 
-### 2. コンポーネント分離テスト
-
-#### 2.1 UserStatusCard テスト
-
-```typescript
-describe('UserStatusCard', () => {
-  it('ユーザー情報を正しく表示する', () => {
-    // Given: ユーザーデータ
-    const mockUser = {
-      name: 'テストユーザー',
-      level: 5,
-      totalXp: 2500,
-      currentLevelXp: 200,
-      nextLevelXp: 500,
-      avatarUrl: '/avatar.jpg'
-    };
-    
-    // When: UserStatusCardをレンダリング
-    render(<UserStatusCard user={mockUser} />);
-    
-    // Then: 情報が正しく表示される
-    expect(screen.getByText('テストユーザー')).toBeInTheDocument();
-    expect(screen.getByText('レベル 5')).toBeInTheDocument();
-    expect(screen.getByText('2,500 XP')).toBeInTheDocument();
-    
-    const progressBar = screen.getByRole('progressbar');
-    expect(progressBar).toHaveAttribute('aria-valuenow', '40'); // 200/500 = 40%
-  });
-
-  it('レベルアップ時にアニメーションが表示される', async () => {
-    // Given: レベルアップフラグ付きのデータ
-    const mockUser = { level: 6, isLevelUp: true };
-    
-    // When: UserStatusCardをレンダリング
-    render(<UserStatusCard user={mockUser} />);
-    
-    // Then: レベルアップアニメーションが表示される
-    expect(screen.getByTestId('level-up-animation')).toBeInTheDocument();
-    expect(screen.getByText('レベルアップ！')).toBeInTheDocument();
-  });
-});
+#### TC-003-2: パス展開の確認
+```bash
+# 新パス設定でのプレースホルダー確認
+grep -q "docs/tsumiki/spec/{要件名}" .claude/commands/kairo-requirements.md && echo "✅ requirements パス" || echo "❌ requirements パス"
+grep -q "docs/tsumiki/design/{要件名}" .claude/commands/kairo-design.md && echo "✅ design パス" || echo "❌ design パス"
+grep -q "docs/tsumiki/tasks/{要件名}" .claude/commands/kairo-tasks.md && echo "✅ tasks パス" || echo "❌ tasks パス"
 ```
+**期待結果**: 全パスで適切にプレースホルダーが設定されている
 
-#### 2.2 TodayProgressCard テスト
+## 統合テストケース
 
-```typescript
-describe('TodayProgressCard', () => {
-  it('本日の進捗情報を正しく表示する', () => {
-    // Given: 進捗データ
-    const mockProgress = {
-      completedRoutines: 3,
-      totalRoutines: 5,
-      todayXp: 150,
-      currentStreak: 7,
-      completionRate: 60
-    };
-    
-    // When: TodayProgressCardをレンダリング
-    render(<TodayProgressCard progress={mockProgress} />);
-    
-    // Then: 進捗情報が正しく表示される
-    expect(screen.getByText('3 / 5 完了')).toBeInTheDocument();
-    expect(screen.getByText('60%')).toBeInTheDocument();
-    expect(screen.getByText('150 XP 獲得')).toBeInTheDocument();
-    expect(screen.getByText('7日連続')).toBeInTheDocument();
-  });
+### TC-101: コマンド間連携の確認
 
-  it('進捗率に応じて色が変わる', () => {
-    // Given: 異なる進捗率のデータ
-    const lowProgress = { completionRate: 30 };
-    const highProgress = { completionRate: 80 };
-    
-    // When: 低い進捗率でレンダリング
-    const { rerender } = render(<TodayProgressCard progress={lowProgress} />);
-    expect(screen.getByTestId('progress-bar')).toHaveClass('bg-orange-500');
-    
-    // 高い進捗率で再レンダリング
-    rerender(<TodayProgressCard progress={highProgress} />);
-    expect(screen.getByTestId('progress-bar')).toHaveClass('bg-green-500');
-  });
-});
+**テスト概要**: 3つのkairosコマンドの連携が正常に機能する
+
+#### TC-101-1: 参照関係の確認
+```bash
+# kairo-design → kairo-requirements参照
+grep -q "docs/tsumiki/spec/" .claude/commands/kairo-design.md && echo "✅ design->requirements" || echo "❌ design->requirements"
+
+# kairo-tasks → kairo-design参照
+grep -q "docs/tsumiki/design/" .claude/commands/kairo-tasks.md && echo "✅ tasks->design" || echo "❌ tasks->design"
 ```
+**期待結果**: コマンド間の参照が正しく設定されている
 
-## 統合テスト
+### TC-102: 出力先整合性の確認
 
-### 3. カスタムフックテスト
+**テスト概要**: 出力先と参照先が一致している
 
-#### 3.1 useDashboardData フックテスト
+```bash
+# 出力先と参照先の整合性チェック
+echo "=== 出力先と参照先の整合性 ==="
+echo "requirements出力先:" 
+grep "docs/tsumiki/spec.*保存" .claude/commands/kairo-requirements.md
+echo "design参照先:"
+grep "docs/tsumiki/spec.*存在" .claude/commands/kairo-design.md
 
-```typescript
-describe('useDashboardData', () => {
-  it('ダッシュボードデータを正しくフェッチする', async () => {
-    // Given: APIレスポンスのモック
-    const mockApiResponses = {
-      userProfile: { level: 5, totalXp: 2500 },
-      todayRoutines: [{ id: '1', name: '運動', completed: false }],
-      statistics: { completionRate: 75, currentStreak: 5 },
-      notifications: [{ id: '1', message: 'レベルアップ！' }]
-    };
-    
-    // When: フックを使用
-    const { result } = renderHook(() => useDashboardData(), {
-      wrapper: createMockApiWrapper(mockApiResponses)
-    });
-    
-    // Then: 正しいデータが返される
-    await waitFor(() => {
-      expect(result.current.data).toEqual({
-        user: mockApiResponses.userProfile,
-        todayRoutines: mockApiResponses.todayRoutines,
-        statistics: mockApiResponses.statistics,
-        notifications: mockApiResponses.notifications
-      });
-      expect(result.current.loading).toBe(false);
-      expect(result.current.error).toBeNull();
-    });
-  });
-
-  it('APIエラー時にエラー状態を返す', async () => {
-    // Given: APIエラーのモック
-    jest.spyOn(global, 'fetch').mockRejectedValue(new Error('API Error'));
-    
-    // When: フックを使用
-    const { result } = renderHook(() => useDashboardData());
-    
-    // Then: エラー状態が返される
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-      expect(result.current.error).toBeTruthy();
-      expect(result.current.data).toBeNull();
-    });
-  });
-
-  it('ルーチン完了後にデータを再フェッチする', async () => {
-    // Given: 初期データ
-    const { result } = renderHook(() => useDashboardData());
-    
-    await waitFor(() => expect(result.current.loading).toBe(false));
-    
-    // When: ルーチン完了を実行
-    act(() => {
-      result.current.completeRoutine('routine1');
-    });
-    
-    // Then: データが再フェッチされる
-    expect(result.current.loading).toBe(true);
-    
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-      expect(result.current.data).toBeTruthy();
-    });
-  });
-});
+echo "design出力先:"
+grep "docs/tsumiki/design.*作成" .claude/commands/kairo-design.md  
+echo "tasks参照先:"
+grep "docs/tsumiki/design.*存在" .claude/commands/kairo-tasks.md
 ```
+**期待結果**: 各段階の出力先と次段階の参照先が一致する
 
-#### 3.2 useCompleteRoutine フックテスト
+## 回帰テストケース
 
-```typescript
-describe('useCompleteRoutine', () => {
-  it('ルーチン完了処理が正常に実行される', async () => {
-    // Given: APIレスポンスのモック
-    const mockResponse = { success: true, xpGained: 50, newLevel: 6 };
-    jest.spyOn(global, 'fetch').mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve(mockResponse)
-    } as Response);
-    
-    // When: フックを使用
-    const { result } = renderHook(() => useCompleteRoutine());
-    
-    let completeResult;
-    await act(async () => {
-      completeResult = await result.current.completeRoutine('routine1');
-    });
-    
-    // Then: 正しいレスポンスが返される
-    expect(completeResult).toEqual(mockResponse);
-    expect(global.fetch).toHaveBeenCalledWith('/api/execution-records', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ routineId: 'routine1' })
-    });
-  });
+### TC-201: 変更前後の差分確認
 
-  it('エラー時に例外をスローする', async () => {
-    // Given: APIエラーのモック
-    jest.spyOn(global, 'fetch').mockResolvedValue({
-      ok: false,
-      status: 400,
-      json: () => Promise.resolve({ error: 'ルーチンが見つかりません' })
-    } as Response);
-    
-    // When: フックを使用
-    const { result } = renderHook(() => useCompleteRoutine());
-    
-    // Then: エラーがスローされる
-    await act(async () => {
-      await expect(result.current.completeRoutine('invalid-routine'))
-        .rejects.toThrow('ルーチンが見つかりません');
-    });
-  });
-});
+**テスト概要**: パス以外に意図しない変更がないことを確認
+
+#### TC-201-1: セクション数の確認
+```bash
+# 各ファイルのセクション数確認（## で始まる行）
+echo "kairo-requirements.md セクション数:"
+grep -c "^## " .claude/commands/kairo-requirements.md
+echo "kairo-design.md セクション数:"  
+grep -c "^## " .claude/commands/kairo-design.md
+echo "kairo-tasks.md セクション数:"
+grep -c "^## " .claude/commands/kairo-tasks.md
 ```
+**期待結果**: 各ファイルのセクション数が変更前と同じ
 
-## E2Eテスト
-
-### 4. ユーザーフローテスト
-
-```typescript
-describe('Dashboard E2E Tests', () => {
-  it('ユーザーはダッシュボードでルーチンを完了できる', async ({ page }) => {
-    // Given: ログイン済みの状態
-    await page.goto('/auth/signin');
-    await page.fill('input[name="email"]', 'test@example.com');
-    await page.fill('input[name="password"]', 'password123');
-    await page.click('button[type="submit"]');
-    
-    // When: ダッシュボードに移動
-    await expect(page).toHaveURL('/dashboard');
-    
-    // ルーチン完了ボタンをクリック
-    await page.click('[data-testid="complete-routine-button"]');
-    
-    // Then: XP獲得通知が表示される
-    await expect(page.locator('text=XP獲得！')).toBeVisible();
-    
-    // 進捗バーが更新される
-    await expect(page.locator('[data-testid="progress-bar"]')).toBeVisible();
-  });
-
-  it('モバイルデバイスでレスポンシブデザインが機能する', async ({ page }) => {
-    // Given: モバイルサイズのビューポート
-    await page.setViewportSize({ width: 375, height: 667 });
-    await page.goto('/dashboard');
-    
-    // Then: モバイルレイアウトが表示される
-    await expect(page.locator('[data-testid="mobile-sidebar"]')).toBeVisible();
-    await expect(page.locator('[data-testid="desktop-sidebar"]')).not.toBeVisible();
-    
-    // ハンバーガーメニューが機能する
-    await page.click('[data-testid="mobile-menu-button"]');
-    await expect(page.locator('[data-testid="mobile-menu"]')).toBeVisible();
-  });
-
-  it('アクセシビリティ機能が動作する', async ({ page }) => {
-    // Given: ダッシュボードページ
-    await page.goto('/dashboard');
-    
-    // Then: ARIAラベルが正しく設定されている
-    await expect(page.locator('[aria-label="ユーザーステータス"]')).toBeVisible();
-    await expect(page.locator('[aria-label="今日の進捗"]')).toBeVisible();
-    
-    // キーボードナビゲーションが機能する
-    await page.keyboard.press('Tab'); // 最初のフォーカサブル要素
-    await page.keyboard.press('Enter'); // Enterでアクティベート
-  });
-});
+#### TC-201-2: 特殊記法の保持確認
+```bash
+# マークダウン記法の確認
+grep -c "```" .claude/commands/kairo-requirements.md && echo "✅ コードブロック" || echo "❌ コードブロック"
+grep -c "\`\`\`mermaid" .claude/commands/kairo-design.md && echo "✅ Mermaid" || echo "❌ Mermaid"  
+grep -c "- \[ \]" .claude/commands/kairo-tasks.md && echo "✅ チェックボックス" || echo "❌ チェックボックス"
 ```
+**期待結果**: 特殊記法が保持されている
 
-## エラーハンドリングテスト
+## エラーテストケース
 
-### 5. エラー状態テスト
+### TC-301: 破損検出テスト
 
-```typescript
-describe('Dashboard Error Handling', () => {
-  it('APIエラー時にエラーメッセージが表示される', async () => {
-    // Given: APIエラーのモック
-    jest.spyOn(require('@/hooks/useDashboardData'), 'useDashboardData')
-      .mockReturnValue({ 
-        data: null, 
-        loading: false, 
-        error: new Error('サーバーエラーが発生しました') 
-      });
-    
-    // When: ダッシュボードをレンダリング
-    render(<Dashboard />);
-    
-    // Then: エラーメッセージが表示される
-    expect(screen.getByText('サーバーエラーが発生しました')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '再試行' })).toBeInTheDocument();
-  });
+**テスト概要**: ファイル破損や記法エラーの検出
 
-  it('ネットワークエラー時にリトライ機能が動作する', async () => {
-    // Given: ネットワークエラー後の状態
-    const mockRetry = jest.fn();
-    jest.spyOn(require('@/hooks/useDashboardData'), 'useDashboardData')
-      .mockReturnValue({ 
-        data: null, 
-        loading: false, 
-        error: new Error('ネットワークエラー'),
-        retry: mockRetry
-      });
-    
-    render(<Dashboard />);
-    
-    // When: 再試行ボタンをクリック
-    const retryButton = screen.getByRole('button', { name: '再試行' });
-    await user.click(retryButton);
-    
-    // Then: 再試行処理が呼ばれる
-    expect(mockRetry).toHaveBeenCalled();
-  });
+#### TC-301-1: マークダウン記法の検証
+```bash
+# 対応していない記法や破損の確認
+grep -n "^\s*- \[ \] \*\*" .claude/commands/kairo-tasks.md | head -3 && echo "✅ チェックボックス形式正常" || echo "❌ チェックボックス形式異常"
 
-  it('認証エラー時にサインインページにリダイレクトされる', async () => {
-    // Given: 認証エラーのモック
-    const mockPush = jest.fn();
-    jest.spyOn(require('next/navigation'), 'useRouter').mockReturnValue({ push: mockPush });
-    jest.spyOn(require('@/hooks/useDashboardData'), 'useDashboardData')
-      .mockReturnValue({ 
-        data: null, 
-        loading: false, 
-        error: new Error('401: Unauthorized') 
-      });
-    
-    // When: ダッシュボードをレンダリング
-    render(<Dashboard />);
-    
-    // Then: サインインページにリダイレクト
-    await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/auth/signin');
-    });
-  });
-});
+# 不正なヘッダーレベルの確認
+grep -n "^##### " .claude/commands/ -r && echo "❌ 不正なヘッダー" || echo "✅ ヘッダー形式正常"
 ```
+**期待結果**: 記法エラーが検出されない
 
-## テストヘルパー関数
+## パフォーマンステストケース
 
-```typescript
-// テストデータ作成ヘルパー
-function createMockUser(overrides?: Partial<User>) {
-  return {
-    id: 'user123',
-    name: 'テストユーザー',
-    level: 5,
-    totalXp: 2500,
-    currentLevelXp: 200,
-    nextLevelXp: 500,
-    avatarUrl: '/avatar.jpg',
-    ...overrides
-  };
-}
+### TC-401: ファイルサイズの確認
 
-function createMockDashboardData(overrides?: Partial<DashboardData>) {
-  return {
-    user: createMockUser(),
-    todayProgress: {
-      completedRoutines: 2,
-      totalRoutines: 5,
-      todayXp: 100,
-      currentStreak: 3,
-      completionRate: 40
-    },
-    recentBadges: [],
-    activeMissions: [],
-    notifications: [],
-    ...overrides
-  };
-}
+**テスト概要**: ファイルサイズが異常に増加していない
 
-function createMockWrapper({ 
-  user = createMockUser(), 
-  dashboardData = createMockDashboardData(),
-  ...props 
-}) {
-  return ({ children }: { children: React.ReactNode }) => (
-    <AuthProvider user={user}>
-      <MockApiProvider data={dashboardData} {...props}>
-        {children}
-      </MockApiProvider>
-    </AuthProvider>
-  );
-}
-
-function createMockApiWrapper(responses: Record<string, any>) {
-  return ({ children }: { children: React.ReactNode }) => (
-    <MockApiProvider responses={responses}>
-      {children}
-    </MockApiProvider>
-  );
-}
+```bash
+# ファイルサイズの確認
+ls -la .claude/commands/kairo-*.md
 ```
+**期待結果**: ファイルサイズが大幅に変更されていない
 
-## 成功基準
+## 受け入れテストケース
 
-- [ ] 全コンポーネントテストが合格（カバレッジ‵80%以上）
-- [ ] カスタムフック統合テストが合格
-- [ ] E2Eテストが合格（メインユーザーフロー）
-- [ ] エラーハンドリングテストが合格
-- [ ] アクセシビリティテストが合格
-- [ ] レスポンシブテストが合格
+### TC-501: エンドツーエンド互換性テスト
+
+**テスト概要**: 変更されたコマンドが期待通りに機能する
+
+**前提条件**: 
+- `docs/tsumiki/`ディレクトリ構造が存在する
+- テスト用の要件名「test-compatibility」を使用
+
+**テストシナリオ**:
+1. 各コマンドファイルの形式が正しい
+2. プレースホルダーが適切に定義されている  
+3. 相互参照が正しく設定されている
+4. 出力フォーマット例が完全である
+
+**成功条件**: 
+- 全テストケースが合格
+- エラーや警告が発生しない
+- 生成されるドキュメント形式が期待通り
+
+## テスト実行順序
+
+1. **単体テスト** (TC-001 ~ TC-003): 個別ファイルの検証
+2. **統合テスト** (TC-101 ~ TC-102): コマンド間連携の検証  
+3. **回帰テスト** (TC-201): 意図しない変更の検出
+4. **エラーテスト** (TC-301): 破損・異常の検出
+5. **パフォーマンステスト** (TC-401): サイズ・性能の確認
+6. **受け入れテスト** (TC-501): 全体動作の確認

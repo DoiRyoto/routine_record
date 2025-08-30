@@ -103,7 +103,7 @@ export function determineMissionStatus(
   isCompleted: boolean,
   isActive: boolean,
   timeSlot?: TimeSlot,
-  currentTime: Date = new Date()
+  _currentTime: Date = new Date()
 ): MissionStatus {
   if (!isActive) {
     return 'cancelled';

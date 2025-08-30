@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { MissionProgressCalculationService } from '../MissionProgressCalculationService';
+
 import { Mission } from '../../entities/Mission';
 import { IExecutionRecordRepository } from '../../repositories/IExecutionRecordRepository';
+import { MissionProgressCalculationService } from '../MissionProgressCalculationService';
 
 describe('MissionProgressCalculationService', () => {
   let service: MissionProgressCalculationService;

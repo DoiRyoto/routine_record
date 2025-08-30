@@ -1,5 +1,5 @@
-import { UserId } from '../valueObjects/UserId';
 import { Level } from '../valueObjects/Level';
+import { UserId } from '../valueObjects/UserId';
 import { XPAmount } from '../valueObjects/XPAmount';
 
 export class UserProfile {

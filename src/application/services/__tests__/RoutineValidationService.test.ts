@@ -1,7 +1,9 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { RoutineValidationService } from '../RoutineValidationService';
+
 import { Routine, UserId, RoutineId, GoalType, RecurrenceType } from '@/domain';
 import { ValidationError, BusinessRuleViolationError } from '@/shared/types/DomainError';
+
+import { RoutineValidationService } from '../RoutineValidationService';
 
 describe('RoutineValidationService', () => {
   let service: RoutineValidationService;

@@ -1,7 +1,9 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import RoutinesPage from '../RoutinesPage';
+
 import { SnackbarProvider } from '@/context/SnackbarContext';
 import { apiClient } from '@/lib/api-client/endpoints';
+
+import RoutinesPage from '../RoutinesPage';
 
 // Mock API client
 jest.mock('@/lib/api-client/endpoints', () => ({

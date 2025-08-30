@@ -7,22 +7,15 @@ import {
   restoreRoutine,
   softDeleteRoutine,
   updateRoutine,
-  canUserAccessRoutine,
 } from '@/lib/db/queries/routines';
-import {
-  validateRoutineInput, 
-  sanitizeRoutineInput, 
-  type RoutineInput 
-} from '@/lib/routines/validation';
+import { logRoutineError, logRoutineSuccess, logRoutinePerformance } from '@/lib/routines/logging';
 import {
   createSuccessResponse,
   createAuthErrorResponse,
-  createValidationErrorResponse,
   createServerErrorResponse,
   createNotFoundErrorResponse,
   createPermissionErrorResponse,
 } from '@/lib/routines/responses';
-import { logRoutineError, logRoutineSuccess, logRoutinePerformance } from '@/lib/routines/logging';
 
 // 認証ユーザー取得のヘルパー関数
 async function getAuthenticatedUser() {
@@ -98,11 +91,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return createPermissionErrorResponse();
     }
 
-    const duration = Date.now() - startTime;
+    const _duration = Date.now() - startTime;
     logRoutinePerformance(
       { userId, routineId, action: 'GET_ROUTINE' },
       'get_routine_by_id',
-      duration
+      _duration
     );
 
     logRoutineSuccess(
@@ -112,7 +105,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     return createSuccessResponse(routine);
   } catch (error) {
-    const duration = Date.now() - startTime;
+    const _duration = Date.now() - startTime;
     logRoutineError(
       { 
         userId,
@@ -208,7 +201,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       data: updatedRoutine,
     });
   } catch {
-    return NextResponse.json({ error: getServerErrorMessage() }, { status: 500 });
+    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
   }
 }
 
@@ -268,7 +261,7 @@ export async function DELETE(
       message: 'ルーチンが削除されました',
     });
   } catch {
-    return NextResponse.json({ error: getServerErrorMessage() }, { status: 500 });
+    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
   }
 }
 
@@ -317,6 +310,6 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       data: restoredRoutine,
     });
   } catch {
-    return NextResponse.json({ error: getServerErrorMessage() }, { status: 500 });
+    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
   }
 }

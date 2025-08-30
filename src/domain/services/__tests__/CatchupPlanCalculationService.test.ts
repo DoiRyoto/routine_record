@@ -8,9 +8,10 @@
  */
 
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { CatchupPlanCalculationService } from '../CatchupPlanCalculationService';
+
 import { IExecutionRecordRepository } from '../../repositories/IExecutionRecordRepository';
 import { IRoutineRepository } from '../../repositories/IRoutineRepository';
+import { CatchupPlanCalculationService } from '../CatchupPlanCalculationService';
 
 describe('CatchupPlanCalculationService', () => {
   let service: CatchupPlanCalculationService;

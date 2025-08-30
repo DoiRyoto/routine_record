@@ -3,19 +3,7 @@
  * TDD Green Phase - 最小実装でテストをパスさせる
  */
 
-import { eq, and, desc, gte, lte, sql } from 'drizzle-orm';
-import { db } from '../index';
-import { 
-  users, 
-  missions, 
-  userMissions, 
-  categories, 
-  executionRecords,
-  type Mission,
-  type UserMission,
-  type Category,
-  type User
-} from '../schema';
+import { eq, and, desc, sql } from 'drizzle-orm';
 
 import type { 
   MissionWithDetails,
@@ -27,17 +15,23 @@ import type {
   MissionStatus,
   ProgressData,
   CategoryDisplay,
-  ParticipantDisplay,
   UserMissionExtended,
   ExecutionRecordSummary
 } from '../../../types/mission-card';
-
 import { 
   calculateProgress, 
   determineMissionStatus,
   getCategoryBackgroundClass,
   getCategoryTextClass 
 } from '../../../utils/mission-card';
+import { db } from '../index';
+import { 
+  missions, 
+  userMissions, 
+  executionRecords
+} from '../schema';
+
+
 
 /**
  * 今日のミッション一覧を取得
@@ -45,7 +39,7 @@ import {
 export async function getTodayMissions(
   request: GetTodayMissionsRequest
 ): Promise<MissionWithDetails[]> {
-  const { userId, date, timezone = 'Asia/Tokyo', includeCompleted = true } = request;
+  const { userId, date, timezone: _timezone = 'Asia/Tokyo', includeCompleted = true } = request;
   
   // 入力検証
   if (!isValidUUID(userId)) {
@@ -146,7 +140,7 @@ export async function getTodayMissions(
 
       return {
         id: data.missionId,
-        userId: userId,
+        userId,
         name: data.missionTitle,
         description: data.missionDescription || undefined,
         category: data.categoryName,
@@ -307,16 +301,16 @@ export async function updateMissionStatus(
 export async function getMissionProgress(
   request: GetMissionProgressRequest
 ): Promise<MissionProgressResponse> {
-  const { userId, missionId, period = 'today' } = request;
+  const { userId, missionId, period: _period = 'today' } = request;
 
   try {
     // ミッション詳細取得
-    const missions = await getTodayMissions({
+    const userMissionList = await getTodayMissions({
       userId,
       date: new Date().toISOString().split('T')[0]
     });
 
-    const mission = missions.find(m => m.id === missionId);
+    const mission = userMissionList.find(m => m.id === missionId);
     if (!mission) {
       throw new Error('ミッションが見つかりません');
     }

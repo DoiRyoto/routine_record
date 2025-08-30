@@ -4,9 +4,10 @@
  */
 
 import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
 import { type User } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
+
 import { createErrorResponse } from '@/lib/routines/responses';
 
 export interface AuthenticatedUser {

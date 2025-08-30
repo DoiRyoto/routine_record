@@ -13,9 +13,9 @@ import {
   createErrorResponse,
   createServerErrorResponse,
 } from '@/lib/routines/responses';
-import { validateBadgeQuery } from '@/lib/validation/common';
-import { sortBadges } from '@/lib/utils/sorting';
 import { paginateArray } from '@/lib/utils/pagination';
+import { sortBadges } from '@/lib/utils/sorting';
+import { validateBadgeQuery } from '@/lib/validation/common';
 
 // GET: Public badges API - no authentication required
 export async function GET(request: NextRequest) {

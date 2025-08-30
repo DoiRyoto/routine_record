@@ -1,12 +1,13 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { UserSettings } from '../UserSettings';
-import { UserSettingsId } from '../../valueObjects/UserSettingsId';
-import { UserId } from '../../valueObjects/UserId';
+
 import {
   UserSettingsInvalidThemeError,
   UserSettingsInvalidLanguageError,
   UserSettingsInvalidTimeFormatError
 } from '../../../shared/types/UserSettingsErrors';
+import { UserId } from '../../valueObjects/UserId';
+import { UserSettingsId } from '../../valueObjects/UserSettingsId';
+import { UserSettings } from '../UserSettings';
 
 describe('UserSettings', () => {
   const validUserSettingsId = new UserSettingsId('550e8400-e29b-41d4-a716-446655440001');

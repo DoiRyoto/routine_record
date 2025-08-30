@@ -1,5 +1,5 @@
-import { RoutineId, UserId, GoalType, RecurrenceType } from '../valueObjects';
 import { Routine, ExecutionRecord } from '../entities';
+import { RoutineId, UserId, GoalType, RecurrenceType } from '../valueObjects';
 
 describe('Architecture Boundaries Tests', () => {
   describe('Value Objects', () => {

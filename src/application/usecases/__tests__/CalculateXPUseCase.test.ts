@@ -1,11 +1,12 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { CalculateXPUseCase } from '../CalculateXPUseCase';
-import { XPCalculationService } from '../../../domain/services/XPCalculationService';
-import { IUserProfileRepository } from '../../../domain/repositories/IUserProfileRepository';
+
 import { UserProfile } from '../../../domain/entities/UserProfile';
+import { IUserProfileRepository } from '../../../domain/repositories/IUserProfileRepository';
+import { XPCalculationService } from '../../../domain/services/XPCalculationService';
 import { UserId } from '../../../domain/valueObjects/UserId';
 import { XPAmount } from '../../../domain/valueObjects/XPAmount';
 import { CalculateXPDto } from '../../dtos/CalculateXPDto';
+import { CalculateXPUseCase } from '../CalculateXPUseCase';
 
 describe('CalculateXPUseCase', () => {
   let useCase: CalculateXPUseCase;

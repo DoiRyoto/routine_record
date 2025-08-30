@@ -1,6 +1,13 @@
 import { Container } from 'inversify';
 import 'reflect-metadata';
 
+// Import implementations
+import { RoutineValidationService } from '@/application/services/RoutineValidationService';
+import { CreateRoutineUseCase } from '@/application/usecases/CreateRoutineUseCase';
+import { GetRoutinesUseCase } from '@/application/usecases/GetRoutinesUseCase';
+import { DrizzleRoutineRepository } from '@/infrastructure/repositories/DrizzleRoutineRepository';
+import { RoutineController } from '@/presentation/controllers/RoutineController';
+
 // Types (Symbols for dependency injection)
 export const TYPES = {
   // Repositories
@@ -50,12 +57,6 @@ export function isBound(serviceIdentifier: symbol): boolean {
 
 // Initialize container (will be called from a setup file)
 export function initializeContainer(): void {
-  // Import implementations
-  const { DrizzleRoutineRepository } = require('@/infrastructure/repositories/DrizzleRoutineRepository');
-  const { RoutineValidationService } = require('@/application/services/RoutineValidationService');
-  const { CreateRoutineUseCase } = require('@/application/usecases/CreateRoutineUseCase');
-  const { GetRoutinesUseCase } = require('@/application/usecases/GetRoutinesUseCase');
-  const { RoutineController } = require('@/presentation/controllers/RoutineController');
 
   // Bind repositories
   container.bind(TYPES.IRoutineRepository).to(DrizzleRoutineRepository);

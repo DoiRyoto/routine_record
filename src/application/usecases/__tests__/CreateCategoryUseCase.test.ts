@@ -1,14 +1,15 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { CreateCategoryUseCase } from '../CreateCategoryUseCase';
-import { ICategoryRepository } from '../../../domain/repositories/ICategoryRepository';
+
 import { Category } from '../../../domain/entities/Category';
+import { ICategoryRepository } from '../../../domain/repositories/ICategoryRepository';
 import { CategoryId, UserId } from '../../../domain/valueObjects';
-import { CreateCategoryDto } from '../../dtos/CreateCategoryDto';
 import { 
   CategoryNameConflictError,
   CategoryNameEmptyError,
   CategoryNameTooLongError
 } from '../../../shared/types/CategoryErrors';
+import { CreateCategoryDto } from '../../dtos/CreateCategoryDto';
+import { CreateCategoryUseCase } from '../CreateCategoryUseCase';
 
 // Mock repository
 const mockCategoryRepository: ICategoryRepository = {

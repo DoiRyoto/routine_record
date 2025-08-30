@@ -1,6 +1,4 @@
-import { IExecutionRecordRepository } from '../repositories/IExecutionRecordRepository';
-import { IRoutineRepository } from '../repositories/IRoutineRepository';
-import { CATCHUP_PLAN_CONSTANTS, DifficultyLevel, TimeOfDay } from '../constants/CatchupPlanConstants';
+import type { ExecutionRecord } from '@/lib/db/schema';
 import {
   calculateRemainingDays,
   calculateSuggestedDailyTarget,
@@ -10,7 +8,10 @@ import {
   suggestOptimalTimeOfDay,
   calculateWeekdayAdjustments
 } from '@/lib/utils/catchupCalculations';
-import type { ExecutionRecord } from '@/lib/db/schema';
+
+import { CATCHUP_PLAN_CONSTANTS, DifficultyLevel, TimeOfDay } from '../constants/CatchupPlanConstants';
+import { IExecutionRecordRepository } from '../repositories/IExecutionRecordRepository';
+import { IRoutineRepository } from '../repositories/IRoutineRepository';
 
 export interface CatchupPlanInput {
   routine: {

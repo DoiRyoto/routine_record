@@ -1,5 +1,6 @@
 import { type NextRequest } from 'next/server';
 
+import { requireAuth, validateUserAccess } from '@/lib/auth/middleware';
 import { 
   getUserProfile, 
   getUserProfileWithStats 
@@ -9,7 +10,6 @@ import {
   createErrorResponse,
   createServerErrorResponse,
 } from '@/lib/routines/responses';
-import { requireAuth, validateUserAccess } from '@/lib/auth/middleware';
 import { validateBoolean } from '@/lib/validation/common';
 
 // GET: ユーザープロフィール取得

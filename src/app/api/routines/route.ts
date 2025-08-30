@@ -1,20 +1,19 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
 
 import { createRoutine, getRoutines, type GetRoutinesOptions } from '@/lib/db/queries/routines';
-import { 
-  validateRoutineInput, 
-  sanitizeRoutineInput, 
-  type RoutineInput 
-} from '@/lib/routines/validation';
+import { logRoutineError, logRoutineSuccess, logRoutinePerformance } from '@/lib/routines/logging';
 import {
   createSuccessResponse,
   createAuthErrorResponse,
   createValidationErrorResponse,
   createServerErrorResponse,
 } from '@/lib/routines/responses';
-import { logRoutineError, logRoutineSuccess, logRoutinePerformance } from '@/lib/routines/logging';
+import { 
+  validateRoutineInput, 
+  sanitizeRoutineInput
+} from '@/lib/routines/validation';
 
 // 認証ユーザー取得のヘルパー関数
 async function getAuthenticatedUser() {
@@ -80,7 +79,7 @@ export async function GET(request: NextRequest) {
 
     const routines = await getRoutines(user.id, options);
 
-    const duration = Date.now() - startTime;
+    const _duration = Date.now() - startTime;
     logRoutinePerformance(
       { userId: user.id, action: 'GET_ROUTINES' },
       'get_routines',
@@ -94,7 +93,7 @@ export async function GET(request: NextRequest) {
 
     return createSuccessResponse(routines);
   } catch (error) {
-    const duration = Date.now() - startTime;
+    const _duration = Date.now() - startTime;
     logRoutineError(
       { 
         userId, 
@@ -151,7 +150,7 @@ export async function POST(request: NextRequest) {
       userId: user.id,
     });
 
-    const duration = Date.now() - startTime;
+    const _duration = Date.now() - startTime;
     logRoutinePerformance(
       { userId: user.id, routineId: newRoutine.id, action: 'CREATE_ROUTINE' },
       'create_routine',
@@ -169,7 +168,7 @@ export async function POST(request: NextRequest) {
       201
     );
   } catch (error) {
-    const duration = Date.now() - startTime;
+    const _duration = Date.now() - startTime;
     logRoutineError(
       { 
         userId,

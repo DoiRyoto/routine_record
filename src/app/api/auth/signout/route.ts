@@ -23,7 +23,7 @@ export async function POST(_request: NextRequest) {
           },
           setAll(cookiesToSet) {
             try {
-              cookiesToSet.forEach(({ name, value, options }) => {
+              cookiesToSet.forEach(({ name, value: _value, options }) => {
                 // Cookie をクリア
                 const clearOptions = {
                   ...options,

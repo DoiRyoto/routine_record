@@ -1,7 +1,8 @@
 import { and, desc, eq, isNull } from 'drizzle-orm';
 import { injectable } from 'inversify';
-import { IRoutineRepository } from '@/domain/repositories/IRoutineRepository';
+
 import { Routine, RoutineId, UserId } from '@/domain';
+import { IRoutineRepository } from '@/domain/repositories/IRoutineRepository';
 import { db } from '@/infrastructure/database';
 import { routines } from '@/infrastructure/database/schema';
 

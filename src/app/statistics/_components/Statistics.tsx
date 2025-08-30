@@ -2,9 +2,16 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
+import { CategoryDistributionChart } from '@/components/charts/CategoryDistributionChart';
+import { ExecutionTrendChart } from '@/components/charts/ExecutionTrendChart';
+import { DateRangePicker, type DateRange } from '@/components/filters/DateRangePicker';
 import { Card } from '@/components/ui/Card';
 import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
 import type { ExecutionRecord, Routine } from '@/lib/db/schema';
+import { 
+  calculateDailyExecutions, 
+  calculateCategoryDistribution 
+} from '@/utils/statistics';
 // Local interface for statistics display
 interface StatisticsData {
   routineId: string;
@@ -30,10 +37,35 @@ interface Props {
 
 export default function Statistics({ routines, executionRecords, userSettings }: Props) {
   const [isMounted, setIsMounted] = useState(false);
+  const [dateRange, setDateRange] = useState<DateRange>({
+    startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30日前
+    endDate: new Date(),
+    preset: '1month'
+  });
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // フィルタリングされた実行記録
+  const filteredExecutionRecords = useMemo(() => {
+    if (!isMounted) return [];
+    
+    return executionRecords.filter(record => {
+      const recordDate = new Date(record.executedAt);
+      return recordDate >= dateRange.startDate && recordDate <= dateRange.endDate;
+    });
+  }, [executionRecords, dateRange, isMounted]);
+
+  // チャート用データ計算
+  const chartData = useMemo(() => {
+    if (!isMounted) return { trend: [], distribution: [] };
+    
+    const trend = calculateDailyExecutions(filteredExecutionRecords);
+    const distribution = calculateCategoryDistribution(routines, filteredExecutionRecords);
+    
+    return { trend, distribution };
+  }, [routines, filteredExecutionRecords, isMounted]);
 
   const statisticsData = useMemo(() => {
     if (!isMounted) {
@@ -41,7 +73,7 @@ export default function Statistics({ routines, executionRecords, userSettings }:
     } // マウント前は空配列を返す
     return routines
       .map((routine) => {
-        const routineRecords = executionRecords.filter(
+        const routineRecords = filteredExecutionRecords.filter(
           (record) => record.routineId === routine.id && record.isCompleted
         );
 
@@ -108,7 +140,7 @@ export default function Statistics({ routines, executionRecords, userSettings }:
         } as StatisticsData;
       })
       .sort((a, b) => b.totalExecutions - a.totalExecutions);
-  }, [routines, executionRecords, isMounted, userSettings?.timezone]);
+  }, [routines, filteredExecutionRecords, isMounted, userSettings?.timezone]);
 
   const overallStats = useMemo(() => {
     if (!isMounted) {
@@ -120,24 +152,21 @@ export default function Statistics({ routines, executionRecords, userSettings }:
       };
     }
     const totalRoutines = routines.filter((r) => r.isActive).length;
-    const totalExecutions = executionRecords.filter((r) => r.isCompleted).length;
+    const totalExecutions = filteredExecutionRecords.filter((r) => r.isCompleted).length;
     const uniqueExecutedRoutines = new Set(
-      executionRecords.filter((r) => r.isCompleted).map((r) => r.routineId)
+      filteredExecutionRecords.filter((r) => r.isCompleted).map((r) => r.routineId)
     ).size;
 
-    const today = new Date();
-    const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
-    const recentExecutions = executionRecords.filter(
-      (record) => record.executedAt >= thirtyDaysAgo && record.isCompleted
-    ).length;
+    const daysDiff = Math.max(1, Math.ceil((dateRange.endDate.getTime() - dateRange.startDate.getTime()) / (24 * 60 * 60 * 1000)));
+    const averageExecutionsPerDay = Math.round((totalExecutions / daysDiff) * 10) / 10;
 
     return {
       totalRoutines,
       totalExecutions,
       uniqueExecutedRoutines,
-      averageExecutionsPerDay: Math.round((recentExecutions / 30) * 10) / 10,
+      averageExecutionsPerDay,
     };
-  }, [routines, executionRecords, isMounted]);
+  }, [routines, filteredExecutionRecords, dateRange, isMounted]);
 
   // マウント前は読み込み中を表示
   if (!isMounted) {
@@ -153,7 +182,10 @@ export default function Statistics({ routines, executionRecords, userSettings }:
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray">統計</h1>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <h1 className="text-2xl font-bold text-gray">統計・分析</h1>
+        <DateRangePicker onChange={setDateRange} />
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>
@@ -190,6 +222,19 @@ export default function Statistics({ routines, executionRecords, userSettings }:
             </div>
             <div className="text-sm text-gray">1日平均実行数</div>
           </div>
+        </Card>
+      </div>
+
+      {/* 新しいチャート表示 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <h2 className="text-xl font-bold mb-4 text-gray">実行回数推移</h2>
+          <ExecutionTrendChart data={chartData.trend} />
+        </Card>
+
+        <Card>
+          <h2 className="text-xl font-bold mb-4 text-gray">カテゴリ別分布</h2>
+          <CategoryDistributionChart data={chartData.distribution} />
         </Card>
       </div>
 

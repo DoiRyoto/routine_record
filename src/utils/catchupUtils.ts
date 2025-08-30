@@ -1,12 +1,10 @@
-import type { CatchupPlan, ExecutionRecord, Routine } from '@/lib/db/schema';
 import { CATCHUP_PLAN_CONSTANTS, DifficultyLevel, PeriodType } from '@/domain/constants/CatchupPlanConstants';
+import type { CatchupPlan, ExecutionRecord, Routine } from '@/lib/db/schema';
 import {
   calculateRemainingDays,
   calculateSuggestedDailyTarget,
   determineDifficultyLevel,
-  generateProgressMessage,
-  suggestOptimalTimeOfDay,
-  calculateWeekdayAdjustments
+  generateProgressMessage
 } from '@/lib/utils/catchupCalculations';
 
 /**

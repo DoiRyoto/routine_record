@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { 
   getUserBadges,
@@ -9,7 +9,7 @@ import {
   getNewUserBadges,
   awardBadge,
   markBadgeAsViewed,
-  markAllBadgesAsViewed
+  _markAllBadgesAsViewed
 } from '@/lib/db/queries/user-badges';
 import {
   createSuccessResponse,

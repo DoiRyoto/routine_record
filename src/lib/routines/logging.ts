@@ -55,9 +55,11 @@ export function logRoutineSuccess(context: LogContext, message: string): void {
 
   // 本番環境では構造化ログとして出力
   if (process.env.NODE_ENV === 'production') {
+    // eslint-disable-next-line no-console
     console.log(JSON.stringify(logData));
   } else {
     // 開発環境では読みやすい形式で出力
+    // eslint-disable-next-line no-console
     console.log(`[ROUTINE INFO] ${message}`, {
       userId: context.userId,
       routineId: context.routineId,
@@ -87,6 +89,7 @@ export function logRoutinePerformance(
 
   // デバッグモードでのみ出力
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG === 'true') {
+    // eslint-disable-next-line no-console
     console.debug(JSON.stringify(logData));
   }
 }

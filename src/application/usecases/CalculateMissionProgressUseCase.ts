@@ -1,7 +1,7 @@
-import { CalculateMissionProgressDto } from '../dtos';
+import { Mission } from '../../domain/entities/Mission';
 import { IMissionRepository } from '../../domain/repositories/IMissionRepository';
 import { MissionProgressCalculationService } from '../../domain/services/MissionProgressCalculationService';
-import { Mission } from '../../domain/entities/Mission';
+import { CalculateMissionProgressDto } from '../dtos';
 
 export interface CalculateMissionProgressResult {
   mission: Mission;
@@ -35,7 +35,7 @@ export class CalculateMissionProgressUseCase {
     const isCompleted = progress >= mission.targetValue;
     
     // Calculate completion percentage
-    let completionPercentage = mission.targetValue > 0 
+    const completionPercentage = mission.targetValue > 0 
       ? Math.round((progress / mission.targetValue) * 100)
       : progress > 0 ? Infinity : 0;
     

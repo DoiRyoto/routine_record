@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { GetUserSettingsUseCase } from '../GetUserSettingsUseCase';
-import { IUserSettingsRepository } from '../../../domain/repositories/IUserSettingsRepository';
+
 import { UserSettings } from '../../../domain/entities/UserSettings';
+import { IUserSettingsRepository } from '../../../domain/repositories/IUserSettingsRepository';
 import { UserSettingsId, UserId } from '../../../domain/valueObjects';
 import { GetUserSettingsDto } from '../../dtos/GetUserSettingsDto';
+import { GetUserSettingsUseCase } from '../GetUserSettingsUseCase';
 
 // Mock repository
 const mockUserSettingsRepository: IUserSettingsRepository = {

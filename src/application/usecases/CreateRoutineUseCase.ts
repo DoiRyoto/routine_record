@@ -1,12 +1,15 @@
 import { injectable, inject } from 'inversify';
-import type { IRoutineRepository } from '@/domain/repositories/IRoutineRepository';
-import type { RoutineValidationService } from '../services/RoutineValidationService';
-import { CreateRoutineDto } from '../dtos/CreateRoutineDto';
+
 import { Routine, RoutineId, UserId, GoalType, RecurrenceType } from '@/domain';
-import { Result, success, failure } from '@/shared/types';
-import { validateDto } from '@/shared/utils/ValidationUtils';
-import { UuidUtils } from '@/shared/utils/UuidUtils';
+import type { IRoutineRepository } from '@/domain/repositories/IRoutineRepository';
 import { TYPES } from '@/shared/config/container';
+import { Result, success, failure } from '@/shared/types';
+import { UuidUtils } from '@/shared/utils/UuidUtils';
+import { validateDto } from '@/shared/utils/ValidationUtils';
+
+import { CreateRoutineDto } from '../dtos/CreateRoutineDto';
+import type { RoutineValidationService } from '../services/RoutineValidationService';
+
 
 @injectable()
 export class CreateRoutineUseCase {

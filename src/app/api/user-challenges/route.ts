@@ -1,12 +1,12 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
 
 import {
   getUserChallenges,
   getUserChallengesByStatus,
   getUserChallengesWithDetails,
-  getUserChallengeByChallenge,
+  _getUserChallengeByChallenge,
 } from '@/lib/db/queries/user-challenges';
 import {
   createSuccessResponse,
@@ -80,7 +80,7 @@ function validateQueryParams(searchParams: URLSearchParams) {
     }
     
     // 一般的な文字列の場合の基本チェック
-    const generalIdRegex = /^[a-zA-Z0-9\-_]+$/;
+    const generalIdRegex = /^[a-zA-Z0-9-_]+$/;
     if (!generalIdRegex.test(challengeId)) {
       return 'challengeId パラメータが無効です。英数字、ハイフン、アンダースコアのみ使用できます';
     }

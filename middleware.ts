@@ -1,6 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 /**
  * Next.js Middleware - 認証状態の管理とルート保護

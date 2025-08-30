@@ -1,5 +1,6 @@
 import { type NextRequest } from 'next/server';
 
+import { requireAuth } from '@/lib/auth/middleware';
 import { 
   getAllMissions,
   getMissionsByDifficulty,
@@ -10,10 +11,9 @@ import {
   createErrorResponse,
   createServerErrorResponse,
 } from '@/lib/routines/responses';
-import { requireAuth } from '@/lib/auth/middleware';
-import { validateMissionQuery } from '@/lib/validation/common';
-import { sortMissions } from '@/lib/utils/sorting';
 import { paginateArray } from '@/lib/utils/pagination';
+import { sortMissions } from '@/lib/utils/sorting';
+import { validateMissionQuery } from '@/lib/validation/common';
 
 // Filter missions based on query parameters
 function filterMissions(missions: any[], filters: { 
@@ -37,7 +37,7 @@ function filterMissions(missions: any[], filters: {
 
 // GET: ミッション一覧取得
 export async function GET(request: NextRequest) {
-  return requireAuth(request, async (authData) => {
+  return requireAuth(request, async (_authData) => {
     try {
       // URLパラメータの解析
       const { searchParams } = new URL(request.url);

@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { CalculateMissionProgressUseCase } from '../CalculateMissionProgressUseCase';
-import { CalculateMissionProgressDto } from '../../dtos';
+
+import { Mission } from '../../../domain/entities/Mission';
 import { IMissionRepository } from '../../../domain/repositories/IMissionRepository';
 import { MissionProgressCalculationService } from '../../../domain/services/MissionProgressCalculationService';
-import { Mission } from '../../../domain/entities/Mission';
+import { CalculateMissionProgressDto } from '../../dtos';
+import { CalculateMissionProgressUseCase } from '../CalculateMissionProgressUseCase';
 
 describe('CalculateMissionProgressUseCase', () => {
   let useCase: CalculateMissionProgressUseCase;

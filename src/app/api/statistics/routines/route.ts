@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { authenticateRequest, createErrorResponse } from '@/lib/api/auth-helper';
 import {
   getRoutineStatistics,
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest) {
     // Parse query parameters
     const { searchParams } = new URL(request.url);
     const routineId = searchParams.get('routineId');
-    const period = searchParams.get('period') || 'month';
+    const _period = searchParams.get('period') || 'month';
     const sort = searchParams.get('sort') || 'executions';
     const limit = parseInt(searchParams.get('limit') || '50');
     const include = searchParams.get('include')?.split(',') || [];

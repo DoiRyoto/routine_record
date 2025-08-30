@@ -1,9 +1,9 @@
-import { UserSettingsId, UserId } from '../valueObjects';
 import { 
   UserSettingsInvalidThemeError,
   UserSettingsInvalidLanguageError,
   UserSettingsInvalidTimeFormatError
 } from '../../shared/types/UserSettingsErrors';
+import { UserSettingsId, UserId } from '../valueObjects';
 
 export type Theme = 'light' | 'dark' | 'auto';
 export type Language = 'ja' | 'en';

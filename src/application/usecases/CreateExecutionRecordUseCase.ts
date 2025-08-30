@@ -2,9 +2,9 @@ import { ExecutionRecord } from '../../domain/entities/ExecutionRecord';
 import { IExecutionRecordRepository } from '../../domain/repositories/IExecutionRecordRepository';
 import { IRoutineRepository } from '../../domain/repositories/IRoutineRepository';
 import { ExecutionRecordId, UserId, RoutineId } from '../../domain/valueObjects';
-import { CreateExecutionRecordDto } from '../dtos/CreateExecutionRecordDto';
-import { InactiveRoutineError } from '../../shared/types/ExecutionRecordErrors';
 import { NotFoundError, UnauthorizedError } from '../../shared/types/DomainError';
+import { InactiveRoutineError } from '../../shared/types/ExecutionRecordErrors';
+import { CreateExecutionRecordDto } from '../dtos/CreateExecutionRecordDto';
 
 export class CreateExecutionRecordUseCase {
   constructor(

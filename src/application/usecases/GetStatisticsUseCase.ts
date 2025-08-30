@@ -1,5 +1,5 @@
-import { GetDashboardStatisticsDto, GetRoutineStatisticsDto } from '../dtos/GetStatisticsDto';
 import { StatisticsCalculationService, DashboardStatistics, WeeklyProgressData, MonthlyProgressData, CategoryDistribution, PerformanceMetrics, RoutineStatistics, ExecutionPatterns, TimeSeriesData, ComparisonData } from '../../domain/services/StatisticsCalculationService';
+import { GetDashboardStatisticsDto, GetRoutineStatisticsDto } from '../dtos/GetStatisticsDto';
 
 export interface DashboardStatisticsResult {
   summary: DashboardStatistics;

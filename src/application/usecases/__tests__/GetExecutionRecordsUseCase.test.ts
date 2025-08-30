@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { GetExecutionRecordsUseCase } from '../GetExecutionRecordsUseCase';
-import { IExecutionRecordRepository } from '../../../domain/repositories/IExecutionRecordRepository';
+
 import { ExecutionRecord } from '../../../domain/entities/ExecutionRecord';
+import { IExecutionRecordRepository } from '../../../domain/repositories/IExecutionRecordRepository';
 import { ExecutionRecordId, UserId, RoutineId } from '../../../domain/valueObjects';
 import { GetExecutionRecordsDto } from '../../dtos/GetExecutionRecordsDto';
+import { GetExecutionRecordsUseCase } from '../GetExecutionRecordsUseCase';
 
 // Mock repository
 const mockExecutionRecordRepository: IExecutionRecordRepository = {

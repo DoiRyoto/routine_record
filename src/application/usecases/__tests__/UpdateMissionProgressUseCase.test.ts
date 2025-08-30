@@ -1,16 +1,17 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { UpdateMissionProgressUseCase } from '../UpdateMissionProgressUseCase';
-import { UpdateMissionProgressDto } from '../../dtos';
-import { IUserMissionRepository } from '../../../domain/repositories/IUserMissionRepository';
-import { IMissionRepository } from '../../../domain/repositories/IMissionRepository';
-import { IUserProfileRepository } from '../../../domain/repositories/IUserProfileRepository';
-import { IUserBadgeRepository } from '../../../domain/repositories/IUserBadgeRepository';
-import { IGameNotificationRepository } from '../../../domain/repositories/IGameNotificationRepository';
-import { MissionProgressCalculationService } from '../../../domain/services/MissionProgressCalculationService';
-import { ProcessLevelUpUseCase } from '../ProcessLevelUpUseCase';
+
 import { Mission } from '../../../domain/entities/Mission';
 import { UserMission } from '../../../domain/entities/UserMission';
 import { UserProfile } from '../../../domain/entities/UserProfile';
+import { IGameNotificationRepository } from '../../../domain/repositories/IGameNotificationRepository';
+import { IMissionRepository } from '../../../domain/repositories/IMissionRepository';
+import { IUserBadgeRepository } from '../../../domain/repositories/IUserBadgeRepository';
+import { IUserMissionRepository } from '../../../domain/repositories/IUserMissionRepository';
+import { IUserProfileRepository } from '../../../domain/repositories/IUserProfileRepository';
+import { MissionProgressCalculationService } from '../../../domain/services/MissionProgressCalculationService';
+import { UpdateMissionProgressDto } from '../../dtos';
+import { ProcessLevelUpUseCase } from '../ProcessLevelUpUseCase';
+import { UpdateMissionProgressUseCase } from '../UpdateMissionProgressUseCase';
 
 describe('UpdateMissionProgressUseCase', () => {
   let useCase: UpdateMissionProgressUseCase;

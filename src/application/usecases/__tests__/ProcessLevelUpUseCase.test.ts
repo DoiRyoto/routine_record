@@ -1,13 +1,14 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { ProcessLevelUpUseCase } from '../ProcessLevelUpUseCase';
-import { LevelUpService } from '../../../domain/services/LevelUpService';
-import { IUserProfileRepository } from '../../../domain/repositories/IUserProfileRepository';
-import { IGameNotificationRepository } from '../../../domain/repositories/IGameNotificationRepository';
+
 import { UserProfile } from '../../../domain/entities/UserProfile';
+import { IGameNotificationRepository } from '../../../domain/repositories/IGameNotificationRepository';
+import { IUserProfileRepository } from '../../../domain/repositories/IUserProfileRepository';
+import { LevelUpService } from '../../../domain/services/LevelUpService';
+import { Level } from '../../../domain/valueObjects/Level';
 import { UserId } from '../../../domain/valueObjects/UserId';
 import { XPAmount } from '../../../domain/valueObjects/XPAmount';
-import { Level } from '../../../domain/valueObjects/Level';
 import { ProcessLevelUpDto } from '../../dtos/ProcessLevelUpDto';
+import { ProcessLevelUpUseCase } from '../ProcessLevelUpUseCase';
 
 describe('ProcessLevelUpUseCase', () => {
   let useCase: ProcessLevelUpUseCase;

@@ -1,13 +1,13 @@
 import { Category } from '../../domain/entities/Category';
 import { ICategoryRepository } from '../../domain/repositories/ICategoryRepository';
 import { CategoryId, UserId } from '../../domain/valueObjects';
-import { UpdateCategoryDto } from '../dtos/UpdateCategoryDto';
 import { 
   DefaultCategoryModificationError,
   CategoryAccessForbiddenError,
   CategoryNotFoundError,
   CategoryNameConflictError
 } from '../../shared/types/CategoryErrors';
+import { UpdateCategoryDto } from '../dtos/UpdateCategoryDto';
 
 export class UpdateCategoryUseCase {
   constructor(

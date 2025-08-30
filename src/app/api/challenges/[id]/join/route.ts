@@ -1,14 +1,8 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
 
 import { JoinChallengeUseCase } from '@/application/usecases/JoinChallengeUseCase';
-import { JoinChallengeDto } from '@/application/dtos/JoinChallengeDto';
-import { 
-  getChallengeById,
-  joinChallenge,
-  isUserAlreadyJoined
-} from '@/lib/db/queries/challenges';
 import {
   createSuccessResponse,
   createErrorResponse,

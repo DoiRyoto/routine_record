@@ -1,5 +1,5 @@
-import { Mission } from '../entities/Mission';
 import { MISSION_CONSTANTS } from '../constants/MissionConstants';
+import { Mission } from '../entities/Mission';
 
 export interface MissionCalculatorStrategy {
   calculate(userId: string, mission: Mission, executionRecords: any[]): Promise<number>;

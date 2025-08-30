@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 import { Card } from '@/components/ui/Card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
-
 import type { Challenge, UserChallenge } from '@/lib/db/schema';
 
 import { Leaderboard } from './Leaderboard';

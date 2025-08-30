@@ -1,5 +1,7 @@
 import { Mission, MissionType } from '../entities/Mission';
+import { InvalidMissionTypeException, MissionProgressCalculationException } from '../exceptions/MissionProgressExceptions';
 import { IExecutionRecordRepository } from '../repositories/IExecutionRecordRepository';
+
 import {
   MissionCalculatorStrategy,
   StreakMissionCalculator,
@@ -7,7 +9,6 @@ import {
   VarietyMissionCalculator,
   ConsistencyMissionCalculator
 } from './MissionCalculatorStrategy';
-import { InvalidMissionTypeException, MissionProgressCalculationException } from '../exceptions/MissionProgressExceptions';
 
 export class MissionProgressCalculationService {
   private strategies: Map<MissionType, MissionCalculatorStrategy>;

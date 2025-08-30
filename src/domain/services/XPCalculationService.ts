@@ -1,5 +1,5 @@
-import { XPAmount } from '../valueObjects/XPAmount';
 import { InvalidXPSourceError } from '../../shared/types/GamificationErrors';
+import { XPAmount } from '../valueObjects/XPAmount';
 
 export type BadgeRank = 'bronze' | 'silver' | 'gold' | 'platinum';
 export type ChallengeDifficulty = 'easy' | 'normal' | 'hard';

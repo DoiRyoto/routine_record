@@ -1,10 +1,12 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { CreateRoutineUseCase } from '../CreateRoutineUseCase';
-import { CreateRoutineDto } from '../../dtos/CreateRoutineDto';
-import { IRoutineRepository } from '@/domain/repositories/IRoutineRepository';
-import { RoutineValidationService } from '../../services/RoutineValidationService';
+
 import { Routine, RoutineId, UserId } from '@/domain';
+import { IRoutineRepository } from '@/domain/repositories/IRoutineRepository';
 import { ValidationError, BusinessRuleViolationError } from '@/shared/types/DomainError';
+
+import { CreateRoutineDto } from '../../dtos/CreateRoutineDto';
+import { RoutineValidationService } from '../../services/RoutineValidationService';
+import { CreateRoutineUseCase } from '../CreateRoutineUseCase';
 
 describe('CreateRoutineUseCase', () => {
   let useCase: CreateRoutineUseCase;

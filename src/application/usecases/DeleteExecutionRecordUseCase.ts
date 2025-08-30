@@ -1,10 +1,10 @@
 import { IExecutionRecordRepository } from '../../domain/repositories/IExecutionRecordRepository';
 import { ExecutionRecordId, UserId } from '../../domain/valueObjects';
-import { DeleteExecutionRecordDto } from '../dtos/DeleteExecutionRecordDto';
 import { 
   ExecutionRecordNotFoundError,
   ExecutionRecordAccessForbiddenError
 } from '../../shared/types/ExecutionRecordErrors';
+import { DeleteExecutionRecordDto } from '../dtos/DeleteExecutionRecordDto';
 
 export class DeleteExecutionRecordUseCase {
   constructor(

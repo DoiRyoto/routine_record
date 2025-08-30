@@ -16,6 +16,7 @@ export default function Header() {
   const navigationItems = [
     { href: '/', label: 'ダッシュボード', icon: '🏠' },
     { href: '/routines', label: 'ルーティン', icon: '📋' },
+    { href: '/badges', label: 'バッジ', icon: '🏅' },
     { href: '/missions', label: 'ミッション', icon: '🎯' },
     { href: '/challenges', label: 'チャレンジ', icon: '🏆' },
     { href: '/calendar', label: 'カレンダー', icon: '📅' },

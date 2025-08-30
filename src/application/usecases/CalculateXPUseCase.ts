@@ -1,8 +1,8 @@
-import { XPCalculationService, BadgeRank, ChallengeDifficulty, MissionType } from '../../domain/services/XPCalculationService';
 import { IUserProfileRepository } from '../../domain/repositories/IUserProfileRepository';
+import { XPCalculationService, BadgeRank, ChallengeDifficulty, MissionType } from '../../domain/services/XPCalculationService';
 import { UserId } from '../../domain/valueObjects/UserId';
-import { CalculateXPDto } from '../dtos/CalculateXPDto';
 import { Result, success, failure } from '../../shared/types';
+import { CalculateXPDto } from '../dtos/CalculateXPDto';
 
 export interface CalculateXPResult {
   calculatedXP: number;

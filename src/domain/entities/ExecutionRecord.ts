@@ -1,9 +1,9 @@
-import { ExecutionRecordId, UserId, RoutineId } from '../valueObjects';
 import { 
   InvalidExecutionDateError,
   InvalidDurationError,
   MemoTooLongError
 } from '../../shared/types/ExecutionRecordErrors';
+import { ExecutionRecordId, UserId, RoutineId } from '../valueObjects';
 
 export class ExecutionRecord {
   constructor(

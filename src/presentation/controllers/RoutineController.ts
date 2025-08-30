@@ -1,12 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { injectable, inject } from 'inversify';
+import { NextRequest, NextResponse } from 'next/server';
+
+import { CreateRoutineDto } from '@/application/dtos/CreateRoutineDto';
 import { CreateRoutineUseCase } from '@/application/usecases/CreateRoutineUseCase';
 import { GetRoutinesUseCase } from '@/application/usecases/GetRoutinesUseCase';
-import { CreateRoutineDto } from '@/application/dtos/CreateRoutineDto';
 import { Routine } from '@/domain';
+import { TYPES } from '@/shared/config/container';
 import { createApiResponse } from '@/shared/types';
 import { isDomainError } from '@/shared/types/DomainError';
-import { TYPES } from '@/shared/config/container';
 
 @injectable()
 export class RoutineController {

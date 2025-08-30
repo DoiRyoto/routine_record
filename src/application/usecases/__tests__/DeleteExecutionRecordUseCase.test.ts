@@ -1,13 +1,14 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { DeleteExecutionRecordUseCase } from '../DeleteExecutionRecordUseCase';
-import { IExecutionRecordRepository } from '../../../domain/repositories/IExecutionRecordRepository';
+
 import { ExecutionRecord } from '../../../domain/entities/ExecutionRecord';
+import { IExecutionRecordRepository } from '../../../domain/repositories/IExecutionRecordRepository';
 import { ExecutionRecordId, UserId, RoutineId } from '../../../domain/valueObjects';
-import { DeleteExecutionRecordDto } from '../../dtos/DeleteExecutionRecordDto';
 import { 
   ExecutionRecordNotFoundError,
   ExecutionRecordAccessForbiddenError
 } from '../../../shared/types/ExecutionRecordErrors';
+import { DeleteExecutionRecordDto } from '../../dtos/DeleteExecutionRecordDto';
+import { DeleteExecutionRecordUseCase } from '../DeleteExecutionRecordUseCase';
 
 // Mock repository
 const mockExecutionRecordRepository: IExecutionRecordRepository = {

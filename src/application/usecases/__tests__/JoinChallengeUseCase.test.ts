@@ -1,18 +1,19 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { JoinChallengeUseCase } from '../JoinChallengeUseCase';
-import { IChallengeRepository } from '../../../domain/repositories/IChallengeRepository';
-import { IUserProfileRepository } from '../../../domain/repositories/IUserProfileRepository';
+
 import { Challenge } from '../../../domain/entities/Challenge';
 import { UserProfile } from '../../../domain/entities/UserProfile';
-import { UserId } from '../../../domain/valueObjects/UserId';
+import { IChallengeRepository } from '../../../domain/repositories/IChallengeRepository';
+import { IUserProfileRepository } from '../../../domain/repositories/IUserProfileRepository';
 import { ChallengeId } from '../../../domain/valueObjects/ChallengeId';
-import { JoinChallengeDto } from '../../dtos/JoinChallengeDto';
+import { UserId } from '../../../domain/valueObjects/UserId';
 import { 
   ChallengeNotFoundError,
   ChallengeNotActiveError,
   ChallengeFullError,
   DuplicateParticipationError 
 } from '../../../shared/types/GamificationErrors';
+import { JoinChallengeDto } from '../../dtos/JoinChallengeDto';
+import { JoinChallengeUseCase } from '../JoinChallengeUseCase';
 
 describe('JoinChallengeUseCase', () => {
   let useCase: JoinChallengeUseCase;

@@ -8,10 +8,11 @@
  */
 
 import { describe, it, expect } from '@jest/globals';
-import { CatchupPlan } from '../CatchupPlan';
+
 import { CatchupPlanId } from '../../valueObjects/CatchupPlanId';
 import { RoutineId } from '../../valueObjects/RoutineId';
 import { UserId } from '../../valueObjects/UserId';
+import { CatchupPlan } from '../CatchupPlan';
 
 describe('CatchupPlan Domain Entity', () => {
   describe('Constructor and Basic Properties', () => {

@@ -1,8 +1,8 @@
 import { UserSettings } from '../../domain/entities/UserSettings';
 import { IUserSettingsRepository } from '../../domain/repositories/IUserSettingsRepository';
 import { UserId } from '../../domain/valueObjects';
-import { UpdateUserSettingsDto } from '../dtos/UpdateUserSettingsDto';
 import { UserSettingsEmptyUpdateError } from '../../shared/types/UserSettingsErrors';
+import { UpdateUserSettingsDto } from '../dtos/UpdateUserSettingsDto';
 
 export class UpdateUserSettingsUseCase {
   constructor(

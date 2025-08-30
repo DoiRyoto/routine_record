@@ -1,6 +1,6 @@
-import { UserId } from '../valueObjects/UserId';
-import { GameNotificationId } from '../valueObjects/GameNotificationId';
 import { InvalidNotificationTypeError } from '../../shared/types/GamificationErrors';
+import { GameNotificationId } from '../valueObjects/GameNotificationId';
+import { UserId } from '../valueObjects/UserId';
 
 export type NotificationType = 
   | 'level_up' 

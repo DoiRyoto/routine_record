@@ -8,22 +8,23 @@
  */
 
 // Next.js API Routes
-import { GET as userProfilesGET } from '@/app/api/user-profiles/route';
+import { NextRequest } from 'next/server';
+
+import { POST as joinChallengesPOST } from '@/app/api/challenges/[id]/join/route';
+import { GET as challengesGET } from '@/app/api/challenges/route';
 import { GET as missionsGET } from '@/app/api/missions/route';
 import { GET as userMissionsGET } from '@/app/api/user-missions/route';
-import { GET as challengesGET } from '@/app/api/challenges/route';
-import { POST as joinChallengesPOST } from '@/app/api/challenges/[id]/join/route';
+import { GET as userProfilesGET } from '@/app/api/user-profiles/route';
 
 // Use Cases
 import { CalculateXPUseCase } from '@/application/usecases/CalculateXPUseCase';
-import { ProcessLevelUpUseCase } from '@/application/usecases/ProcessLevelUpUseCase';
 import { JoinChallengeUseCase } from '@/application/usecases/JoinChallengeUseCase';
+import { ProcessLevelUpUseCase } from '@/application/usecases/ProcessLevelUpUseCase';
 
 // Domain Services
-import { XPCalculationService } from '@/domain/services/XPCalculationService';
 import { LevelUpService } from '@/domain/services/LevelUpService';
+import { XPCalculationService } from '@/domain/services/XPCalculationService';
 
-import { NextRequest } from 'next/server';
 
 // Global mocks
 jest.mock('@/lib/supabase/server', () => ({
@@ -204,9 +205,9 @@ describe('ゲーミフィケーションシステム統合テスト', () => {
         },
       ]);
 
-      let challengesRequest = createMockRequest('/api/challenges');
-      let challengesResponse = await challengesGET(challengesRequest);
-      let challengesData = await challengesResponse.json();
+      const challengesRequest = createMockRequest('/api/challenges');
+      const challengesResponse = await challengesGET(challengesRequest);
+      const challengesData = await challengesResponse.json();
 
       expect(challengesResponse.status).toBe(200);
       expect(challengesData.data.challenges).toHaveLength(1);

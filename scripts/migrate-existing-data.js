@@ -1,8 +1,10 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
-import { eq } from 'drizzle-orm';
-import postgres from 'postgres';
-import { routines } from '../src/lib/db/schema.js';
 import dotenv from 'dotenv';
+import { eq } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+
+import { routines } from '../src/lib/db/schema.js';
+
 
 // 環境変数を読み込み
 dotenv.config({ path: '.env.local' });

@@ -1,9 +1,8 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { UpdateExecutionRecordUseCase } from '../UpdateExecutionRecordUseCase';
-import { IExecutionRecordRepository } from '../../../domain/repositories/IExecutionRecordRepository';
+
 import { ExecutionRecord } from '../../../domain/entities/ExecutionRecord';
+import { IExecutionRecordRepository } from '../../../domain/repositories/IExecutionRecordRepository';
 import { ExecutionRecordId, UserId, RoutineId } from '../../../domain/valueObjects';
-import { UpdateExecutionRecordDto } from '../../dtos/UpdateExecutionRecordDto';
 import { 
   ExecutionRecordNotFoundError,
   ExecutionRecordAccessForbiddenError,
@@ -11,6 +10,8 @@ import {
   InvalidDurationError,
   MemoTooLongError
 } from '../../../shared/types/ExecutionRecordErrors';
+import { UpdateExecutionRecordDto } from '../../dtos/UpdateExecutionRecordDto';
+import { UpdateExecutionRecordUseCase } from '../UpdateExecutionRecordUseCase';
 
 // Mock repository
 const mockExecutionRecordRepository: IExecutionRecordRepository = {

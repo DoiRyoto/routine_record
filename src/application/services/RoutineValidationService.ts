@@ -1,4 +1,5 @@
 import { injectable } from 'inversify';
+
 import { Routine } from '@/domain';
 import { ValidationError, BusinessRuleViolationError } from '@/shared/types/DomainError';
 

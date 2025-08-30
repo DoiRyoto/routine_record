@@ -1,15 +1,16 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { UpdateUserSettingsUseCase } from '../UpdateUserSettingsUseCase';
-import { IUserSettingsRepository } from '../../../domain/repositories/IUserSettingsRepository';
+
 import { UserSettings } from '../../../domain/entities/UserSettings';
+import { IUserSettingsRepository } from '../../../domain/repositories/IUserSettingsRepository';
 import { UserSettingsId, UserId } from '../../../domain/valueObjects';
-import { UpdateUserSettingsDto } from '../../dtos/UpdateUserSettingsDto';
 import {
   UserSettingsInvalidThemeError,
   UserSettingsInvalidLanguageError,
   UserSettingsInvalidTimeFormatError,
   UserSettingsEmptyUpdateError
 } from '../../../shared/types/UserSettingsErrors';
+import { UpdateUserSettingsDto } from '../../dtos/UpdateUserSettingsDto';
+import { UpdateUserSettingsUseCase } from '../UpdateUserSettingsUseCase';
 
 // Mock repository
 const mockUserSettingsRepository: IUserSettingsRepository = {

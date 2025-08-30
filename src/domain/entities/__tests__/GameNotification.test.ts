@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { GameNotification } from '../GameNotification';
-import { UserId } from '../../valueObjects/UserId';
+
 import { InvalidNotificationTypeError } from '../../../shared/types/GamificationErrors';
+import { UserId } from '../../valueObjects/UserId';
+import { GameNotification } from '../GameNotification';
 
 describe('GameNotification', () => {
   const validUserId = new UserId('550e8400-e29b-41d4-a716-446655440000');

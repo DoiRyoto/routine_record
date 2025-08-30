@@ -1,9 +1,8 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { UpdateCategoryUseCase } from '../UpdateCategoryUseCase';
-import { ICategoryRepository } from '../../../domain/repositories/ICategoryRepository';
+
 import { Category } from '../../../domain/entities/Category';
+import { ICategoryRepository } from '../../../domain/repositories/ICategoryRepository';
 import { CategoryId, UserId } from '../../../domain/valueObjects';
-import { UpdateCategoryDto } from '../../dtos/UpdateCategoryDto';
 import { 
   DefaultCategoryModificationError,
   CategoryAccessForbiddenError,
@@ -12,6 +11,8 @@ import {
   CategoryNameEmptyError,
   CategoryNameTooLongError
 } from '../../../shared/types/CategoryErrors';
+import { UpdateCategoryDto } from '../../dtos/UpdateCategoryDto';
+import { UpdateCategoryUseCase } from '../UpdateCategoryUseCase';
 
 // Mock repository
 const mockCategoryRepository: ICategoryRepository = {

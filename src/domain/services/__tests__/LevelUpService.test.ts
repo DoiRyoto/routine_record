@@ -1,8 +1,9 @@
 import { describe, it, expect } from '@jest/globals';
-import { LevelUpService } from '../LevelUpService';
-import { XPAmount } from '../../valueObjects/XPAmount';
+
 import { Level } from '../../valueObjects/Level';
 import { UserId } from '../../valueObjects/UserId';
+import { XPAmount } from '../../valueObjects/XPAmount';
+import { LevelUpService } from '../LevelUpService';
 
 describe('LevelUpService', () => {
   let service: LevelUpService;

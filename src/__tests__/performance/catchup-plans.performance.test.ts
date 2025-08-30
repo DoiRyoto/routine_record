@@ -9,9 +9,11 @@
  */
 
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { testClient } from '../utils/test-client';
+
 import { CatchupPlanCalculationService } from '@/domain/services/CatchupPlanCalculationService';
 import * as catchupQueries from '@/lib/db/queries/catchup-plans';
+
+import { testClient } from '../utils/test-client';
 
 // Mock heavy dependencies for isolated performance testing
 jest.mock('@/lib/db/queries/catchup-plans');
@@ -575,7 +577,7 @@ describe('Catchup Plans Performance Tests', () => {
           body: {
             action: 'updateProgress',
             userId: 'user123',
-            planId: planId,
+            planId,
             currentProgress: 10 + i
           },
           headers: { Authorization: 'Bearer valid-token' }

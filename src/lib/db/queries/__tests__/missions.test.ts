@@ -1,3 +1,4 @@
+import { db } from '../../index';
 import { 
   getActiveMissions,
   getUserMissions, 
@@ -5,7 +6,6 @@ import {
   updateMissionProgress,
   completeMission
 } from '../missions';
-import { db } from '../../index';
 
 // Mock database
 jest.mock('../../index');

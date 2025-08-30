@@ -1,6 +1,7 @@
 import { describe, it, expect } from '@jest/globals';
-import { XPAmount } from '../XPAmount';
+
 import { InvalidXPAmountError } from '../../../shared/types/GamificationErrors';
+import { XPAmount } from '../XPAmount';
 
 describe('XPAmount', () => {
   describe('正常系テストケース', () => {

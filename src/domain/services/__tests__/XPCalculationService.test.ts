@@ -1,7 +1,8 @@
 import { describe, it, expect } from '@jest/globals';
-import { XPCalculationService } from '../XPCalculationService';
-import { XPAmount } from '../../valueObjects/XPAmount';
+
 import { InvalidXPSourceError } from '../../../shared/types/GamificationErrors';
+import { XPAmount } from '../../valueObjects/XPAmount';
+import { XPCalculationService } from '../XPCalculationService';
 
 describe('XPCalculationService', () => {
   let service: XPCalculationService;

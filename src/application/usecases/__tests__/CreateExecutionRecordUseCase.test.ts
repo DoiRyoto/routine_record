@@ -1,18 +1,19 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { CreateExecutionRecordUseCase } from '../CreateExecutionRecordUseCase';
-import { IExecutionRecordRepository } from '../../../domain/repositories/IExecutionRecordRepository';
-import { IRoutineRepository } from '../../../domain/repositories/IRoutineRepository';
+
 import { ExecutionRecord } from '../../../domain/entities/ExecutionRecord';
 import { Routine } from '../../../domain/entities/Routine';
+import { IExecutionRecordRepository } from '../../../domain/repositories/IExecutionRecordRepository';
+import { IRoutineRepository } from '../../../domain/repositories/IRoutineRepository';
 import { ExecutionRecordId, UserId, RoutineId, CategoryId, GoalType, RecurrenceType } from '../../../domain/valueObjects';
-import { CreateExecutionRecordDto } from '../../dtos/CreateExecutionRecordDto';
+import { NotFoundError } from '../../../shared/types/DomainError';
 import { 
   InactiveRoutineError, 
   InvalidExecutionDateError,
   InvalidDurationError,
   MemoTooLongError
 } from '../../../shared/types/ExecutionRecordErrors';
-import { NotFoundError } from '../../../shared/types/DomainError';
+import { CreateExecutionRecordDto } from '../../dtos/CreateExecutionRecordDto';
+import { CreateExecutionRecordUseCase } from '../CreateExecutionRecordUseCase';
 
 // Mock repositories
 const mockExecutionRecordRepository: IExecutionRecordRepository = {

@@ -1,11 +1,11 @@
 import { ExecutionRecord } from '../../domain/entities/ExecutionRecord';
 import { IExecutionRecordRepository } from '../../domain/repositories/IExecutionRecordRepository';
 import { ExecutionRecordId, UserId, RoutineId } from '../../domain/valueObjects';
-import { UpdateExecutionRecordDto } from '../dtos/UpdateExecutionRecordDto';
 import { 
   ExecutionRecordNotFoundError,
   ExecutionRecordAccessForbiddenError
 } from '../../shared/types/ExecutionRecordErrors';
+import { UpdateExecutionRecordDto } from '../dtos/UpdateExecutionRecordDto';
 
 export class UpdateExecutionRecordUseCase {
   constructor(

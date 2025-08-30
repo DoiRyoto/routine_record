@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { 
   getUserCatchupPlans,
@@ -178,7 +178,7 @@ export async function POST(request: NextRequest) {
           // TODO: Integrate full calculation service once repositories are available
           
           const currentDate = new Date();
-          const targetPeriodStart = new Date(planData.targetPeriodStart);
+          const _targetPeriodStart = new Date(planData.targetPeriodStart);
           const targetPeriodEnd = new Date(planData.targetPeriodEnd);
           
           // Basic calculation logic

@@ -6,7 +6,6 @@ import {
   badges,
   type UserBadge,
   type Badge,
-  type InsertUserBadge,
 } from '../schema';
 
 // ユーザーバッジ一覧取得（バッジ詳細も含む）

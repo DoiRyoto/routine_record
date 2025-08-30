@@ -1,7 +1,7 @@
-import { Level } from '../valueObjects/Level';
-import { XPAmount } from '../valueObjects/XPAmount';
-import { UserId } from '../valueObjects/UserId';
 import { DomainEvent } from '../../shared/types';
+import { Level } from '../valueObjects/Level';
+import { UserId } from '../valueObjects/UserId';
+import { XPAmount } from '../valueObjects/XPAmount';
 
 export interface LevelUpRewards {
   bonusXP: XPAmount;

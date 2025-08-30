@@ -4,6 +4,12 @@
  */
 
 // Jest環境でのテスト実装
+import type { 
+  MissionWithDetails, 
+  UpdateMissionStatusRequest,
+  GetMissionProgressRequest 
+} from '@/types/mission-card';
+
 import { db } from '../../index';
 import { users, missions, userMissions, categories, executionRecords } from '../../schema';
 import { 
@@ -11,11 +17,6 @@ import {
   updateMissionStatus, 
   getMissionProgress 
 } from '../mission-card';
-import type { 
-  MissionWithDetails, 
-  UpdateMissionStatusRequest,
-  GetMissionProgressRequest 
-} from '@/types/mission-card';
 
 // テストデータ型定義
 interface TestUser {

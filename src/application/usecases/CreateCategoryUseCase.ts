@@ -1,8 +1,8 @@
 import { Category } from '../../domain/entities/Category';
 import { ICategoryRepository } from '../../domain/repositories/ICategoryRepository';
 import { CategoryId, UserId } from '../../domain/valueObjects';
-import { CreateCategoryDto } from '../dtos/CreateCategoryDto';
 import { CategoryNameConflictError } from '../../shared/types/CategoryErrors';
+import { CreateCategoryDto } from '../dtos/CreateCategoryDto';
 
 export class CreateCategoryUseCase {
   constructor(

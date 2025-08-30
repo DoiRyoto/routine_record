@@ -1,7 +1,7 @@
 import { IGameNotificationRepository } from '../../domain/repositories/IGameNotificationRepository';
 import { UserId } from '../../domain/valueObjects/UserId';
-import { GetGameNotificationsDto } from '../dtos/GetGameNotificationsDto';
 import { Result, success, failure } from '../../shared/types';
+import { GetGameNotificationsDto } from '../dtos/GetGameNotificationsDto';
 
 export interface GetGameNotificationsResult {
   notifications: Array<{
