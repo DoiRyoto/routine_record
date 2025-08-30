@@ -14,6 +14,13 @@ export async function GET(request: NextRequest) {
     // Authenticate user
     const { user, error: authError } = await authenticateRequest(request);
     if (authError) return authError;
+    if (!user) {
+      return createErrorResponse(
+        'AUTHENTICATION_REQUIRED',
+        'Authentication required',
+        401
+      );
+    }
 
     // Parse query parameters
     const { searchParams } = new URL(request.url);

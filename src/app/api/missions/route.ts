@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
 
       // Apply sorting using consolidated utility
       if (sortBy) {
-        missions = sortMissions(missions, sortBy, sortOrder);
+        missions = sortMissions(missions, sortBy, sortOrder as 'asc' | 'desc' | undefined);
       }
 
       // Apply pagination using consolidated utility

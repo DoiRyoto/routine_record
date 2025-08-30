@@ -13,6 +13,13 @@ export async function GET(request: NextRequest) {
     // Authenticate user
     const { user, error: authError } = await authenticateRequest(request);
     if (authError) return authError;
+    if (!user) {
+      return createErrorResponse(
+        'AUTHENTICATION_REQUIRED',
+        'Authentication required',
+        401
+      );
+    }
 
     // Parse query parameters
     const { searchParams } = new URL(request.url);
@@ -34,7 +41,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get routine statistics
-    const routines = await getRoutineStatistics(user.id, routineId);
+    const routines = await getRoutineStatistics(user.id, routineId || undefined);
 
     // Handle case where specific routine is not found
     if (routineId && routines.length === 0) {
@@ -49,11 +56,11 @@ export async function GET(request: NextRequest) {
     // Add additional data if requested
     for (const routine of routines) {
       if (include.includes('timeSeries')) {
-        routine.timeSeries = await getRoutineTimeSeries(user.id, routine.routineId);
+        (routine as any).timeSeries = await getRoutineTimeSeries(user.id, routine.routineId);
       }
       
       if (include.includes('patterns')) {
-        routine.patterns = await getRoutinePatterns(user.id, routine.routineId);
+        (routine as any).patterns = await getRoutinePatterns(user.id, routine.routineId);
       }
     }
 
@@ -64,7 +71,7 @@ export async function GET(request: NextRequest) {
 
     // Add comparison data if requested
     if (include.includes('comparison')) {
-      response.comparison = await getRoutineComparison(user.id, routineId);
+      response.comparison = await getRoutineComparison(user.id, routineId || undefined);
     }
 
     return NextResponse.json(response);

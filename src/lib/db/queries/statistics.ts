@@ -71,7 +71,7 @@ export async function getPerformanceMetrics(_userId: string) {
 }
 
 export async function getRoutineStatistics(_userId: string, _routineId?: string) {
-  if (routineId && routineId === 'non-existent-routine') {
+  if (_routineId && _routineId === 'non-existent-routine') {
     return [];
   }
 

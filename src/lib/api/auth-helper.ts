@@ -15,7 +15,7 @@ export interface AuthResult {
 export async function authenticateRequest(_request: NextRequest): Promise<AuthResult> {
   try {
     // Create Supabase client
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { 
   getUserNotifications,
@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
     let notifications;
     
     if (type) {
-      notifications = await getNotificationsByType(user.id, type, limit);
+      notifications = await getNotificationsByType(user.id, type as 'level_up' | 'badge_unlocked' | 'mission_completed' | 'challenge_completed' | 'streak_milestone' | 'xp_milestone', limit);
     } else if (isRead === 'false') {
       notifications = await getUnreadNotifications(user.id);
     } else {

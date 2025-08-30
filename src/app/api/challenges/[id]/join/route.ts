@@ -63,7 +63,7 @@ function isValidUUID(uuid: string): boolean {
 // POST: チャレンジ参加
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getAuthenticatedUser();
@@ -71,7 +71,7 @@ export async function POST(
       return createErrorResponse('認証が必要です', 401);
     }
 
-    const challengeId = params.id;
+    const { id: challengeId } = await params;
 
     // UUIDバリデーション
     if (!isValidUUID(challengeId)) {

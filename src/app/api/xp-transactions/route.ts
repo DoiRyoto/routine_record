@@ -118,7 +118,7 @@ export async function GET(request: NextRequest) {
         new Date(endDate),
         limit,
         offset,
-        source
+        source || undefined
       );
       xpTransactions = result.transactions;
       total = result.total;

@@ -67,8 +67,21 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit",
+        "matcher": "Read",
         "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/doi-ryoto/Desktop/Programming/routine_record/.claude/docs-validation-hook.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit|Update|mcp__serena__replace_symbol_body|mcp__serena__insert_.*_symbol",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/doi-ryoto/Desktop/Programming/routine_record/.claude/docs-validation-hook.sh"
+          },
           {
             "type": "command",
             "command": "/Users/doi-ryoto/Desktop/Programming/routine_record/.claude/rules-validation.sh"

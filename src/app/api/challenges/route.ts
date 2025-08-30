@@ -246,8 +246,7 @@ export async function GET(request: NextRequest) {
       challenges = await getChallengesByType(type);
     } else {
       // 複数フィルタがある場合やページネーション対応のためgetAllChallengesを使用
-      const pagination = { page, limit };
-      challenges = await getAllChallenges(null, pagination);
+      challenges = await getAllChallenges();
     }
 
     // フィルタリング（データベースクエリで取得していないフィルタのみ適用）
@@ -277,7 +276,7 @@ export async function GET(request: NextRequest) {
 
     // ソート
     if (sortBy) {
-      challenges = sortChallenges(challenges, sortBy, sortOrder);
+      challenges = sortChallenges(challenges, sortBy, sortOrder as 'asc' | 'desc' | undefined);
     }
 
     // レスポンスデータの構築

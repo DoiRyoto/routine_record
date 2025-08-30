@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
     logRoutinePerformance(
       { userId: user.id, action: 'GET_ROUTINES' },
       'get_routines',
-      duration
+      _duration
     );
 
     logRoutineSuccess(
@@ -145,16 +145,25 @@ export async function POST(request: NextRequest) {
     }
 
     // ルーチン作成
-    const newRoutine = await createRoutine({
+    const routineData = {
       ...sanitizedData,
       userId: user.id,
-    });
+      name: sanitizedData.name!,
+      category: sanitizedData.category!,
+    };
+
+    // daysOfWeekを文字列に変換
+    if (routineData.daysOfWeek) {
+      (routineData as any).daysOfWeek = JSON.stringify(routineData.daysOfWeek);
+    }
+
+    const newRoutine = await createRoutine(routineData as any);
 
     const _duration = Date.now() - startTime;
     logRoutinePerformance(
       { userId: user.id, routineId: newRoutine.id, action: 'CREATE_ROUTINE' },
       'create_routine',
-      duration
+      _duration
     );
 
     logRoutineSuccess(

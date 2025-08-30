@@ -13,7 +13,7 @@ function validateEmail(email: string): boolean {
 }
 
 function validatePassword(password: string): boolean {
-  return password && password.length >= 8;
+  return !!(password && password.length >= 8);
 }
 
 function sanitizeInput(input: string): string {

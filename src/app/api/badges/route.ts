@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { 
   getAllBadges, 
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
 
     // Apply sorting using consolidated utility
     if (sortBy) {
-      badges = sortBadges(badges, sortBy, sortOrder);
+      badges = sortBadges(badges, sortBy, sortOrder as 'asc' | 'desc' | undefined);
     }
 
     // Apply pagination using consolidated utility

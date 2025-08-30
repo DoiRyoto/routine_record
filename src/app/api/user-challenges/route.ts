@@ -6,7 +6,7 @@ import {
   getUserChallenges,
   getUserChallengesByStatus,
   getUserChallengesWithDetails,
-  _getUserChallengeByChallenge,
+  getUserChallengeByChallenge,
 } from '@/lib/db/queries/user-challenges';
 import {
   createSuccessResponse,
@@ -234,12 +234,15 @@ export async function GET(request: NextRequest) {
 
     // 日付フィルタリング
     if (joinedAfter || joinedBefore) {
-      userChallenges = filterUserChallenges(userChallenges, { joinedAfter, joinedBefore });
+      userChallenges = filterUserChallenges(userChallenges, { 
+        joinedAfter: joinedAfter || undefined, 
+        joinedBefore: joinedBefore || undefined 
+      });
     }
 
     // ソート
     if (sortBy) {
-      userChallenges = sortUserChallenges(userChallenges, sortBy, sortOrder);
+      userChallenges = sortUserChallenges(userChallenges, sortBy, sortOrder as 'asc' | 'desc' | undefined);
     }
 
     // レスポンスデータの構築

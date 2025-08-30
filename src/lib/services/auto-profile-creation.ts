@@ -8,10 +8,9 @@
 import { getCurrentUser } from '@/lib/auth';
 import { 
   getUserProfile, 
-  createUserProfile,
-  type UserProfile,
-  type InsertUserProfile
+  createUserProfile
 } from '@/lib/db/queries/user-profiles';
+import { type UserProfile, type InsertUserProfile } from '@/lib/db/schema';
 
 // 【型定義】: 自動プロフィール作成結果の構造定義
 // 🟡 信頼性レベル: テストケースから妥当な推測
