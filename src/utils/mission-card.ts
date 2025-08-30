@@ -2,7 +2,7 @@
  * Mission Card 関連のユーティリティ関数
  */
 
-import { TimeSlot, FormattedTimeSlot, MissionStatus, ProgressData } from '@/types/mission-card';
+import { TimeSlot, FormattedTimeSlot, MissionStatus, ProgressData } from '@/lib/types/mission-card';
 
 /**
  * ISO 8601 日時文字列からTimeSlotを生成

@@ -14,6 +14,17 @@ const nextConfig: NextConfig = {
   // Next.jsのエラーページを無効化して詳細情報を隠す
   productionBrowserSourceMaps: false,
 
+  // ビルド時にdocsディレクトリを無視
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '/docs': false,
+      };
+    }
+    return config;
+  },
+
   // レスポンスヘッダーのセキュリティ設定
   async headers() {
     return [

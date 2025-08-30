@@ -37,7 +37,7 @@ export async function getUserChallenges(
   // ページネーション適用
   if (pagination) {
     const offset = (pagination.page - 1) * pagination.limit;
-    query = query.limit(pagination.limit).offset(offset);
+    return await query.limit(pagination.limit).offset(offset);
   }
 
   return await query;

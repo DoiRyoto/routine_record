@@ -9,7 +9,7 @@ import {
   getNewUserBadges,
   awardBadge,
   markBadgeAsViewed,
-  markAllBadgesAsViewed
+  markAllBadgesAsViewed as _markAllBadgesAsViewed
 } from '@/lib/db/queries/user-badges';
 import {
   createSuccessResponse,

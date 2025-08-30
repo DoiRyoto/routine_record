@@ -80,7 +80,7 @@ export async function getUserBadgesByCategory(userId: string, category: string):
 }
 
 // レアリティ別ユーザーバッジ取得
-export async function getUserBadgesByRarity(userId: string, rarity: string): Promise<(UserBadge & { badge: Badge })[]> {
+export async function getUserBadgesByRarity(userId: string, rarity: typeof badges.rarity.enumValues[number]): Promise<(UserBadge & { badge: Badge })[]> {
   try {
     const userBadgeList = await db
       .select({

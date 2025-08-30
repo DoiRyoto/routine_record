@@ -352,8 +352,8 @@ export class CatchupPlanCalculationService {
     throw new Error('Routine not found');
   }
 
-  public handlePausedRoutineScenarios(input: CatchupPlanInput & { pausedPeriods?: Array<{ start: Date; end: Date }> }): CatchupPlanResult {
+  public async handlePausedRoutineScenarios(input: CatchupPlanInput & { pausedPeriods?: Array<{ start: Date; end: Date }> }): Promise<CatchupPlanResult> {
     // For now, just calculate normally and add paused day handling
-    return this.calculateCatchupPlan(input);
+    return await this.calculateCatchupPlan(input);
   }
 }

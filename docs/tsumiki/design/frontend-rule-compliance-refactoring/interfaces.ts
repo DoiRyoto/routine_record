@@ -28,8 +28,8 @@ import type {
   Challenge,
   Badge,
   Mission,
-  Notification,
-  XpTransaction,
+  GameNotification,
+  XPTransaction,
   
   // INSERT用型
   InsertUser,
@@ -41,27 +41,24 @@ import type {
   InsertChallenge,
   InsertBadge,
   InsertMission,
-  InsertNotification,
-  InsertXpTransaction,
+  InsertGameNotification,
+  InsertXPTransaction,
   
-  // UPDATE用型（部分更新）
-  UpdateRoutine,
-  UpdateUserProfile,
-  UpdateUserSetting,
+  // UPDATE用型は各ファイルで Partial<Type> として定義
   
   // Enum型
-  GoalTypeEnum,
-  RecurrenceTypeEnum,
-  ThemeEnum,
-  LanguageEnum,
-  TimeFormatEnum,
-  UserStatusEnum,
-  MissionTypeEnum,
-  MissionDifficultyEnum,
-  BadgeRarityEnum,
-  ChallengeTypeEnum,
-  NotificationTypeEnum,
-  XpSourceTypeEnum,
+  goalTypeEnum,
+  recurrenceTypeEnum,
+  themeEnum,
+  languageEnum,
+  timeFormatEnum,
+  userStatusEnum,
+  missionTypeEnum,
+  missionDifficultyEnum,
+  badgeRarityEnum,
+  challengeTypeEnum,
+  notificationTypeEnum,
+  xpSourceTypeEnum,
 } from '@/lib/db/schema';
 
 // ========================================
@@ -139,7 +136,7 @@ export interface RoutineCreateResponse extends ApiResponse<Routine> {}
 /**
  * ルーチン更新API
  */
-export interface RoutineUpdateRequest extends UpdateRoutine {}
+export interface RoutineUpdateRequest extends Partial<Routine> {}
 
 export interface RoutineUpdateResponse extends ApiResponse<Routine> {}
 
@@ -164,7 +161,7 @@ export interface UserProfileGetResponse extends ApiResponse<UserProfile> {}
 /**
  * ユーザープロフィール更新API
  */
-export interface UserProfileUpdateRequest extends UpdateUserProfile {}
+export interface UserProfileUpdateRequest extends Partial<UserProfile> {}
 
 export interface UserProfileUpdateResponse extends ApiResponse<UserProfile> {}
 
@@ -177,20 +174,20 @@ export interface UserProfileUpdateResponse extends ApiResponse<UserProfile> {}
  */
 export interface XpTransactionsGetRequest {
   userId: string;
-  sourceType?: XpSourceTypeEnum;
+  sourceType?: typeof xpSourceTypeEnum.enumValues[number];
   startDate?: string;
   endDate?: string;
   pagination?: PaginationParams;
 }
 
-export interface XpTransactionsGetResponse extends PaginationResponse<XpTransaction> {}
+export interface XpTransactionsGetResponse extends PaginationResponse<XPTransaction> {}
 
 /**
  * バッジ一覧取得API
  */
 export interface BadgesGetRequest {
   userId?: string;
-  rarity?: BadgeRarityEnum;
+  rarity?: typeof badgeRarityEnum.enumValues[number];
   isUnlocked?: boolean;
 }
 
@@ -201,7 +198,7 @@ export interface BadgesGetResponse extends ApiResponse<Badge[]> {}
  */
 export interface ChallengesGetRequest {
   userId?: string;
-  type?: ChallengeTypeEnum;
+  type?: typeof challengeTypeEnum.enumValues[number];
   isActive?: boolean;
 }
 
@@ -365,12 +362,12 @@ export interface RoutineFormData extends Omit<InsertRoutine, 'id' | 'userId' | '
 /**
  * ユーザー設定フォーム
  */
-export interface UserSettingsFormData extends Omit<UpdateUserSetting, 'userId' | 'updatedAt'> {}
+export interface UserSettingsFormData extends Omit<Partial<UserSetting>, 'userId' | 'updatedAt'> {}
 
 /**
  * プロフィール更新フォーム
  */
-export interface ProfileUpdateFormData extends Omit<UpdateUserProfile, 'userId' | 'updatedAt'> {}
+export interface ProfileUpdateFormData extends Omit<Partial<UserProfile>, 'userId' | 'updatedAt'> {}
 
 // ========================================
 // Error型定義

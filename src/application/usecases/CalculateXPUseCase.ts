@@ -1,7 +1,8 @@
+import { Result, success, failure } from '@/lib/types';
+
 import { IUserProfileRepository } from '../../domain/repositories/IUserProfileRepository';
 import { XPCalculationService, BadgeRank, ChallengeDifficulty, MissionType } from '../../domain/services/XPCalculationService';
 import { UserId } from '../../domain/valueObjects/UserId';
-import { Result, success, failure } from '../../shared/types';
 import { CalculateXPDto } from '../dtos/CalculateXPDto';
 
 export interface CalculateXPResult {

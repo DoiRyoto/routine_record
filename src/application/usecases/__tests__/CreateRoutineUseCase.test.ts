@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 
 import { Routine, RoutineId, UserId } from '@/domain';
 import { IRoutineRepository } from '@/domain/repositories/IRoutineRepository';
-import { ValidationError, BusinessRuleViolationError } from '@/shared/types/DomainError';
+import { ValidationError, BusinessRuleViolationError } from '@/lib/types/DomainError';
 
 import { CreateRoutineDto } from '../../dtos/CreateRoutineDto';
 import { RoutineValidationService } from '../../services/RoutineValidationService';

@@ -2,10 +2,10 @@ import { injectable, inject } from 'inversify';
 
 import { Routine, RoutineId, UserId, GoalType, RecurrenceType } from '@/domain';
 import type { IRoutineRepository } from '@/domain/repositories/IRoutineRepository';
-import { TYPES } from '@/shared/config/container';
-import { Result, success, failure } from '@/shared/types';
-import { UuidUtils } from '@/shared/utils/UuidUtils';
-import { validateDto } from '@/shared/utils/ValidationUtils';
+import { TYPES } from '@/lib/config/container';
+import { Result, success, failure } from '@/lib/types';
+import { UuidUtils } from '@/lib/utils/UuidUtils';
+import { validateDto } from '@/lib/utils/ValidationUtils';
 
 import { CreateRoutineDto } from '../dtos/CreateRoutineDto';
 import type { RoutineValidationService } from '../services/RoutineValidationService';

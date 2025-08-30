@@ -39,7 +39,7 @@ export async function getBadgesByCategory(category: string): Promise<Badge[]> {
 }
 
 // レアリティ別バッジ取得
-export async function getBadgesByRarity(rarity: string): Promise<Badge[]> {
+export async function getBadgesByRarity(rarity: 'common' | 'rare' | 'epic' | 'legendary'): Promise<Badge[]> {
   try {
     const badgeList = await db
       .select()

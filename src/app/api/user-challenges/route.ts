@@ -6,7 +6,7 @@ import {
   getUserChallenges,
   getUserChallengesByStatus,
   getUserChallengesWithDetails,
-  getUserChallengeByChallenge,
+  getUserChallengeByChallenge as _getUserChallengeByChallenge,
 } from '@/lib/db/queries/user-challenges';
 import {
   createSuccessResponse,

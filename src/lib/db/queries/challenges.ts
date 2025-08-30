@@ -304,7 +304,7 @@ export async function getChallengeLeaderboard(challengeId: string): Promise<(Use
         }
       })
       .from(userChallenges)
-      .leftJoin(users, eq(userChallenges.userId, users.id))
+      .innerJoin(users, eq(userChallenges.userId, users.id)) // innerJoin ensures user is not null
       .where(eq(userChallenges.challengeId, challengeId))
       .orderBy(desc(userChallenges.progress), desc(userChallenges.completedAt))
       .limit(50); // 上位50位まで表示
@@ -400,7 +400,7 @@ export async function claimChallengeReward(
 }
 
 // タイプ別チャレンジ取得
-export async function getChallengesByType(type: string): Promise<(Challenge & {
+export async function getChallengesByType(type: 'weekly' | 'monthly' | 'seasonal' | 'special'): Promise<(Challenge & {
   requirements: ChallengeRequirement[];
   rewards: ChallengeReward[];
 })[]> {
@@ -446,8 +446,27 @@ export async function getChallengesWithDetails(): Promise<(Challenge & {
   participantCount: number;
 })[]> {
   try {
-    // getAllChallenges と同じだが、参加者数情報も含む
-    return await getAllChallenges();
+    const challengesWithBasicDetails = await getAllChallenges();
+    
+    // 各チャレンジに参加者数を追加
+    const challengesWithParticipantCount = await Promise.all(
+      challengesWithBasicDetails.map(async (challenge) => {
+        // 参加者数を取得
+        const participantCountResult = await db
+          .select({ count: sql<number>`count(*)` })
+          .from(userChallenges)
+          .where(eq(userChallenges.challengeId, challenge.id));
+        
+        const participantCount = participantCountResult[0]?.count || 0;
+        
+        return {
+          ...challenge,
+          participantCount,
+        };
+      })
+    );
+    
+    return challengesWithParticipantCount;
   } catch (error) {
     console.error('Failed to get challenges with details:', error);
     throw new Error('チャレンジ詳細の取得に失敗しました');

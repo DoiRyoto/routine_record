@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     if (category) {
       badges = await getBadgesByCategory(category);
     } else if (rarity) {
-      badges = await getBadgesByRarity(rarity);
+      badges = await getBadgesByRarity(rarity as 'common' | 'rare' | 'epic' | 'legendary');
     } else {
       badges = await getAllBadges();
     }

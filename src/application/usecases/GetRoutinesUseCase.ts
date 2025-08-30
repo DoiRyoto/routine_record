@@ -2,8 +2,8 @@ import { injectable, inject } from 'inversify';
 
 import { Routine, UserId } from '@/domain';
 import type { IRoutineRepository } from '@/domain/repositories/IRoutineRepository';
-import { TYPES } from '@/shared/config/container';
-import { Result, success, failure } from '@/shared/types';
+import { TYPES } from '@/lib/config/container';
+import { Result, success, failure } from '@/lib/types';
 
 @injectable()
 export class GetRoutinesUseCase {

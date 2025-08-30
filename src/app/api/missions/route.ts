@@ -59,12 +59,12 @@ export async function GET(request: NextRequest) {
         missions = await getAllMissions();
         missions = filterMissions(missions, { difficulty, type, isActive });
       } else if (difficulty) {
-        missions = await getMissionsByDifficulty(difficulty);
+        missions = await getMissionsByDifficulty(difficulty as 'easy' | 'medium' | 'hard' | 'extreme');
         if (isActive !== undefined) {
           missions = filterMissions(missions, { isActive });
         }
       } else if (type) {
-        missions = await getMissionsByType(type);
+        missions = await getMissionsByType(type as 'streak' | 'count' | 'variety' | 'consistency');
         if (isActive !== undefined) {
           missions = filterMissions(missions, { isActive });
         }

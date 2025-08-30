@@ -13,6 +13,20 @@ import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import { CatchupPlanCalculationService } from '@/domain/services/CatchupPlanCalculationService';
 import * as catchupQueries from '@/lib/db/queries/catchup-plans';
 
+// Extend CatchupPlanResult for test-specific properties
+type ExtendedCatchupPlanResult = {
+  originalTarget: number;
+  currentProgress: number;
+  remainingTarget: number;
+  remainingDays: number;
+  suggestedDailyTarget: number;
+  isAchievable: boolean;
+  difficultyLevel: string;
+  calculationTime?: number;
+  memoryDelta?: number;
+  processingTime?: number;
+};
+
 import { testClient } from '../utils/test-client';
 
 // Mock heavy dependencies for isolated performance testing
@@ -27,8 +41,23 @@ describe('Catchup Plans Performance Tests', () => {
     
     // Setup calculation service mock
     mockCalculationService = {
-      calculateCatchupPlan: jest.fn()
-    } as jest.Mocked<CatchupPlanCalculationService>;
+      calculateCatchupPlan: jest.fn(),
+      assessDifficultyLevel: jest.fn(),
+      determineAchievability: jest.fn(),
+      isAchievable: jest.fn(),
+      calculateRemainingDaysPublic: jest.fn(),
+      getSuggestedDailyTarget: jest.fn(),
+      validateInput: jest.fn(),
+      mapToDomainResult: jest.fn(),
+      addAchievabilityBonus: jest.fn(),
+      applyConsistencyReduction: jest.fn(),
+      applyWeekendReduction: jest.fn(),
+      calculateWeightedAverage: jest.fn(),
+      roundToNearestTarget: jest.fn(),
+      formatTargetForUI: jest.fn(),
+      validateDateRange: jest.fn(),
+      handlePausedRoutineScenarios: jest.fn()
+    } as any;
   });
 
   describe('API Response Time Tests', () => {
@@ -126,7 +155,7 @@ describe('Catchup Plans Performance Tests', () => {
       // Then: Complex filtering within performance target
       expect(response.status).toBe(200);
       expect(responseTime).toBeLessThan(750); // 750ms for complex queries
-      expect(response.data.data.every(plan => plan.isActive)).toBe(true);
+      expect(response.data.data.every((plan: any) => plan.isActive)).toBe(true);
     });
   });
 
@@ -165,7 +194,7 @@ describe('Catchup Plans Performance Tests', () => {
       });
 
       const { createCatchupPlan } = require('@/lib/db/queries/catchup-plans');
-      createCatchupPlan.mockImplementation(async (data) => {
+      createCatchupPlan.mockImplementation(async (data: any) => {
         // Simulate database write time
         await new Promise(resolve => setTimeout(resolve, 50));
         return { id: 'plan-new', ...data };
@@ -215,11 +244,12 @@ describe('Catchup Plans Performance Tests', () => {
         remainingTarget: 15,
         suggestedDailyTarget: 1,
         isAchievable: true,
-        difficultyLevel: 'easy'
+        difficultyLevel: 'easy',
+        remainingDays: 15
       });
 
       const { createCatchupPlan } = require('@/lib/db/queries/catchup-plans');
-      createCatchupPlan.mockImplementation(async (data) => {
+      createCatchupPlan.mockImplementation(async (data: any) => {
         // Simulate realistic database write time
         await new Promise(resolve => setTimeout(resolve, 20));
         return mockCreatedPlans.find(plan => plan.routineId === data.routineId);
@@ -286,7 +316,8 @@ describe('Catchup Plans Performance Tests', () => {
           remainingTarget: 7,
           suggestedDailyTarget: 1,
           isAchievable: true,
-          difficultyLevel: 'easy'
+          difficultyLevel: 'easy',
+          remainingDays: 7
         };
       });
 
@@ -335,14 +366,14 @@ describe('Catchup Plans Performance Tests', () => {
 
       const mockRoutine = {
         id: 'routine-large',
-        goalType: 'frequency_based',
+        goalType: 'frequency_based' as const,
         targetCount: 50,
         targetPeriod: 'monthly',
         userId: 'user123'
       };
 
       // Mock calculation service with large dataset processing
-      mockCalculationService.calculateCatchupPlan.mockImplementation(async (input) => {
+      (mockCalculationService.calculateCatchupPlan as any).mockImplementation(async (input: any): Promise<ExtendedCatchupPlanResult> => {
         const startTime = Date.now();
         
         // Simulate complex calculation with large dataset
@@ -361,6 +392,7 @@ describe('Catchup Plans Performance Tests', () => {
           suggestedDailyTarget: 1,
           isAchievable: true,
           difficultyLevel: 'easy',
+          remainingDays: 15,
           calculationTime
         };
       });
@@ -376,7 +408,7 @@ describe('Catchup Plans Performance Tests', () => {
 
       // When: Perform calculation with large dataset
       const startTime = Date.now();
-      const result = await mockCalculationService.calculateCatchupPlan(input);
+      const result = await mockCalculationService.calculateCatchupPlan(input) as ExtendedCatchupPlanResult;
       const calculationTime = Date.now() - startTime;
 
       // Then: Calculation completes within acceptable time
@@ -391,14 +423,14 @@ describe('Catchup Plans Performance Tests', () => {
       const batchSize = 20;
       const routines = Array(batchSize).fill(null).map((_, i) => ({
         id: `batch-routine-${i}`,
-        goalType: 'frequency_based',
+        goalType: 'frequency_based' as const,
         targetCount: 15 + (i % 10),
         targetPeriod: 'monthly',
         userId: 'user123'
       }));
 
       // Mock batch calculation processing
-      mockCalculationService.calculateCatchupPlan.mockImplementation(async (input) => {
+      mockCalculationService.calculateCatchupPlan.mockImplementation(async (input: any) => {
         // Simulate optimized batch processing
         await new Promise(resolve => setTimeout(resolve, 10)); // 10ms per calculation
         
@@ -408,7 +440,8 @@ describe('Catchup Plans Performance Tests', () => {
           remainingTarget: Math.ceil(input.routine.targetCount * 0.4),
           suggestedDailyTarget: 1,
           isAchievable: true,
-          difficultyLevel: 'moderate'
+          difficultyLevel: 'moderate',
+          remainingDays: 15
         };
       });
 
@@ -445,14 +478,14 @@ describe('Catchup Plans Performance Tests', () => {
       // Given: Memory-intensive calculation scenario
       const memoryTestRoutine = {
         id: 'memory-test-routine',
-        goalType: 'schedule_based',
-        recurrenceType: 'daily',
+        goalType: 'schedule_based' as const,
+        recurrenceType: 'daily' as const,
         recurrenceInterval: 1,
         userId: 'user123'
       };
 
       // Mock memory-efficient calculation
-      mockCalculationService.calculateCatchupPlan.mockImplementation(async (input) => {
+      (mockCalculationService.calculateCatchupPlan as any).mockImplementation(async (input: any): Promise<ExtendedCatchupPlanResult> => {
         const startTime = Date.now();
         const initialMemory = process.memoryUsage().heapUsed;
         
@@ -472,7 +505,8 @@ describe('Catchup Plans Performance Tests', () => {
           remainingTarget: 16,
           suggestedDailyTarget: 1,
           isAchievable: true,
-          difficultyLevel: 'easy'
+          difficultyLevel: 'easy',
+          remainingDays: 16
         };
         
         // Cleanup temp data
@@ -497,7 +531,7 @@ describe('Catchup Plans Performance Tests', () => {
           start: new Date('2024-01-01T00:00:00Z'),
           end: new Date('2024-01-31T23:59:59Z')
         }
-      });
+      }) as ExtendedCatchupPlanResult;
 
       // Then: Memory usage controlled
       expect(result.memoryDelta).toBeLessThan(10 * 1024 * 1024); // Less than 10MB
@@ -531,7 +565,7 @@ describe('Catchup Plans Performance Tests', () => {
       }));
 
       const { getUserCatchupPlans } = catchupQueries;
-      (getUserCatchupPlans as jest.Mock).mockImplementation(async () => {
+      (getUserCatchupPlans as any).mockImplementation(async (userId: string) => {
         // Simulate complex database query time
         await new Promise(resolve => setTimeout(resolve, 150));
         return complexQueryResult;
@@ -565,7 +599,7 @@ describe('Catchup Plans Performance Tests', () => {
       }));
 
       const { updateCatchupPlanProgress } = catchupQueries;
-      (updateCatchupPlanProgress as jest.Mock).mockImplementation(async (id, userId, progress) => {
+      (updateCatchupPlanProgress as any).mockImplementation(async (id: string, userId: string, progress: number) => {
         // Simulate optimized update query
         await new Promise(resolve => setTimeout(resolve, 5)); // 5ms per update
         return mockUpdatedPlans.find(plan => plan.currentProgress === progress);
@@ -612,7 +646,7 @@ describe('Catchup Plans Performance Tests', () => {
       }))).flat();
 
       const { getUserCatchupPlans } = catchupQueries;
-      (getUserCatchupPlans as jest.Mock).mockImplementation(async (userId) => {
+      (getUserCatchupPlans as any).mockImplementation(async (userId: string) => {
         // Simulate index-optimized query
         const baseTime = 10; // Base query time
         const indexTime = Math.log(indexedQueryResults.length) * 2; // Logarithmic with index
@@ -631,7 +665,7 @@ describe('Catchup Plans Performance Tests', () => {
       expect(response.status).toBe(200);
       expect(indexedQueryTime).toBeLessThan(100); // Fast with proper indexing
       expect(response.data.data).toHaveLength(5);
-      expect(response.data.data.every(plan => plan.userId === testUserId)).toBe(true);
+      expect(response.data.data.every((plan: any) => plan.userId === testUserId)).toBe(true);
       
       // Verify logarithmic scaling rather than linear
       const expectedMaxTime = 10 + Math.log(5000) * 2; // Should be ~27ms

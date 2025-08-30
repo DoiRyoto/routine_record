@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
 
 import { Routine, UserId, RoutineId, GoalType, RecurrenceType } from '@/domain';
-import { ValidationError, BusinessRuleViolationError } from '@/shared/types/DomainError';
+import { ValidationError, BusinessRuleViolationError } from '@/lib/types/DomainError';
 
 import { RoutineValidationService } from '../RoutineValidationService';
 

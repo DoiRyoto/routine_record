@@ -245,7 +245,7 @@ export async function getAllMissions(): Promise<Mission[]> {
 }
 
 // 難易度別ミッション取得
-export async function getMissionsByDifficulty(difficulty: string): Promise<Mission[]> {
+export async function getMissionsByDifficulty(difficulty: typeof missions.difficulty.enumValues[number]): Promise<Mission[]> {
   try {
     const missionList = await db
       .select()
@@ -261,7 +261,7 @@ export async function getMissionsByDifficulty(difficulty: string): Promise<Missi
 }
 
 // タイプ別ミッション取得
-export async function getMissionsByType(type: string): Promise<Mission[]> {
+export async function getMissionsByType(type: typeof missions.type.enumValues[number]): Promise<Mission[]> {
   try {
     const missionList = await db
       .select()

@@ -41,32 +41,56 @@ jest.mock('./_components/Dashboard', () => {
 
 // テストデータヘルパー
 const createMockUser = (overrides = {}) => ({
-  id: 'user123',
-  name: 'テストユーザー',
+  userId: 'user123',
   level: 5,
-  totalXp: 2500,
-  currentLevelXp: 200,
-  nextLevelXp: 500,
-  avatarUrl: '/avatar.jpg',
+  totalXP: 2500,
+  currentXP: 200,
+  nextLevelXP: 500,
+  streak: 3,
+  longestStreak: 10,
+  totalRoutines: 5,
+  totalExecutions: 150,
+  joinedAt: new Date('2024-01-01'),
+  lastActiveAt: new Date(),
+  createdAt: new Date('2024-01-01'),
+  updatedAt: new Date(),
   ...overrides,
 });
 
 const createMockRoutines = () => [
   {
     id: 'routine1',
+    userId: 'user123',
     name: '朝の運動',
     description: '毎朝の運動習慣',
     category: '運動',
+    goalType: 'schedule_based' as const,
+    targetCount: null,
+    targetPeriod: null,
+    recurrenceType: 'daily' as const,
+    recurrenceInterval: 1,
+    monthlyType: null,
+    dayOfMonth: null,
+    weekOfMonth: null,
+    dayOfWeek: null,
+    daysOfWeek: null,
+    startDate: null,
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date(),
     isActive: true,
-    completed: false,
-    xpReward: 50,
+    deletedAt: null,
   },
 ];
 
 const createMockUserSettings = () => ({
+  id: 'setting1',
+  userId: 'user123',
+  theme: 'auto' as const,
+  language: 'ja' as const,
+  timeFormat: '24h' as const,
+  createdAt: new Date('2024-01-01'),
+  updatedAt: new Date(),
   timezone: 'Asia/Tokyo',
-  language: 'ja',
-  notifications: true,
 });
 
 describe('DashboardPage', () => {
@@ -148,9 +172,8 @@ describe('DashboardPage', () => {
     it('ユーザーステータスカードが正しく表示される', () => {
       // このテストは現在の実装では失敗する（詳細なユーザー情報表示が未実装のため）
       const mockUser = createMockUser({
-        name: 'テストユーザー',
         level: 8,
-        totalXp: 4200,
+        totalXP: 4200,
       });
       
       render(
@@ -165,7 +188,6 @@ describe('DashboardPage', () => {
       // Then: ユーザー情報が正しく表示される（失敗するべき）
       expect(screen.getByText('レベル 8')).toBeInTheDocument();
       expect(screen.getByText('4,200 XP')).toBeInTheDocument();
-      expect(screen.getByText('テストユーザー')).toBeInTheDocument();
     });
 
     it('本日の進捗が正しく表示される', () => {

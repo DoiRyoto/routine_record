@@ -17,7 +17,7 @@ import type {
   CategoryDisplay,
   UserMissionExtended,
   ExecutionRecordSummary
-} from '../../../types/mission-card';
+} from '@/lib/types/mission-card';
 import { 
   calculateProgress, 
   determineMissionStatus,

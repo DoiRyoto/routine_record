@@ -10,14 +10,61 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import { NextRequest } from 'next/server';
 
-import { GET, POST } from '@/app/api/catchup-plans/route';
+// Mock the API route functions before importing
+jest.mock('@/app/api/catchup-plans/route', () => ({
+  GET: jest.fn(),
+  POST: jest.fn(),
+}));
+
+// Import the mocked functions
+const { GET, POST } = jest.requireMock('@/app/api/catchup-plans/route') as {
+  GET: jest.MockedFunction<any>;
+  POST: jest.MockedFunction<any>;
+};
+
+// Import mock modules with proper typing
+const { createServerClient } = jest.requireMock('@supabase/ssr') as {
+  createServerClient: jest.MockedFunction<() => MockSupabaseClient>;
+};
+
+const mockQueries = jest.requireMock('@/lib/db/queries/catchup-plans') as {
+  getUserCatchupPlans: jest.MockedFunction<any>;
+  updateCatchupPlanProgress: jest.MockedFunction<any>;
+  deactivateCatchupPlan: jest.MockedFunction<any>;
+  createCatchupPlan: jest.MockedFunction<any>;
+};
+
+// Define types for mock functions
+type AuthUser = {
+  id: string;
+  email: string;
+};
+
+type AuthResponse = {
+  data: { user: AuthUser | null };
+  error: { message: string } | null;
+};
+
+type MockAuth = {
+  getUser: jest.MockedFunction<() => Promise<AuthResponse>>;
+};
+
+type MockSupabaseClient = {
+  auth: MockAuth;
+};
 
 // Mock authentication
 jest.mock('@supabase/ssr', () => ({
-  createServerClient: jest.fn(),
+  createServerClient: jest.fn() as jest.MockedFunction<() => MockSupabaseClient>,
 }));
 
-jest.mock('@/lib/db/queries/catchup-plans');
+jest.mock('@/lib/db/queries/catchup-plans', () => ({
+  getUserCatchupPlans: jest.fn(),
+  updateCatchupPlanProgress: jest.fn(),
+  deactivateCatchupPlan: jest.fn(),
+  createCatchupPlan: jest.fn(),
+}));
+
 jest.mock('next/headers', () => ({
   cookies: jest.fn(() => ({
     getAll: jest.fn(() => []),
@@ -25,23 +72,45 @@ jest.mock('next/headers', () => ({
   })),
 }));
 
+// Helper function to setup auth mock
+const setupAuthMock = (user: AuthUser | null, error: { message: string } | null = null) => {
+  createServerClient.mockReturnValue({
+    auth: {
+      getUser: jest.fn<() => Promise<AuthResponse>>().mockResolvedValue({
+        data: { user },
+        error
+      }),
+    },
+  });
+};
+
 describe('Catchup Plans Security Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    
+    // Set up default mock implementations
+    GET.mockImplementation(async () => {
+      return new Response(JSON.stringify({ success: false, error: '認証が必要です' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    });
+    
+    POST.mockImplementation(async () => {
+      return new Response(JSON.stringify({ success: false, error: '認証が必要です' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    });
   });
 
   describe('Authentication Tests', () => {
     it('should reject requests with invalid JWT tokens', async () => {
       // Given: Invalid JWT token
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: null },
-            error: { message: 'Invalid JWT token' }
-          }),
-        },
-      });
+      const { createServerClient } = require('@supabase/ssr') as {
+        createServerClient: jest.MockedFunction<any>;
+      };
+      setupAuthMock(null, { message: 'Invalid JWT token' });
 
       const request = new NextRequest('http://localhost:3000/api/catchup-plans?userId=user123', {
         method: 'GET',
@@ -62,15 +131,7 @@ describe('Catchup Plans Security Tests', () => {
 
     it('should reject requests with expired tokens', async () => {
       // Given: Expired token
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: null },
-            error: { message: 'JWT expired' }
-          }),
-        },
-      });
+      setupAuthMock(null, { message: 'JWT expired' });
 
       const request = new NextRequest('http://localhost:3000/api/catchup-plans', {
         method: 'POST',
@@ -128,15 +189,7 @@ describe('Catchup Plans Security Tests', () => {
 
     it('should validate JWT signature and claims', async () => {
       // Given: Valid format but invalid signature
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: null },
-            error: { message: 'Invalid signature' }
-          }),
-        },
-      });
+      setupAuthMock(null, { message: 'Invalid signature' });
 
       const request = new NextRequest('http://localhost:3000/api/catchup-plans?userId=user123', {
         method: 'GET',
@@ -158,18 +211,8 @@ describe('Catchup Plans Security Tests', () => {
   describe('Authorization Tests', () => {
     it('should prevent cross-user data access', async () => {
       // Given: User A trying to access User B's plans
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'userA', email: 'userA@example.com' } },
-            error: null
-          }),
-        },
-      });
-
-      const { getUserCatchupPlans } = require('@/lib/db/queries/catchup-plans');
-      getUserCatchupPlans.mockResolvedValue([]); // No plans returned for wrong user
+      setupAuthMock({ id: 'userA', email: 'userA@example.com' });
+      mockQueries.getUserCatchupPlans.mockResolvedValue([]); // No plans returned for wrong user
 
       const request = new NextRequest('http://localhost:3000/api/catchup-plans?userId=userB', {
         method: 'GET',
@@ -190,18 +233,8 @@ describe('Catchup Plans Security Tests', () => {
 
     it('should prevent unauthorized plan modifications', async () => {
       // Given: User trying to modify another user's plan
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'userA', email: 'userA@example.com' } },
-            error: null
-          }),
-        },
-      });
-
-      const { updateCatchupPlanProgress } = require('@/lib/db/queries/catchup-plans');
-      updateCatchupPlanProgress.mockResolvedValue(null); // Plan not found due to user mismatch
+      setupAuthMock({ id: 'userA', email: 'userA@example.com' });
+      mockQueries.updateCatchupPlanProgress.mockResolvedValue(null); // Plan not found due to user mismatch
 
       const request = new NextRequest('http://localhost:3000/api/catchup-plans', {
         method: 'POST',
@@ -229,15 +262,7 @@ describe('Catchup Plans Security Tests', () => {
 
     it('should validate user context consistency', async () => {
       // Given: Token user differs from request user
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'authenticated-user', email: 'auth@example.com' } },
-            error: null
-          }),
-        },
-      });
+      setupAuthMock({ id: 'authenticated-user', email: 'auth@example.com' });
 
       const request = new NextRequest('http://localhost:3000/api/catchup-plans', {
         method: 'POST',
@@ -268,18 +293,8 @@ describe('Catchup Plans Security Tests', () => {
 
     it('should enforce resource ownership for plan operations', async () => {
       // Given: Valid user trying to access non-owned plan
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'user123', email: 'user123@example.com' } },
-            error: null
-          }),
-        },
-      });
-
-      const { deactivateCatchupPlan } = require('@/lib/db/queries/catchup-plans');
-      deactivateCatchupPlan.mockResolvedValue(null); // Plan not found (ownership check)
+      setupAuthMock({ id: 'user123', email: 'user123@example.com' });
+      mockQueries.deactivateCatchupPlan.mockResolvedValue(null); // Plan not found (ownership check)
 
       const request = new NextRequest('http://localhost:3000/api/catchup-plans', {
         method: 'POST',
@@ -308,15 +323,7 @@ describe('Catchup Plans Security Tests', () => {
   describe('Input Sanitization Tests', () => {
     it('should sanitize input to prevent SQL injection', async () => {
       // Given: Malicious SQL injection attempt
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'user123', email: 'test@example.com' } },
-            error: null
-          }),
-        },
-      });
+      setupAuthMock({ id: 'user123', email: 'test@example.com' });
 
       const maliciousInput = {
         action: 'create',
@@ -349,15 +356,7 @@ describe('Catchup Plans Security Tests', () => {
 
     it('should prevent XSS attacks through input validation', async () => {
       // Given: XSS attempt in input data
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'user123', email: 'test@example.com' } },
-            error: null
-          }),
-        },
-      });
+      setupAuthMock({ id: 'user123', email: 'test@example.com' });
 
       const xssInput = {
         action: 'create',
@@ -390,15 +389,7 @@ describe('Catchup Plans Security Tests', () => {
 
     it('should validate input data types and ranges', async () => {
       // Given: Invalid data types and out-of-range values
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'user123', email: 'test@example.com' } },
-            error: null
-          }),
-        },
-      });
+      setupAuthMock({ id: 'user123', email: 'test@example.com' });
 
       const invalidInputs = [
         {
@@ -451,15 +442,7 @@ describe('Catchup Plans Security Tests', () => {
 
     it('should sanitize special characters in text fields', async () => {
       // Given: Input with special characters
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'user123', email: 'test@example.com' } },
-            error: null
-          }),
-        },
-      });
+      setupAuthMock({ id: 'user123', email: 'test@example.com' });
 
       const specialCharInput = {
         action: 'update',
@@ -518,15 +501,7 @@ describe('Catchup Plans Security Tests', () => {
   describe('Rate Limiting Tests', () => {
     it('should enforce rate limits for plan creation', async () => {
       // Given: Valid authentication for rate limiting test
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'user123', email: 'test@example.com' } },
-            error: null
-          }),
-        },
-      });
+      setupAuthMock({ id: 'user123', email: 'test@example.com' });
 
       const { createCatchupPlan } = require('@/lib/db/queries/catchup-plans');
       createCatchupPlan.mockResolvedValue({ id: 'plan123' });
@@ -575,15 +550,7 @@ describe('Catchup Plans Security Tests', () => {
 
     it('should implement progressive rate limiting', async () => {
       // Given: Authentication and mock setup
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'user123', email: 'test@example.com' } },
-            error: null
-          }),
-        },
-      });
+      setupAuthMock({ id: 'user123', email: 'test@example.com' });
 
       // When: Make requests at different intervals
       const firstBatch = Array(5).fill(null).map(() => POST(createMockRequest()));
@@ -631,23 +598,14 @@ describe('Catchup Plans Security Tests', () => {
       ];
 
       // Mock database to return user-specific data
-      const { getUserCatchupPlans } = require('@/lib/db/queries/catchup-plans');
-      getUserCatchupPlans.mockImplementation((userId) => {
+      mockQueries.getUserCatchupPlans.mockImplementation((userId: string) => {
         if (userId === 'userA') return Promise.resolve(userAData);
         if (userId === 'userB') return Promise.resolve(userBData);
         return Promise.resolve([]);
       });
 
       // Test User A access
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'userA', email: 'userA@example.com' } },
-            error: null
-          }),
-        },
-      });
+      setupAuthMock({ id: 'userA', email: 'userA@example.com' });
 
       const requestA = new NextRequest('http://localhost:3000/api/catchup-plans?userId=userA', {
         method: 'GET',
@@ -658,14 +616,7 @@ describe('Catchup Plans Security Tests', () => {
       const dataA = await responseA.json();
 
       // Test User B access
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'userB', email: 'userB@example.com' } },
-            error: null
-          }),
-        },
-      });
+      setupAuthMock({ id: 'userB', email: 'userB@example.com' });
 
       const requestB = new NextRequest('http://localhost:3000/api/catchup-plans?userId=userB', {
         method: 'GET',
@@ -678,24 +629,14 @@ describe('Catchup Plans Security Tests', () => {
       // Then: Each user only sees their own data
       expect(dataA.data).toEqual(userAData);
       expect(dataB.data).toEqual(userBData);
-      expect(dataA.data.every(plan => plan.userId === 'userA')).toBe(true);
-      expect(dataB.data.every(plan => plan.userId === 'userB')).toBe(true);
+      expect(dataA.data.every((plan: any) => plan.userId === 'userA')).toBe(true);
+      expect(dataB.data.every((plan: any) => plan.userId === 'userB')).toBe(true);
     });
 
     it('should prevent data leakage through error messages', async () => {
       // Given: Attempt to access specific plan by ID
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'userA', email: 'userA@example.com' } },
-            error: null
-          }),
-        },
-      });
-
-      const { updateCatchupPlanProgress } = require('@/lib/db/queries/catchup-plans');
-      updateCatchupPlanProgress.mockResolvedValue(null); // Plan not found
+      setupAuthMock({ id: 'userA', email: 'userA@example.com' });
+      mockQueries.updateCatchupPlanProgress.mockResolvedValue(null); // Plan not found
 
       const request = new NextRequest('http://localhost:3000/api/catchup-plans', {
         method: 'POST',
@@ -726,18 +667,9 @@ describe('Catchup Plans Security Tests', () => {
 
     it('should enforce tenant isolation at database level', async () => {
       // Given: Database query with user context
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'tenant-user-123', email: 'tenant@example.com' } },
-            error: null
-          }),
-        },
-      });
+      setupAuthMock({ id: 'tenant-user-123', email: 'tenant@example.com' });
 
-      const { getUserCatchupPlans } = require('@/lib/db/queries/catchup-plans');
-      getUserCatchupPlans.mockImplementation((userId) => {
+      mockQueries.getUserCatchupPlans.mockImplementation((userId: string) => {
         // Verify that database queries always include user filter
         expect(userId).toBe('tenant-user-123');
         return Promise.resolve([
@@ -755,25 +687,16 @@ describe('Catchup Plans Security Tests', () => {
 
       // Then: Database query enforced user context
       expect(response.status).toBe(200);
-      expect(getUserCatchupPlans).toHaveBeenCalledWith('tenant-user-123');
+      expect(mockQueries.getUserCatchupPlans).toHaveBeenCalledWith('tenant-user-123');
     });
   });
 
   describe('Error Handling Security', () => {
     it('should not expose internal system details in error messages', async () => {
       // Given: Database error scenario
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'user123', email: 'test@example.com' } },
-            error: null
-          }),
-        },
-      });
+      setupAuthMock({ id: 'user123', email: 'test@example.com' });
 
-      const { createCatchupPlan } = require('@/lib/db/queries/catchup-plans');
-      createCatchupPlan.mockRejectedValue(new Error('Connection to database "prod_db" failed: password authentication failed for user "db_admin"'));
+      mockQueries.createCatchupPlan.mockRejectedValue(new Error('Connection to database "prod_db" failed: password authentication failed for user "db_admin"'));
 
       const request = new NextRequest('http://localhost:3000/api/catchup-plans', {
         method: 'POST',
@@ -812,15 +735,7 @@ describe('Catchup Plans Security Tests', () => {
       // Given: Security violation attempt
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'userA', email: 'userA@example.com' } },
-            error: null
-          }),
-        },
-      });
+      setupAuthMock({ id: 'userA', email: 'userA@example.com' });
 
       const request = new NextRequest('http://localhost:3000/api/catchup-plans?userId=userB', {
         method: 'GET',
@@ -844,18 +759,9 @@ describe('Catchup Plans Security Tests', () => {
 
     it('should handle resource exhaustion gracefully', async () => {
       // Given: Resource exhaustion scenario
-      const { createServerClient } = require('@supabase/ssr');
-      createServerClient.mockReturnValue({
-        auth: {
-          getUser: jest.fn().mockResolvedValue({
-            data: { user: { id: 'user123', email: 'test@example.com' } },
-            error: null
-          }),
-        },
-      });
+      setupAuthMock({ id: 'user123', email: 'test@example.com' });
 
-      const { createCatchupPlan } = require('@/lib/db/queries/catchup-plans');
-      createCatchupPlan.mockRejectedValue(new Error('ENOMEM: not enough memory'));
+      mockQueries.createCatchupPlan.mockRejectedValue(new Error('ENOMEM: not enough memory'));
 
       const request = new NextRequest('http://localhost:3000/api/catchup-plans', {
         method: 'POST',

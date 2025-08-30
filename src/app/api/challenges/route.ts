@@ -243,7 +243,7 @@ export async function GET(request: NextRequest) {
     } else if (isActive === 'true' && !type && !joinable && !startDate && !endDate) {
       challenges = await getActiveChallenges();
     } else if (type && !isActive && !joinable && !startDate && !endDate) {
-      challenges = await getChallengesByType(type);
+      challenges = await getChallengesByType(type as 'weekly' | 'monthly' | 'seasonal' | 'special');
     } else {
       // 複数フィルタがある場合やページネーション対応のためgetAllChallengesを使用
       challenges = await getAllChallenges();

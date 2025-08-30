@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 
 import { Routine } from '@/domain';
-import { ValidationError, BusinessRuleViolationError } from '@/shared/types/DomainError';
+import { ValidationError, BusinessRuleViolationError } from '@/lib/types/DomainError';
 
 @injectable()
 export class RoutineValidationService {
