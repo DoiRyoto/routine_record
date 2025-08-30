@@ -46,7 +46,7 @@ export const ExecutionRecordModal: React.FC<ExecutionRecordModalProps> = ({
     // 簡単なフォーカストラップ実装
     if (e.key === 'Tab') {
       const focusableElements = [firstInputRef.current, closeButtonRef.current];
-      const currentIndex = focusableElements.indexOf(document.activeElement as HTMLElement | null);
+      const currentIndex = focusableElements.indexOf(document.activeElement as any);
       
       if (e.shiftKey) {
         // Shift+Tab: 前の要素へ

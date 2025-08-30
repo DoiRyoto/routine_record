@@ -14,7 +14,7 @@ export class CreateExecutionRecordUseCase {
 
   async execute(dto: CreateExecutionRecordDto): Promise<ExecutionRecord> {
     // バリデーション
-    ExecutionRecord.validateExecutionData(dto.executedAt, dto.duration, dto.memo);
+    ExecutionRecord.validateExecutionData(dto.executedAt || new Date(), dto.duration, dto.memo);
 
     // ルーチンの存在確認と権限チェック
     const routine = await this.routineRepository.findById(new RoutineId(dto.routineId));
@@ -37,7 +37,7 @@ export class CreateExecutionRecordUseCase {
       ExecutionRecordId.generate(),
       new UserId(dto.userId),
       new RoutineId(dto.routineId),
-      dto.executedAt,
+      dto.executedAt || new Date(),
       dto.duration || null,
       dto.memo || null
     );

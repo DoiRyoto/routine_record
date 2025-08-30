@@ -9,6 +9,7 @@ export * from './usecases/GetRoutinesUseCase';
 export * from './services/RoutineValidationService';
 
 // Re-export for convenience
-export { CreateRoutineDto, UpdateRoutineDto, CreateExecutionRecordDto } from './dtos';
+export { CreateRoutineDto, UpdateRoutineDto } from './dtos';
+export type { CreateExecutionRecordDto } from './dtos';
 export { CreateRoutineUseCase, GetRoutinesUseCase } from './usecases';
 export { RoutineValidationService } from './services/RoutineValidationService';

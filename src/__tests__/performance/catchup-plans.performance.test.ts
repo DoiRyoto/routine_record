@@ -26,8 +26,9 @@ describe('Catchup Plans Performance Tests', () => {
     jest.clearAllMocks();
     
     // Setup calculation service mock
-    mockCalculationService = new CatchupPlanCalculationService() as jest.Mocked<CatchupPlanCalculationService>;
-    mockCalculationService.calculateCatchupPlan = jest.fn();
+    mockCalculationService = {
+      calculateCatchupPlan: jest.fn()
+    } as jest.Mocked<CatchupPlanCalculationService>;
   });
 
   describe('API Response Time Tests', () => {
@@ -51,8 +52,8 @@ describe('Catchup Plans Performance Tests', () => {
         }
       }));
 
-      const { getUserCatchupPlans } = require('@/lib/db/queries/catchup-plans');
-      getUserCatchupPlans.mockResolvedValue(mockPlans);
+      const mockQueries = require('@/lib/db/queries/catchup-plans');
+      mockQueries.getUserCatchupPlans.mockResolvedValue(mockPlans);
 
       // When: Measure response time
       const startTime = Date.now();

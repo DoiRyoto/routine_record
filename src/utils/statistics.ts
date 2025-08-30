@@ -28,8 +28,8 @@ interface ExecutionRecord {
 // ルーチン型（最小限の定義）
 interface Routine {
   id: string;
-  categoryId: string;
-  category: { name: string };
+  categoryId?: string;
+  category: string | { name: string };
 }
 
 /**
@@ -74,7 +74,10 @@ export function calculateCategoryDistribution(
   
   // ルーチンIDからカテゴリへのマッピング作成
   const routineToCategory = routines.reduce((acc, routine) => {
-    acc[routine.id] = routine.category.name;
+    const categoryName = typeof routine.category === 'string' 
+      ? routine.category 
+      : routine.category.name;
+    acc[routine.id] = categoryName;
     return acc;
   }, {} as Record<string, string>);
 

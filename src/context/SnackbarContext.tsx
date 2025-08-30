@@ -7,7 +7,7 @@ import { Toast } from '@/components/ui/Toast';
 interface SnackbarMessage {
   id: string;
   message: string;
-  type: 'success' | 'destructive' | 'warning' | 'default';
+  type: 'success' | 'error' | 'info';
   duration?: number;
 }
 
@@ -51,21 +51,21 @@ export function SnackbarProvider({ children }: { children: React.ReactNode }) {
 
   const showError = useCallback(
     (message: string, duration?: number) => {
-      showSnackbar({ message, type: 'destructive', duration });
+      showSnackbar({ message, type: 'error', duration });
     },
     [showSnackbar]
   );
 
   const showInfo = useCallback(
     (message: string, duration?: number) => {
-      showSnackbar({ message, type: 'default', duration });
+      showSnackbar({ message, type: 'info', duration });
     },
     [showSnackbar]
   );
 
   const showWarning = useCallback(
     (message: string, duration?: number) => {
-      showSnackbar({ message, type: 'warning', duration });
+      showSnackbar({ message, type: 'info', duration });
     },
     [showSnackbar]
   );

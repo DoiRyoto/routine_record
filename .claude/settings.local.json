@@ -45,12 +45,24 @@
       "Bash(test:*)",
       "Bash(chmod:*)",
       "Bash(./test-notification.sh:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(python3:*)"
     ],
     "defaultMode": "acceptEdits",
     "additionalDirectories": []
   },
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "^/(kairo|tdd|rev|init-tech-stack)-.*",
+        "hooks": [
+          {
+            "type": "command", 
+            "command": "echo '📋 【必須】実装コマンド実行:' && echo '以下のルールファイルを必ずReadツールで読み込んでから実装を開始してください:' && echo '' && echo '❌ これらのファイルを読まずに実装を開始することは絶対に禁止されています。' && echo '' && echo '✅ 利用可能なルールファイル:' && find docs/rules -name '*.md' -exec basename {} \\; 2>/dev/null || echo 'docs/rules/*.md' && echo '' && echo '📝 各ルールファイルの内容:' && echo '• TypeScript実装・型管理' && echo '• コメント更新フロー・品質管理' && echo '• 開発ワークフロー・品質チェック' && echo '' && echo '⚠️ 実装手順:' && echo '1. Read toolでルールファイルをコンテキストに追加' && echo '2. ルール内容を確認・理解' && echo '3. ルールに従って実装' && echo '4. 品質チェック実行' && echo '' && echo '🔒 これらのルールは必須遵守事項です。' && echo '🚫 ルールファイル未読での実装開始は禁止されています。'"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "hooks": [
@@ -61,30 +73,6 @@
           {
             "type": "command",
             "command": "/Users/doi-ryoto/Desktop/Programming/routine_record/.claude/advanced-notification-handler.sh"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Read",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/doi-ryoto/Desktop/Programming/routine_record/.claude/docs-validation-hook.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "Write|Edit|MultiEdit|Update|mcp__serena__replace_symbol_body|mcp__serena__insert_.*_symbol",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/doi-ryoto/Desktop/Programming/routine_record/.claude/docs-validation-hook.sh"
-          },
-          {
-            "type": "command",
-            "command": "/Users/doi-ryoto/Desktop/Programming/routine_record/.claude/rules-validation.sh"
           }
         ]
       }

@@ -35,8 +35,8 @@ export function sortData<T extends Record<string, any>>(
   const order = sortOrder === 'desc' ? -1 : 1;
   
   return [...data].sort((a, b) => {
-    let aValue = a[sortBy];
-    let bValue = b[sortBy];
+    let aValue: any = a[sortBy];
+    let bValue: any = b[sortBy];
 
     // Handle special sorting for difficulty and rarity
     if (sortBy === 'difficulty' && typeof aValue === 'string' && typeof bValue === 'string') {

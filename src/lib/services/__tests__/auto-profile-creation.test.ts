@@ -64,10 +64,10 @@ describe('プロフィール自動作成機能', () => {
     // 【期待値確認】: P0課題解決によりエラー状態を回避し、基本的な機能使用が可能になる
     expect(result.success).toBe(true); // 【確認内容】: 自動作成処理が成功することを確認 🔴
     expect(result.created).toBe(true); // 【確認内容】: 新規プロフィールが作成されたことを確認 🔴
-    expect(result.profile.userId).toBe(mockUser.id); // 【確認内容】: 作成されたプロフィールのユーザーIDが正しいことを確認 🔴
-    expect(result.profile.level).toBe(1); // 【確認内容】: デフォルトレベルが1に設定されることを確認 🟡
-    expect(result.profile.totalXP).toBe(0); // 【確認内容】: 初期XPが0に設定されることを確認 🟡
-    expect(result.profile.streak).toBe(0); // 【確認内容】: 初期ストリークが0に設定されることを確認 🟡
+    expect(result.profile?.userId).toBe(mockUser.id); // 【確認内容】: 作成されたプロフィールのユーザーIDが正しいことを確認 🔴
+    expect(result.profile?.level).toBe(1); // 【確認内容】: デフォルトレベルが1に設定されることを確認 🟡
+    expect(result.profile?.totalXP).toBe(0); // 【確認内容】: 初期XPが0に設定されることを確認 🟡
+    expect(result.profile?.streak).toBe(0); // 【確認内容】: 初期ストリークが0に設定されることを確認 🟡
   });
 
   test('既存プロフィールがある場合は作成をスキップ', async () => {
@@ -111,7 +111,7 @@ describe('プロフィール自動作成機能', () => {
     expect(result.success).toBe(true); // 【確認内容】: 処理が成功することを確認 🟡
     expect(result.created).toBe(false); // 【確認内容】: 新規作成が実行されなかったことを確認 🔴
     expect(result.profile).toEqual(existingProfile); // 【確認内容】: 既存プロフィール情報がそのまま返却されることを確認 🟡
-    expect(result.profile.level).toBe(5); // 【確認内容】: 既存のレベル情報が保持されることを確認 🟡
+    expect(result.profile?.level).toBe(5); // 【確認内容】: 既存のレベル情報が保持されることを確認 🟡
   });
 
   test('認証エラー時の適切なエラーハンドリング', async () => {

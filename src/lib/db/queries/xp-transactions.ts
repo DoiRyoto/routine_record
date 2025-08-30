@@ -55,7 +55,7 @@ export async function getXPHistoryByDateRange(
     ];
 
     if (sourceFilter) {
-      whereConditions.push(eq(xpTransactions.sourceType, sourceFilter));
+      whereConditions.push(eq(xpTransactions.sourceType, sourceFilter as any));
     }
 
     const [transactions, totalCount] = await Promise.all([
@@ -97,7 +97,7 @@ export async function getXPHistoryBySource(
         .where(
           and(
             eq(xpTransactions.userId, userId),
-            eq(xpTransactions.sourceType, sourceType)
+            eq(xpTransactions.sourceType, sourceType as any)
           )
         )
         .orderBy(desc(xpTransactions.createdAt))
@@ -109,7 +109,7 @@ export async function getXPHistoryBySource(
         .where(
           and(
             eq(xpTransactions.userId, userId),
-            eq(xpTransactions.sourceType, sourceType)
+            eq(xpTransactions.sourceType, sourceType as any)
           )
         )
     ]);

@@ -192,10 +192,10 @@ export default function DashboardPage({
                 レベル {userProfile.level || 1}
               </h2>
               <p className="text-sm text-gray/70 dark:text-gray/90">
-                {(userProfile.totalXP || userProfile.totalXp || 0).toLocaleString()} XP
+                {(userProfile.totalXP || 0).toLocaleString()} XP
               </p>
               <p className="text-sm font-medium text-gray dark:text-white">
-                {userProfile.displayName || userProfile.name || 'ユーザー'}
+                ユーザー
               </p>
             </div>
           </div>
@@ -203,9 +203,9 @@ export default function DashboardPage({
           <div className="mb-4">
             <LevelProgressBar
               level={userProfile.level || 1}
-              currentXP={userProfile.currentXP || userProfile.currentLevelXp || 0}
-              nextLevelXP={userProfile.nextLevelXP || userProfile.nextLevelXp || 100}
-              totalXP={userProfile.totalXP || userProfile.totalXp || 0}
+              currentXP={userProfile.currentXP || 0}
+              nextLevelXP={userProfile.nextLevelXP || 100}
+              totalXP={userProfile.totalXP || 0}
               size="md"
             />
           </div>
@@ -213,7 +213,7 @@ export default function DashboardPage({
           <div className="flex space-x-4">
             <div className="bg-blue/10 dark:bg-blue/20 rounded-xl px-3 py-2">
               <ExperiencePoints
-                value={userProfile.totalXP || userProfile.totalXp || 0}
+                value={userProfile.totalXP || 0}
                 variant="badge"
                 size="sm"
               />
@@ -261,9 +261,9 @@ export default function DashboardPage({
                 <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
                   <LevelProgressBar
                     level={userProfile.level || 1}
-                    currentXP={userProfile.currentXP || userProfile.currentLevelXp || 0}
-                    nextLevelXP={userProfile.nextLevelXP || userProfile.nextLevelXp || 100}
-                    totalXP={userProfile.totalXP || userProfile.totalXp || 0}
+                    currentXP={userProfile.currentXP || 0}
+                    nextLevelXP={userProfile.nextLevelXP || 100}
+                    totalXP={userProfile.totalXP || 0}
                     size="md"
                   />
                 </div>
@@ -271,7 +271,7 @@ export default function DashboardPage({
                 <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
                   <div className="bg-white/15 rounded-xl px-4 py-2 backdrop-blur-sm">
                     <ExperiencePoints
-                      value={userProfile.totalXP || userProfile.totalXp || 0}
+                      value={userProfile.totalXP || 0}
                       variant="badge"
                       size="md"
                     />
@@ -384,7 +384,6 @@ export default function DashboardPage({
             executionRecords={executionRecords}
             userSettings={userSettings}
             userProfile={userProfile}
-            onCompleteRoutine={handleCompleteRoutine}
           />
         </div>
       </div>

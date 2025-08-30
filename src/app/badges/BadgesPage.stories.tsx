@@ -63,7 +63,7 @@ const meta: Meta<typeof BadgesPage> = {
         {
           userId: 'user-1',
           badgeId: 'badge-1',
-          earnedAt: new Date('2024-12-01'),
+          unlockedAt: new Date('2024-12-01'),
           isNew: false,
           createdAt: new Date('2024-12-01'),
           updatedAt: new Date('2024-12-01')
@@ -71,7 +71,7 @@ const meta: Meta<typeof BadgesPage> = {
         {
           userId: 'user-1', 
           badgeId: 'badge-2',
-          earnedAt: new Date('2024-12-15'),
+          unlockedAt: new Date('2024-12-15'),
           isNew: true,
           createdAt: new Date('2024-12-15'),
           updatedAt: new Date('2024-12-15')
@@ -193,7 +193,7 @@ export const NoBadges: Story = {
             json: () => Promise.resolve({ userBadges: [] })
           } as Response);
         }
-        return Promise.reject(new Error('Unknown endpoint'));
+        return Promise.reject(new globalThis.Error('Unknown endpoint'));
       }) as jest.Mock;
       
       return <Story />;

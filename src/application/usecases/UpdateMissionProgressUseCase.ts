@@ -6,6 +6,7 @@ import { IUserBadgeRepository } from '../../domain/repositories/IUserBadgeReposi
 import { IUserMissionRepository } from '../../domain/repositories/IUserMissionRepository';
 import { IUserProfileRepository } from '../../domain/repositories/IUserProfileRepository';
 import { MissionProgressCalculationService } from '../../domain/services/MissionProgressCalculationService';
+import { UserId } from '../../domain/valueObjects';
 import { UpdateMissionProgressDto } from '../dtos';
 
 import { ProcessLevelUpUseCase } from './ProcessLevelUpUseCase';
@@ -89,7 +90,14 @@ export class UpdateMissionProgressUseCase {
 
     // Process level up if XP was granted
     if (totalXPGranted > 0) {
-      await this.processLevelUpUseCase.execute({ userId });
+      const userProfile = await this.userProfileRepository.findByUserId(new UserId(userId));
+      if (userProfile) {
+        await this.processLevelUpUseCase.execute({ 
+          userId, 
+          currentXP: userProfile.getTotalXP().getValue(), 
+          gainedXP: totalXPGranted 
+        });
+      }
     }
 
     return {

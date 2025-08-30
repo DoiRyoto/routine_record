@@ -12,6 +12,7 @@ import {
 import { CATCHUP_PLAN_CONSTANTS, DifficultyLevel, TimeOfDay } from '../constants/CatchupPlanConstants';
 import { IExecutionRecordRepository } from '../repositories/IExecutionRecordRepository';
 import { IRoutineRepository } from '../repositories/IRoutineRepository';
+import { RoutineId } from '../valueObjects';
 
 export interface CatchupPlanInput {
   routine: {
@@ -63,7 +64,7 @@ export class CatchupPlanCalculationService {
     try {
       // Get execution records for the routine in the target period
       const executionRecords = await this.executionRecordRepository.findByRoutineIdAndDateRange(
-        input.routine.id,
+        new RoutineId(input.routine.id),
         input.targetPeriod.start,
         input.targetPeriod.end
       );
@@ -117,17 +118,17 @@ export class CatchupPlanCalculationService {
       // Calculate consistency score using utility function
       if (executionRecords.length > 0) {
         result.consistencyScore = calculateConsistencyScore(
-          executionRecords as ExecutionRecord[], 
+          executionRecords as any, 
           input.targetPeriod
         );
       }
 
       // Suggest optimal time of day using utility function
-      result.suggestedTimeOfDay = suggestOptimalTimeOfDay(executionRecords as ExecutionRecord[]);
+      result.suggestedTimeOfDay = suggestOptimalTimeOfDay(executionRecords as any);
 
       // Calculate weekday adjustments using utility function
       result.weekdayTargetAdjustment = calculateWeekdayAdjustments(
-        executionRecords as ExecutionRecord[], 
+        executionRecords as any, 
         remainingDays
       );
 
@@ -294,8 +295,8 @@ export class CatchupPlanCalculationService {
 
   public async validateRoutineOwnership(routineId: string, userId: string): Promise<boolean> {
     try {
-      const routine = await this.routineRepository.findById(routineId);
-      return routine && routine.userId === userId;
+      const routine = await this.routineRepository.findById(new RoutineId(routineId));
+      return !!(routine && routine.getUserId().getValue() === userId);
     } catch {
       return false;
     }

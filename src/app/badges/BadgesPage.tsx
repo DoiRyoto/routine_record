@@ -107,7 +107,7 @@ function BadgeCard({ badge, onClick, className }: BadgeCardProps) {
       {/* Earned date or status */}
       {badge.isEarned && badge.userBadge ? (
         <div className="text-xs text-gray-500 text-center mt-1">
-          {new Date(badge.userBadge.earnedAt).toLocaleDateString('ja-JP')}
+          {new Date(badge.userBadge.unlockedAt).toLocaleDateString('ja-JP')}
         </div>
       ) : (
         <div className="text-xs text-gray-400 text-center mt-1">
@@ -181,7 +181,7 @@ function BadgeDetailModal({ badge, isOpen, onClose }: BadgeDetailModalProps) {
             <div>
               <h3 className="font-semibold text-sm mb-1">取得日時</h3>
               <p className="text-gray-600 text-sm">
-                {new Date(badge.userBadge.earnedAt).toLocaleString('ja-JP')}
+                {new Date(badge.userBadge.unlockedAt).toLocaleString('ja-JP')}
               </p>
             </div>
           ) : (

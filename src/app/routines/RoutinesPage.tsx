@@ -104,7 +104,7 @@ export default function RoutinesPage({
       // Undo機能付きSnackbarを表示（5秒）
       showWithAction(
         `「${routineToDelete.name}」を削除しました`,
-        'warning',
+        'info',
         '元に戻す',
         () => handleUndoDelete(id, routineToDelete),
         5000
