@@ -228,3 +228,50 @@ export async function createMission(missionData: InsertMission): Promise<Mission
     throw new Error('ミッションの作成に失敗しました');
   }
 }
+
+// 全ミッション取得（API用）
+export async function getAllMissions(): Promise<Mission[]> {
+  try {
+    const missionList = await db
+      .select()
+      .from(missions)
+      .orderBy(missions.createdAt);
+
+    return missionList;
+  } catch (error) {
+    console.error('Failed to get all missions:', error);
+    throw new Error('ミッション一覧の取得に失敗しました');
+  }
+}
+
+// 難易度別ミッション取得
+export async function getMissionsByDifficulty(difficulty: string): Promise<Mission[]> {
+  try {
+    const missionList = await db
+      .select()
+      .from(missions)
+      .where(eq(missions.difficulty, difficulty))
+      .orderBy(missions.createdAt);
+
+    return missionList;
+  } catch (error) {
+    console.error('Failed to get missions by difficulty:', error);
+    throw new Error('難易度別ミッション取得に失敗しました');
+  }
+}
+
+// タイプ別ミッション取得
+export async function getMissionsByType(type: string): Promise<Mission[]> {
+  try {
+    const missionList = await db
+      .select()
+      .from(missions)
+      .where(eq(missions.type, type))
+      .orderBy(missions.createdAt);
+
+    return missionList;
+  } catch (error) {
+    console.error('Failed to get missions by type:', error);
+    throw new Error('タイプ別ミッション取得に失敗しました');
+  }
+}

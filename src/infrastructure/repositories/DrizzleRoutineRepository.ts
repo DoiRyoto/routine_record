@@ -24,7 +24,10 @@ export class DrizzleRoutineRepository implements IRoutineRepository {
         return null;
       }
 
-      return Routine.fromPersistence(result[0]);
+      return Routine.fromPersistence({
+        ...result[0],
+        recurrenceInterval: result[0].recurrenceInterval ?? 1,
+      });
     } catch (error) {
       throw new Error(`Failed to find routine by id: ${error}`);
     }
@@ -43,7 +46,10 @@ export class DrizzleRoutineRepository implements IRoutineRepository {
         )
         .orderBy(desc(routines.createdAt));
 
-      return result.map(row => Routine.fromPersistence(row));
+      return result.map(row => Routine.fromPersistence({
+        ...row,
+        recurrenceInterval: row.recurrenceInterval ?? 1,
+      }));
     } catch (error) {
       throw new Error(`Failed to find routines by user id: ${error}`);
     }
@@ -62,7 +68,10 @@ export class DrizzleRoutineRepository implements IRoutineRepository {
           )
         );
 
-      return result.map(row => Routine.fromPersistence(row));
+      return result.map(row => Routine.fromPersistence({
+        ...row,
+        recurrenceInterval: row.recurrenceInterval ?? 1,
+      }));
     } catch (error) {
       throw new Error(`Failed to find active routines by user id: ${error}`);
     }
@@ -72,21 +81,28 @@ export class DrizzleRoutineRepository implements IRoutineRepository {
     try {
       const data = routine.toPersistence();
       
+      // Convert domain types to database types
+      const dbData = {
+        ...data,
+        goalType: data.goalType as 'frequency_based' | 'schedule_based',
+        recurrenceType: data.recurrenceType as 'daily' | 'weekly' | 'monthly' | 'custom',
+      };
+      
       await db
         .insert(routines)
-        .values(data)
+        .values(dbData)
         .onConflictDoUpdate({
           target: routines.id,
           set: {
-            name: data.name,
-            description: data.description,
-            category: data.category,
-            goalType: data.goalType,
-            recurrenceType: data.recurrenceType,
-            targetCount: data.targetCount,
-            targetPeriod: data.targetPeriod,
-            recurrenceInterval: data.recurrenceInterval,
-            isActive: data.isActive,
+            name: dbData.name,
+            description: dbData.description,
+            category: dbData.category,
+            goalType: dbData.goalType,
+            recurrenceType: dbData.recurrenceType,
+            targetCount: dbData.targetCount,
+            targetPeriod: dbData.targetPeriod,
+            recurrenceInterval: dbData.recurrenceInterval,
+            isActive: dbData.isActive,
             updatedAt: new Date(),
           },
         });
@@ -142,7 +158,10 @@ export class DrizzleRoutineRepository implements IRoutineRepository {
           )
         );
 
-      return result.map(row => Routine.fromPersistence(row));
+      return result.map(row => Routine.fromPersistence({
+        ...row,
+        recurrenceInterval: row.recurrenceInterval ?? 1,
+      }));
     } catch (error) {
       throw new Error(`Failed to find routines by category: ${error}`);
     }
@@ -163,7 +182,10 @@ export class DrizzleRoutineRepository implements IRoutineRepository {
           )
         );
 
-      return result.map(row => Routine.fromPersistence(row));
+      return result.map(row => Routine.fromPersistence({
+        ...row,
+        recurrenceInterval: row.recurrenceInterval ?? 1,
+      }));
     } catch (error) {
       throw new Error(`Failed to find scheduled routines: ${error}`);
     }
@@ -183,7 +205,10 @@ export class DrizzleRoutineRepository implements IRoutineRepository {
           )
         );
 
-      return result.map(row => Routine.fromPersistence(row));
+      return result.map(row => Routine.fromPersistence({
+        ...row,
+        recurrenceInterval: row.recurrenceInterval ?? 1,
+      }));
     } catch (error) {
       throw new Error(`Failed to find frequency-based routines: ${error}`);
     }

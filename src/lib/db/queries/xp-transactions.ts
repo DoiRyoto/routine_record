@@ -1,4 +1,4 @@
-import { eq, desc, and, gte, lte, sum } from 'drizzle-orm';
+import { eq, desc, and, gte, lte, sum, count } from 'drizzle-orm';
 
 import { db } from '../index';
 import {
@@ -12,17 +12,26 @@ export async function getXPHistory(
   userId: string, 
   limit = 50, 
   offset = 0
-): Promise<XPTransaction[]> {
+): Promise<{ transactions: XPTransaction[]; total: number }> {
   try {
-    const transactions = await db
-      .select()
-      .from(xpTransactions)
-      .where(eq(xpTransactions.userId, userId))
-      .orderBy(desc(xpTransactions.createdAt))
-      .limit(limit)
-      .offset(offset);
+    const [transactions, totalCount] = await Promise.all([
+      db
+        .select()
+        .from(xpTransactions)
+        .where(eq(xpTransactions.userId, userId))
+        .orderBy(desc(xpTransactions.createdAt))
+        .limit(limit)
+        .offset(offset),
+      db
+        .select({ count: count() })
+        .from(xpTransactions)
+        .where(eq(xpTransactions.userId, userId))
+    ]);
 
-    return transactions;
+    return {
+      transactions,
+      total: totalCount[0]?.count || 0
+    };
   } catch (error) {
     console.error('Failed to get XP history:', error);
     throw new Error('XP履歴の取得に失敗しました');
@@ -33,22 +42,40 @@ export async function getXPHistory(
 export async function getXPHistoryByDateRange(
   userId: string,
   startDate: Date,
-  endDate: Date
-): Promise<XPTransaction[]> {
+  endDate: Date,
+  limit = 50,
+  offset = 0,
+  sourceFilter?: string
+): Promise<{ transactions: XPTransaction[]; total: number }> {
   try {
-    const transactions = await db
-      .select()
-      .from(xpTransactions)
-      .where(
-        and(
-          eq(xpTransactions.userId, userId),
-          gte(xpTransactions.createdAt, startDate),
-          lte(xpTransactions.createdAt, endDate)
-        )
-      )
-      .orderBy(desc(xpTransactions.createdAt));
+    const whereConditions = [
+      eq(xpTransactions.userId, userId),
+      gte(xpTransactions.createdAt, startDate),
+      lte(xpTransactions.createdAt, endDate)
+    ];
 
-    return transactions;
+    if (sourceFilter) {
+      whereConditions.push(eq(xpTransactions.sourceType, sourceFilter));
+    }
+
+    const [transactions, totalCount] = await Promise.all([
+      db
+        .select()
+        .from(xpTransactions)
+        .where(and(...whereConditions))
+        .orderBy(desc(xpTransactions.createdAt))
+        .limit(limit)
+        .offset(offset),
+      db
+        .select({ count: count() })
+        .from(xpTransactions)
+        .where(and(...whereConditions))
+    ]);
+
+    return {
+      transactions,
+      total: totalCount[0]?.count || 0
+    };
   } catch (error) {
     console.error('Failed to get XP history by date range:', error);
     throw new Error('期間別XP履歴の取得に失敗しました');
@@ -58,23 +85,39 @@ export async function getXPHistoryByDateRange(
 // ソース別XP履歴取得
 export async function getXPHistoryBySource(
   userId: string,
-  sourceType: 'routine_completion' | 'streak_bonus' | 'mission_completion' | 'challenge_completion' | 'daily_bonus' | 'achievement_unlock',
-  limit = 50
-): Promise<XPTransaction[]> {
+  sourceType: string,
+  limit = 50,
+  offset = 0
+): Promise<{ transactions: XPTransaction[]; total: number }> {
   try {
-    const transactions = await db
-      .select()
-      .from(xpTransactions)
-      .where(
-        and(
-          eq(xpTransactions.userId, userId),
-          eq(xpTransactions.sourceType, sourceType)
+    const [transactions, totalCount] = await Promise.all([
+      db
+        .select()
+        .from(xpTransactions)
+        .where(
+          and(
+            eq(xpTransactions.userId, userId),
+            eq(xpTransactions.sourceType, sourceType)
+          )
         )
-      )
-      .orderBy(desc(xpTransactions.createdAt))
-      .limit(limit);
+        .orderBy(desc(xpTransactions.createdAt))
+        .limit(limit)
+        .offset(offset),
+      db
+        .select({ count: count() })
+        .from(xpTransactions)
+        .where(
+          and(
+            eq(xpTransactions.userId, userId),
+            eq(xpTransactions.sourceType, sourceType)
+          )
+        )
+    ]);
 
-    return transactions;
+    return {
+      transactions,
+      total: totalCount[0]?.count || 0
+    };
   } catch (error) {
     console.error('Failed to get XP history by source:', error);
     throw new Error('ソース別XP履歴の取得に失敗しました');
@@ -156,5 +199,65 @@ export async function getDailyXPStats(
   } catch (error) {
     console.error('Failed to get daily XP stats:', error);
     throw new Error('日別XP統計の取得に失敗しました');
+  }
+}
+
+// XPサマリー取得
+export async function getXPSummary(
+  userId: string,
+  startDate?: Date,
+  endDate?: Date
+): Promise<{
+  totalXP: number;
+  period: string;
+  breakdown: Record<string, number>;
+}> {
+  try {
+    const whereConditions = [eq(xpTransactions.userId, userId)];
+    
+    if (startDate) {
+      whereConditions.push(gte(xpTransactions.createdAt, startDate));
+    }
+    
+    if (endDate) {
+      whereConditions.push(lte(xpTransactions.createdAt, endDate));
+    }
+
+    const transactions = await db
+      .select({
+        amount: xpTransactions.amount,
+        sourceType: xpTransactions.sourceType
+      })
+      .from(xpTransactions)
+      .where(and(...whereConditions));
+
+    // 総XP計算
+    const totalXP = transactions.reduce((sum, t) => sum + t.amount, 0);
+
+    // ソース別集計
+    const breakdown: Record<string, number> = {};
+    transactions.forEach(transaction => {
+      const source = transaction.sourceType;
+      breakdown[source] = (breakdown[source] || 0) + transaction.amount;
+    });
+
+    // 期間文字列構築
+    let period = '全期間';
+    if (startDate && endDate) {
+      period = `${startDate.toISOString().split('T')[0]} to ${endDate.toISOString().split('T')[0]}`;
+    } else if (startDate) {
+      period = `${startDate.toISOString().split('T')[0]} から`;
+    } else if (endDate) {
+      period = `${endDate.toISOString().split('T')[0]} まで`;
+    }
+
+    return {
+      totalXP,
+      period,
+      breakdown
+    };
+  } catch (error) {
+    console.error('Failed to get XP summary:', error);
+    throw new Error('XPサマリーの取得に失敗しました');
   }
 }

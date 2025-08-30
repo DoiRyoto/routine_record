@@ -155,8 +155,10 @@ describe('CreateRoutineUseCase', () => {
 
       // Assert
       expect(result.isFailure).toBe(true);
-      expect(result.error).toBeInstanceOf(Error);
-      expect(result.error.message).toBe('Database connection failed');
+      if (result.isFailure) {
+        expect(result.error).toBeInstanceOf(Error);
+        expect(result.error.message).toBe('Database connection failed');
+      }
     });
 
     it('should handle validation service errors', async () => {
@@ -169,7 +171,9 @@ describe('CreateRoutineUseCase', () => {
 
       // Assert
       expect(result.isFailure).toBe(true);
-      expect(result.error).toBeInstanceOf(BusinessRuleViolationError);
+      if (result.isFailure) {
+        expect(result.error).toBeInstanceOf(BusinessRuleViolationError);
+      }
       expect(mockRoutineRepository.save).not.toHaveBeenCalled();
     });
 

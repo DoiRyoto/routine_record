@@ -38,6 +38,22 @@ export async function getBadgesByCategory(category: string): Promise<Badge[]> {
   }
 }
 
+// レアリティ別バッジ取得
+export async function getBadgesByRarity(rarity: string): Promise<Badge[]> {
+  try {
+    const badgeList = await db
+      .select()
+      .from(badges)
+      .where(eq(badges.rarity, rarity))
+      .orderBy(badges.createdAt);
+
+    return badgeList;
+  } catch (error) {
+    console.error('Failed to get badges by rarity:', error);
+    throw new Error('レアリティ別バッジの取得に失敗しました');
+  }
+}
+
 // バッジ作成
 export async function createBadge(badgeData: InsertBadge): Promise<Badge> {
   try {

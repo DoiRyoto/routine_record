@@ -1,4 +1,8 @@
 export * from './DomainError';
+export * from './ExecutionRecordErrors';
+export * from './CategoryErrors';
+export * from './UserSettingsErrors';
+export * from './GamificationErrors';
 
 // Common result type for use cases and services
 export type Result<T, E = Error> = Success<T> | Failure<E>;

@@ -1,4 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import { NextRequest } from 'next/server';
 
 import { 
   getUserNotifications,
@@ -6,44 +8,105 @@ import {
   markNotificationAsRead,
   markAllNotificationsAsRead,
   deleteNotification,
-  getNotificationsByType
+  getNotificationsByType,
+  getUnreadCount
 } from '@/lib/db/queries/game-notifications';
+import {
+  createSuccessResponse,
+  createErrorResponse,
+  createServerErrorResponse,
+} from '@/lib/routines/responses';
 
+// 認証ユーザー取得のヘルパー関数
+async function getAuthenticatedUser() {
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // The `setAll` method was called from a Server Component.
+          }
+        },
+      },
+    }
+  );
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return null;
+  }
+
+  return user;
+}
+
+// GET: ゲーム通知取得
 export async function GET(request: NextRequest) {
   try {
+    const user = await getAuthenticatedUser();
+    if (!user) {
+      return createErrorResponse('認証が必要です', 401);
+    }
+
+    // URLパラメータの解析
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
-    const unreadOnly = searchParams.get('unreadOnly') === 'true';
-    const notificationType = searchParams.get('notificationType') as 'level_up' | 'badge_unlocked' | 'mission_completed' | 'challenge_completed' | 'streak_milestone' | 'xp_milestone' | null;
-    const limit = parseInt(searchParams.get('limit') || '50');
-    const offset = parseInt(searchParams.get('offset') || '0');
+    const requestedUserId = searchParams.get('userId');
+    const type = searchParams.get('type');
+    const isRead = searchParams.get('isRead');
+    const limitStr = searchParams.get('limit');
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'userIdが必要です' },
-        { status: 400 }
-      );
+    // userIdのバリデーション（他のユーザーの通知にはアクセスできない）
+    if (requestedUserId !== null && requestedUserId !== user.id) {
+      return createErrorResponse('他のユーザーの情報にはアクセスできません', 403);
     }
 
-    if (unreadOnly) {
-      const notifications = await getUnreadNotifications(userId);
-      return NextResponse.json(notifications);
+    // limitのバリデーション
+    const limit = limitStr ? parseInt(limitStr) : 20;
+    if (limitStr && (isNaN(limit) || limit < 1 || limit > 50)) {
+      return createErrorResponse('limit は1から50の間で指定してください', 400);
     }
 
-    if (notificationType) {
-      const notifications = await getNotificationsByType(userId, notificationType, limit);
-      return NextResponse.json(notifications);
+    // typeのバリデーション
+    const validTypes = ['level_up', 'badge_unlocked', 'mission_completed', 'challenge_completed', 'streak_milestone', 'xp_milestone'];
+    if (type && !validTypes.includes(type)) {
+      return createErrorResponse('無効な通知タイプです', 400);
     }
 
-    const notifications = await getUserNotifications(userId, limit, offset);
-    return NextResponse.json(notifications);
+    // 通知取得
+    let notifications;
+    
+    if (type) {
+      notifications = await getNotificationsByType(user.id, type, limit);
+    } else if (isRead === 'false') {
+      notifications = await getUnreadNotifications(user.id);
+    } else {
+      notifications = await getUserNotifications(user.id, limit);
+    }
+
+    // 未読数も取得
+    const unreadCount = await getUnreadCount(user.id);
+
+    return createSuccessResponse({
+      notifications,
+      unreadCount
+    });
 
   } catch (error) {
     console.error('GET /api/game-notifications error:', error);
-    return NextResponse.json(
-      { error: 'ゲーム通知の取得に失敗しました' },
-      { status: 500 }
-    );
+    return createServerErrorResponse();
   }
 }
 

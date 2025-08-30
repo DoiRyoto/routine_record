@@ -1,4 +1,4 @@
-import { and, desc, eq, isNull } from 'drizzle-orm';
+import { and, desc, eq, isNull, like, count, sql } from 'drizzle-orm';
 
 import type { Routine } from '@/lib/db/schema';
 
@@ -57,13 +57,39 @@ function transformRoutine(rawRoutine: {
   };
 }
 
+// ルーチン一覧の取得オプション
+export interface GetRoutinesOptions {
+  category?: string;
+  isActive?: boolean;
+  page?: number;
+  limit?: number;
+}
+
 // ルーチン一覧を取得（削除されていないもののみ）
-export async function getRoutines(userId: string): Promise<Routine[]> {
+export async function getRoutines(userId: string, options: GetRoutinesOptions = {}): Promise<Routine[]> {
+  const { category, isActive, page = 1, limit = 50 } = options;
+  
+  // WHERE条件を構築
+  const conditions = [eq(routines.userId, userId), isNull(routines.deletedAt)];
+  
+  if (category) {
+    conditions.push(eq(routines.category, category));
+  }
+  
+  if (isActive !== undefined) {
+    conditions.push(eq(routines.isActive, isActive));
+  }
+
+  // ページネーション計算
+  const offset = (page - 1) * limit;
+
   const rawRoutines = await db
     .select()
     .from(routines)
-    .where(and(eq(routines.userId, userId), isNull(routines.deletedAt)))
-    .orderBy(desc(routines.createdAt));
+    .where(and(...conditions))
+    .orderBy(desc(routines.createdAt))
+    .limit(limit)
+    .offset(offset);
 
   return rawRoutines.map(transformRoutine);
 }
@@ -72,6 +98,17 @@ export async function getRoutines(userId: string): Promise<Routine[]> {
 export async function getRoutineById(id: string): Promise<Routine | null> {
   const result = await db.select().from(routines).where(eq(routines.id, id)).limit(1);
   return result[0] ? transformRoutine(result[0]) : null;
+}
+
+// ユーザーが指定したルーチンにアクセス可能かチェック
+export async function canUserAccessRoutine(userId: string, routineId: string): Promise<boolean> {
+  const result = await db
+    .select({ id: routines.id })
+    .from(routines)
+    .where(and(eq(routines.id, routineId), eq(routines.userId, userId), isNull(routines.deletedAt)))
+    .limit(1);
+  
+  return result.length > 0;
 }
 
 // ルーチンを作成

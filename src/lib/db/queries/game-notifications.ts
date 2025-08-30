@@ -1,4 +1,4 @@
-import { eq, desc, and } from 'drizzle-orm';
+import { eq, desc, and, count } from 'drizzle-orm';
 
 import { db } from '../index';
 import {
@@ -47,6 +47,26 @@ export async function getUnreadNotifications(userId: string): Promise<GameNotifi
   } catch (error) {
     console.error('Failed to get unread notifications:', error);
     throw new Error('未読通知の取得に失敗しました');
+  }
+}
+
+// 未読通知数取得
+export async function getUnreadCount(userId: string): Promise<number> {
+  try {
+    const [result] = await db
+      .select({ count: count() })
+      .from(gameNotifications)
+      .where(
+        and(
+          eq(gameNotifications.userId, userId),
+          eq(gameNotifications.isRead, false)
+        )
+      );
+
+    return result?.count || 0;
+  } catch (error) {
+    console.error('Failed to get unread count:', error);
+    throw new Error('未読通知数の取得に失敗しました');
   }
 }
 

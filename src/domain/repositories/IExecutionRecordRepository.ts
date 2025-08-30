@@ -6,6 +6,17 @@ export interface IExecutionRecordRepository {
    * IDで実行記録を取得
    */
   findById(id: ExecutionRecordId): Promise<ExecutionRecord | null>;
+  
+  /**
+   * Alternative methods for test compatibility
+   */
+  getById(id: string): Promise<ExecutionRecord | null>;
+  getByUserId(userId: string): Promise<ExecutionRecord[]>;
+  create(executionRecord: any): Promise<ExecutionRecord>;
+  update(id: string, executionRecord: any): Promise<void>;
+  delete(id: string): Promise<void>;
+  getByUserAndDateRange(userId: string, startDate: Date, endDate: Date): Promise<ExecutionRecord[]>;
+  getByUserAndMissionPeriod(userId: string, missionStartDate?: Date): Promise<ExecutionRecord[]>;
 
   /**
    * ユーザーIDで実行記録一覧を取得

@@ -1,7 +1,17 @@
 import type { CatchupPlan, ExecutionRecord, Routine } from '@/lib/db/schema';
+import { CATCHUP_PLAN_CONSTANTS, DifficultyLevel, PeriodType } from '@/domain/constants/CatchupPlanConstants';
+import {
+  calculateRemainingDays,
+  calculateSuggestedDailyTarget,
+  determineDifficultyLevel,
+  generateProgressMessage,
+  suggestOptimalTimeOfDay,
+  calculateWeekdayAdjustments
+} from '@/lib/utils/catchupCalculations';
 
 /**
  * 挽回プランの計算と生成に関するユーティリティ
+ * リファクタリング済み：型安全性の向上と定数の活用
  */
 
 export interface CatchupAnalysis {
@@ -12,13 +22,15 @@ export interface CatchupAnalysis {
   remainingDays: number;
   suggestedDailyTarget: number;
   needsCatchup: boolean;
-  periodType: 'weekly' | 'monthly';
+  periodType: PeriodType;
   periodStart: Date;
   periodEnd: Date;
+  difficultyLevel: DifficultyLevel;
 }
 
 /**
  * 頻度ベースルーティンの進捗を分析し、挽回が必要かどうかを判定
+ * リファクタリング済み：定数の活用と型安全性の向上
  */
 export function analyzeCatchupNeed(
   routine: Routine,
@@ -38,7 +50,7 @@ export function analyzeCatchupNeed(
   if (routine.targetPeriod === 'weekly') {
     periodStart = getWeekStart(now, timezone);
     periodEnd = new Date(periodStart);
-    periodEnd.setDate(periodEnd.getDate() + 6);
+    periodEnd.setDate(periodEnd.getDate() + (CATCHUP_PLAN_CONSTANTS.DAYS_PER_WEEK - 1));
   } else if (routine.targetPeriod === 'monthly') {
     periodStart = getMonthStart(now, timezone);
     periodEnd = new Date(periodStart.getFullYear(), periodStart.getMonth() + 1, 0);
@@ -57,18 +69,20 @@ export function analyzeCatchupNeed(
   ).length;
 
   const targetCount = routine.targetCount;
-  const remainingTarget = Math.max(targetCount - currentProgress, 0);
-  const remainingDays = Math.max(
-    Math.ceil((periodEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
-    1
-  );
+  const remainingTarget = Math.max(targetCount - currentProgress, CATCHUP_PLAN_CONSTANTS.MIN_PROGRESS_VALUE);
+  const remainingDays = calculateRemainingDays(now, periodEnd);
 
   // 1日あたりの推奨実行回数を計算
-  const suggestedDailyTarget = remainingTarget > 0 ? Math.ceil(remainingTarget / remainingDays) : 0;
+  const suggestedDailyTarget = calculateSuggestedDailyTarget(remainingTarget, remainingDays);
+
+  // 難易度レベルを判定
+  const difficultyLevel = determineDifficultyLevel(suggestedDailyTarget);
 
   // 挽回が必要かどうかを判定
   // 残り日数に対して必要な1日あたりの実行回数が通常よりも多い場合
-  const normalDailyTarget = routine.targetPeriod === 'weekly' ? targetCount / 7 : targetCount / 30;
+  const normalDailyTarget = routine.targetPeriod === 'weekly' ? 
+    targetCount / CATCHUP_PLAN_CONSTANTS.DAYS_PER_WEEK : 
+    targetCount / CATCHUP_PLAN_CONSTANTS.DEFAULT_DAYS_PER_MONTH;
   const needsCatchup = suggestedDailyTarget > Math.ceil(normalDailyTarget);
 
   return {
@@ -79,9 +93,10 @@ export function analyzeCatchupNeed(
     remainingDays,
     suggestedDailyTarget,
     needsCatchup,
-    periodType: routine.targetPeriod as 'weekly' | 'monthly',
+    periodType: routine.targetPeriod as PeriodType,
     periodStart,
     periodEnd,
+    difficultyLevel,
   };
 }
 
@@ -100,6 +115,7 @@ export function analyzeAllCatchupNeeds(
 
 /**
  * 挽回プランを生成
+ * リファクタリング済み：型安全性の向上
  */
 export function generateCatchupPlan(analysis: CatchupAnalysis): Omit<CatchupPlan, 'id' | 'userId' | 'createdAt' | 'updatedAt'> {
   return {
@@ -116,12 +132,14 @@ export function generateCatchupPlan(analysis: CatchupAnalysis): Omit<CatchupPlan
 
 /**
  * デイリーミッション提案を生成
+ * リファクタリング済み：定数の活用と可読性の向上
  */
 export function generateDailyMissionSuggestions(catchupAnalyses: CatchupAnalysis[]): string[] {
   const suggestions: string[] = [];
+  const URGENCY_THRESHOLD = 2; // 緊急度の閾値を定数として定義
   
   catchupAnalyses
-    .filter(analysis => analysis.needsCatchup && analysis.remainingTarget > 0)
+    .filter(analysis => analysis.needsCatchup && analysis.remainingTarget > CATCHUP_PLAN_CONSTANTS.MIN_PROGRESS_VALUE)
     .forEach(analysis => {
       const { routine, suggestedDailyTarget, remainingDays, periodType } = analysis;
       
@@ -134,7 +152,7 @@ export function generateDailyMissionSuggestions(catchupAnalyses: CatchupAnalysis
         );
       }
       
-      if (remainingDays <= 2) {
+      if (remainingDays <= URGENCY_THRESHOLD) {
         suggestions.push(`⚠️「${routine.name}」の期限まで残り${remainingDays}日です！`);
       }
     });
@@ -144,13 +162,15 @@ export function generateDailyMissionSuggestions(catchupAnalyses: CatchupAnalysis
 
 /**
  * 週の開始日を取得（月曜日）
+ * リファクタリング済み：定数の活用
  */
 function getWeekStart(date: Date, _timezone?: string): Date {
   const d = new Date(date);
   d.setHours(0, 0, 0, 0);
   
   const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1); // 月曜日を週の開始とする
+  const DAYS_TO_SUBTRACT_FOR_SUNDAY = 6; // 日曜日の場合に戻る日数
+  const diff = d.getDate() - day + (day === 0 ? -DAYS_TO_SUBTRACT_FOR_SUNDAY : 1); // 月曜日を週の開始とする
   d.setDate(diff);
   
   return d;
@@ -168,25 +188,9 @@ function getMonthStart(date: Date, _timezone?: string): Date {
 
 /**
  * 挽回進捗メッセージを生成
+ * リファクタリング済み：定数を活用したヘルパー関数の利用
  */
 export function getCatchupProgressMessage(analysis: CatchupAnalysis): string {
   const { currentProgress, targetCount, remainingTarget, remainingDays, periodType } = analysis;
-  
-  if (remainingTarget === 0) {
-    return `🎉 ${periodType === 'weekly' ? '今週' : '今月'}の目標を達成しました！`;
-  }
-  
-  if (remainingDays === 0) {
-    return `⏰ 期限終了。最終結果: ${currentProgress}/${targetCount}回`;
-  }
-  
-  const progressRate = Math.round((currentProgress / targetCount) * 100);
-  
-  if (progressRate >= 80) {
-    return `👍 順調です！あと${remainingTarget}回で目標達成`;
-  } else if (progressRate >= 50) {
-    return `💪 頑張りましょう！残り${remainingDays}日で${remainingTarget}回`;
-  } else {
-    return `🚨 挽回が必要です！残り${remainingDays}日で${remainingTarget}回`;
-  }
+  return generateProgressMessage(currentProgress, targetCount, remainingTarget, remainingDays, periodType);
 }

@@ -5,50 +5,20 @@ import {
   catchupPlans,
   routines,
   type CatchupPlan,
-  type Routine,
   type InsertCatchupPlan,
 } from '../schema';
+import { CATCHUP_PLAN_CONSTANTS } from '@/domain/constants/CatchupPlanConstants';
+import {
+  CATCHUP_PLAN_WITH_ROUTINE_FIELDS,
+  createUpdateData,
+  type CatchupPlanWithRoutine
+} from '../helpers/catchupPlanSelectors';
 
 // ユーザーの挽回プラン一覧取得
-export async function getUserCatchupPlans(userId: string): Promise<(CatchupPlan & { routine: Routine })[]> {
+export async function getUserCatchupPlans(userId: string): Promise<CatchupPlanWithRoutine[]> {
   try {
     const plans = await db
-      .select({
-        id: catchupPlans.id,
-        routineId: catchupPlans.routineId,
-        userId: catchupPlans.userId,
-        targetPeriodStart: catchupPlans.targetPeriodStart,
-        targetPeriodEnd: catchupPlans.targetPeriodEnd,
-        originalTarget: catchupPlans.originalTarget,
-        currentProgress: catchupPlans.currentProgress,
-        remainingTarget: catchupPlans.remainingTarget,
-        suggestedDailyTarget: catchupPlans.suggestedDailyTarget,
-        isActive: catchupPlans.isActive,
-        createdAt: catchupPlans.createdAt,
-        updatedAt: catchupPlans.updatedAt,
-        routine: {
-          id: routines.id,
-          userId: routines.userId,
-          name: routines.name,
-          description: routines.description,
-          category: routines.category,
-          goalType: routines.goalType,
-          targetCount: routines.targetCount,
-          targetPeriod: routines.targetPeriod,
-          recurrenceType: routines.recurrenceType,
-          recurrenceInterval: routines.recurrenceInterval,
-          monthlyType: routines.monthlyType,
-          dayOfMonth: routines.dayOfMonth,
-          weekOfMonth: routines.weekOfMonth,
-          dayOfWeek: routines.dayOfWeek,
-          daysOfWeek: routines.daysOfWeek,
-          startDate: routines.startDate,
-          createdAt: routines.createdAt,
-          updatedAt: routines.updatedAt,
-          isActive: routines.isActive,
-          deletedAt: routines.deletedAt,
-        }
-      })
+      .select(CATCHUP_PLAN_WITH_ROUTINE_FIELDS)
       .from(catchupPlans)
       .innerJoin(routines, eq(catchupPlans.routineId, routines.id))
       .where(
@@ -62,52 +32,17 @@ export async function getUserCatchupPlans(userId: string): Promise<(CatchupPlan 
     return plans;
   } catch (error) {
     console.error('Failed to get user catchup plans:', error);
-    throw new Error('ユーザー挽回プランの取得に失敗しました');
+    throw new Error(CATCHUP_PLAN_CONSTANTS.ERROR_MESSAGES.USER_PLANS_FETCH_FAILED);
   }
 }
 
 // アクティブな挽回プラン取得
-export async function getActiveCatchupPlans(userId: string): Promise<(CatchupPlan & { routine: Routine })[]> {
+export async function getActiveCatchupPlans(userId: string): Promise<CatchupPlanWithRoutine[]> {
   try {
     const now = new Date();
     
     const plans = await db
-      .select({
-        id: catchupPlans.id,
-        routineId: catchupPlans.routineId,
-        userId: catchupPlans.userId,
-        targetPeriodStart: catchupPlans.targetPeriodStart,
-        targetPeriodEnd: catchupPlans.targetPeriodEnd,
-        originalTarget: catchupPlans.originalTarget,
-        currentProgress: catchupPlans.currentProgress,
-        remainingTarget: catchupPlans.remainingTarget,
-        suggestedDailyTarget: catchupPlans.suggestedDailyTarget,
-        isActive: catchupPlans.isActive,
-        createdAt: catchupPlans.createdAt,
-        updatedAt: catchupPlans.updatedAt,
-        routine: {
-          id: routines.id,
-          userId: routines.userId,
-          name: routines.name,
-          description: routines.description,
-          category: routines.category,
-          goalType: routines.goalType,
-          targetCount: routines.targetCount,
-          targetPeriod: routines.targetPeriod,
-          recurrenceType: routines.recurrenceType,
-          recurrenceInterval: routines.recurrenceInterval,
-          monthlyType: routines.monthlyType,
-          dayOfMonth: routines.dayOfMonth,
-          weekOfMonth: routines.weekOfMonth,
-          dayOfWeek: routines.dayOfWeek,
-          daysOfWeek: routines.daysOfWeek,
-          startDate: routines.startDate,
-          createdAt: routines.createdAt,
-          updatedAt: routines.updatedAt,
-          isActive: routines.isActive,
-          deletedAt: routines.deletedAt,
-        }
-      })
+      .select(CATCHUP_PLAN_WITH_ROUTINE_FIELDS)
       .from(catchupPlans)
       .innerJoin(routines, eq(catchupPlans.routineId, routines.id))
       .where(
@@ -122,7 +57,7 @@ export async function getActiveCatchupPlans(userId: string): Promise<(CatchupPla
     return plans;
   } catch (error) {
     console.error('Failed to get active catchup plans:', error);
-    throw new Error('アクティブな挽回プランの取得に失敗しました');
+    throw new Error(CATCHUP_PLAN_CONSTANTS.ERROR_MESSAGES.ACTIVE_PLANS_FETCH_FAILED);
   }
 }
 
@@ -137,7 +72,7 @@ export async function createCatchupPlan(planData: InsertCatchupPlan): Promise<Ca
     return newPlan;
   } catch (error) {
     console.error('Failed to create catchup plan:', error);
-    throw new Error('挽回プランの作成に失敗しました');
+    throw new Error(CATCHUP_PLAN_CONSTANTS.ERROR_MESSAGES.PLAN_CREATION_FAILED);
   }
 }
 
@@ -150,10 +85,7 @@ export async function updateCatchupPlan(
   try {
     const [updatedPlan] = await db
       .update(catchupPlans)
-      .set({
-        ...updates,
-        updatedAt: new Date()
-      })
+      .set(createUpdateData(updates))
       .where(
         and(
           eq(catchupPlans.id, planId),
@@ -163,7 +95,7 @@ export async function updateCatchupPlan(
       .returning();
 
     if (!updatedPlan) {
-      throw new Error('挽回プランが見つかりません');
+      throw new Error(CATCHUP_PLAN_CONSTANTS.ERROR_MESSAGES.PLAN_NOT_FOUND);
     }
 
     return updatedPlan;
@@ -172,7 +104,7 @@ export async function updateCatchupPlan(
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error('挽回プランの更新に失敗しました');
+    throw new Error(CATCHUP_PLAN_CONSTANTS.ERROR_MESSAGES.PLAN_UPDATE_FAILED);
   }
 }
 
@@ -196,28 +128,30 @@ export async function updateCatchupPlanProgress(
       .limit(1);
 
     if (!existingPlan) {
-      throw new Error('挽回プランが見つかりません');
+      throw new Error(CATCHUP_PLAN_CONSTANTS.ERROR_MESSAGES.PLAN_NOT_FOUND);
     }
 
     // 残り目標を再計算
-    const remainingTarget = Math.max(0, existingPlan.originalTarget - currentProgress);
+    const remainingTarget = Math.max(CATCHUP_PLAN_CONSTANTS.MIN_PROGRESS_VALUE, existingPlan.originalTarget - currentProgress);
     
     // 残り日数を計算
     const now = new Date();
     const endDate = new Date(existingPlan.targetPeriodEnd);
-    const remainingDays = Math.max(1, Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
+    const remainingDays = Math.max(
+      CATCHUP_PLAN_CONSTANTS.MIN_REMAINING_DAYS, 
+      Math.ceil((endDate.getTime() - now.getTime()) / CATCHUP_PLAN_CONSTANTS.MILLISECONDS_PER_DAY)
+    );
     
     // 1日あたりの推奨目標を再計算
     const suggestedDailyTarget = Math.ceil(remainingTarget / remainingDays);
 
     const [updatedPlan] = await db
       .update(catchupPlans)
-      .set({
+      .set(createUpdateData({
         currentProgress,
         remainingTarget,
-        suggestedDailyTarget,
-        updatedAt: new Date()
-      })
+        suggestedDailyTarget
+      }))
       .where(
         and(
           eq(catchupPlans.id, planId),
@@ -232,7 +166,7 @@ export async function updateCatchupPlanProgress(
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error('挽回プラン進捗の更新に失敗しました');
+    throw new Error(CATCHUP_PLAN_CONSTANTS.ERROR_MESSAGES.PROGRESS_UPDATE_FAILED);
   }
 }
 
@@ -241,10 +175,7 @@ export async function deactivateCatchupPlan(planId: string, userId: string): Pro
   try {
     const result = await db
       .update(catchupPlans)
-      .set({
-        isActive: false,
-        updatedAt: new Date()
-      })
+      .set(createUpdateData({ isActive: false }))
       .where(
         and(
           eq(catchupPlans.id, planId),
@@ -253,14 +184,14 @@ export async function deactivateCatchupPlan(planId: string, userId: string): Pro
       );
 
     if (result.count === 0) {
-      throw new Error('挽回プランが見つかりません');
+      throw new Error(CATCHUP_PLAN_CONSTANTS.ERROR_MESSAGES.PLAN_NOT_FOUND);
     }
   } catch (error) {
     console.error('Failed to deactivate catchup plan:', error);
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error('挽回プランの非アクティブ化に失敗しました');
+    throw new Error(CATCHUP_PLAN_CONSTANTS.ERROR_MESSAGES.PLAN_DEACTIVATION_FAILED);
   }
 }
 
@@ -286,6 +217,46 @@ export async function getCatchupPlanByRoutine(
     return plan || null;
   } catch (error) {
     console.error('Failed to get catchup plan by routine:', error);
-    throw new Error('ルーティン別挽回プランの取得に失敗しました');
+    throw new Error(CATCHUP_PLAN_CONSTANTS.ERROR_MESSAGES.ROUTINE_PLAN_FETCH_FAILED);
+  }
+}
+
+// 挽回プラン削除（物理削除）
+export async function deleteCatchupPlan(planId: string, userId: string): Promise<CatchupPlan | null> {
+  try {
+    // First check if plan exists and belongs to user
+    const [existingPlan] = await db
+      .select()
+      .from(catchupPlans)
+      .where(
+        and(
+          eq(catchupPlans.id, planId),
+          eq(catchupPlans.userId, userId)
+        )
+      )
+      .limit(1);
+
+    if (!existingPlan) {
+      return null;
+    }
+
+    // Delete the plan
+    const [deletedPlan] = await db
+      .delete(catchupPlans)
+      .where(
+        and(
+          eq(catchupPlans.id, planId),
+          eq(catchupPlans.userId, userId)
+        )
+      )
+      .returning();
+
+    return deletedPlan || null;
+  } catch (error) {
+    console.error('Failed to delete catchup plan:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(CATCHUP_PLAN_CONSTANTS.ERROR_MESSAGES.PLAN_DELETION_FAILED);
   }
 }

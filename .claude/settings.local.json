@@ -2,6 +2,7 @@
   "cleanupPeriodDays": 60,
   "permissions": {
     "allow": [
+      "Bash(echo:*)",
       "Bash(npm:*)",
       "Bash(git:*)",
       "Bash(cargo:*)",
@@ -23,11 +24,25 @@
       "Bash(curl:*)",
       "Bash(rg:*)",
       "Bash(tree:*)",
-      "Read(//**)"
+      "Read(//**)",
+      "Bash(node:*)",
+      "Bash(npx tsx:*)",
+      "Bash(timeout 10s npm test src/app/api/user-profiles/__tests__/user-profiles.test.ts)",
+      "Bash(npx jest:*)",
+      "Bash(npx storybook:*)",
+      "Bash(grep:*)",
+      "mcp__serena__check_onboarding_performed",
+      "mcp__serena__onboarding",
+      "mcp__serena__list_dir",
+      "mcp__serena__find_file",
+      "mcp__serena__get_symbols_overview",
+      "mcp__serena__find_symbol",
+      "mcp__serena__write_memory",
+      "mcp__serena__search_for_pattern",
+      "mcp__ide__getDiagnostics",
+      "mcp__serena__read_memory"
     ],
     "defaultMode": "acceptEdits",
-    "additionalDirectories": [
-      "C:\\c\\Users\\d1210\\Desktop"
-    ]
+    "additionalDirectories": ["C:\\c\\Users\\d1210\\Desktop"]
   }
 }

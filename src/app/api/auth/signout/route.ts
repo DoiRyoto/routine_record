@@ -7,7 +7,10 @@ export async function POST(_request: NextRequest) {
     const cookieStore = await cookies();
 
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      return NextResponse.json({ error: 'Supabase configuration is missing' }, { status: 500 });
+      return NextResponse.json({ 
+        success: false,
+        error: '一時的なエラーが発生しました。しばらく経ってから再度お試しください' 
+      }, { status: 500 });
     }
 
     const supabase = createServerClient(
@@ -20,9 +23,18 @@ export async function POST(_request: NextRequest) {
           },
           setAll(cookiesToSet) {
             try {
-              cookiesToSet.forEach(({ name, value, options }) =>
-                cookieStore.set(name, value, options)
-              );
+              cookiesToSet.forEach(({ name, value, options }) => {
+                // Cookie をクリア
+                const clearOptions = {
+                  ...options,
+                  httpOnly: true,
+                  secure: process.env.NODE_ENV === 'production',
+                  sameSite: 'lax' as const,
+                  path: '/',
+                  maxAge: 0, // Cookie をクリア
+                };
+                cookieStore.set(name, '', clearOptions);
+              });
             } catch {
               // The `setAll` method was called from a Server Component.
             }
@@ -36,9 +48,13 @@ export async function POST(_request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'サインアウトが完了しました',
+      message: 'サインアウトしました',
     });
-  } catch {
-    return NextResponse.json({ error: 'サインアウトに失敗しました' }, { status: 500 });
+  } catch (error) {
+    console.error('Signout error:', error);
+    return NextResponse.json({ 
+      success: false,
+      error: '一時的なエラーが発生しました。しばらく経ってから再度お試しください' 
+    }, { status: 500 });
   }
 }

@@ -289,3 +289,31 @@ export async function updateUserStats(
     throw new Error('ユーザー統計の更新に失敗しました');
   }
 }
+
+// ユーザープロフィールを詳細情報と一緒に取得
+export async function getUserProfileWithStats(userId: string): Promise<{
+  userProfile: UserProfile;
+  badges: (UserBadge & { badge: Badge })[];
+  recentXPHistory: XPTransaction[];
+} | null> {
+  try {
+    const [profile, userBadgeList, xpHistory] = await Promise.all([
+      getUserProfile(userId),
+      getUserBadges(userId),
+      getXPHistory(userId, 10) // 最新10件のXP履歴
+    ]);
+
+    if (!profile) {
+      return null;
+    }
+
+    return {
+      userProfile: profile,
+      badges: userBadgeList,
+      recentXPHistory: xpHistory
+    };
+  } catch (error) {
+    console.error('Failed to get user profile with stats:', error);
+    throw new Error('ユーザープロフィール詳細の取得に失敗しました');
+  }
+}

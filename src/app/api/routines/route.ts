@@ -2,114 +2,184 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { createRoutine, getRoutines } from '@/lib/db/queries/routines';
-import { getServerErrorMessage } from '@/utils/errorHandler';
+import { createRoutine, getRoutines, type GetRoutinesOptions } from '@/lib/db/queries/routines';
+import { 
+  validateRoutineInput, 
+  sanitizeRoutineInput, 
+  type RoutineInput 
+} from '@/lib/routines/validation';
+import {
+  createSuccessResponse,
+  createAuthErrorResponse,
+  createValidationErrorResponse,
+  createServerErrorResponse,
+} from '@/lib/routines/responses';
+import { logRoutineError, logRoutineSuccess, logRoutinePerformance } from '@/lib/routines/logging';
+
+// 認証ユーザー取得のヘルパー関数
+async function getAuthenticatedUser() {
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // The `setAll` method was called from a Server Component.
+          }
+        },
+      },
+    }
+  );
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return null;
+  }
+
+  return user;
+}
 
 // GET: ルーチン一覧取得
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
+  const startTime = Date.now();
+  let userId: string | undefined;
+
   try {
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll();
-          },
-          setAll(cookiesToSet) {
-            try {
-              cookiesToSet.forEach(({ name, value, options }) =>
-                cookieStore.set(name, value, options)
-              );
-            } catch {
-              // The `setAll` method was called from a Server Component.
-            }
-          },
-        },
-      }
-    );
-
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: '認証が必要です' }, { status: 401 });
+    const user = await getAuthenticatedUser();
+    if (!user) {
+      logRoutineError(
+        { action: 'GET_ROUTINES', timestamp: new Date() },
+        'Unauthenticated access attempt'
+      );
+      return createAuthErrorResponse();
     }
 
-    const routines = await getRoutines(user.id);
+    userId = user.id;
 
-    return NextResponse.json({
-      success: true,
-      data: routines,
-    });
-  } catch {
-    return NextResponse.json({ error: getServerErrorMessage() }, { status: 500 });
+    // URLパラメータの解析
+    const { searchParams } = new URL(request.url);
+    const options: GetRoutinesOptions = {
+      category: searchParams.get('category') || undefined,
+      isActive: searchParams.get('isActive') ? searchParams.get('isActive') === 'true' : undefined,
+      page: parseInt(searchParams.get('page') || '1'),
+      limit: Math.min(parseInt(searchParams.get('limit') || '50'), 100), // 最大100件制限
+    };
+
+    const routines = await getRoutines(user.id, options);
+
+    const duration = Date.now() - startTime;
+    logRoutinePerformance(
+      { userId: user.id, action: 'GET_ROUTINES' },
+      'get_routines',
+      duration
+    );
+
+    logRoutineSuccess(
+      { userId: user.id, action: 'GET_ROUTINES' },
+      `Retrieved ${routines.length} routines`
+    );
+
+    return createSuccessResponse(routines);
+  } catch (error) {
+    const duration = Date.now() - startTime;
+    logRoutineError(
+      { 
+        userId, 
+        action: 'GET_ROUTINES', 
+        error: error instanceof Error ? error : new Error(String(error)),
+        timestamp: new Date()
+      },
+      'Failed to retrieve routines'
+    );
+    return createServerErrorResponse();
   }
 }
 
 // POST: ルーチン作成
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+  let userId: string | undefined;
+  let requestData: any;
+
   try {
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll();
-          },
-          setAll(cookiesToSet) {
-            try {
-              cookiesToSet.forEach(({ name, value, options }) =>
-                cookieStore.set(name, value, options)
-              );
-            } catch {
-              // The `setAll` method was called from a Server Component.
-            }
-          },
-        },
-      }
-    );
-
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: '認証が必要です' }, { status: 401 });
+    const user = await getAuthenticatedUser();
+    if (!user) {
+      logRoutineError(
+        { action: 'CREATE_ROUTINE', timestamp: new Date() },
+        'Unauthenticated routine creation attempt'
+      );
+      return createAuthErrorResponse();
     }
 
-    const routineData = await request.json();
-    const { name, description, category, goalType, targetCount, targetPeriod, recurrenceType } = routineData;
+    userId = user.id;
+    requestData = await request.json();
+
+    // 入力値のサニタイズ
+    const sanitizedData = sanitizeRoutineInput(requestData);
 
     // バリデーション
-    if (!name || !category || !goalType || !recurrenceType) {
-      return NextResponse.json({ error: '必須項目が不足しています' }, { status: 400 });
+    const validationResult = validateRoutineInput(sanitizedData);
+    if (!validationResult.isValid) {
+      logRoutineError(
+        { 
+          userId: user.id, 
+          action: 'CREATE_ROUTINE',
+          requestData: sanitizedData,
+          timestamp: new Date()
+        },
+        `Validation failed: ${validationResult.error}`
+      );
+      return createValidationErrorResponse(validationResult.error!);
     }
 
-    // 頻度ベースの場合は targetCount と targetPeriod が必要
-    if (goalType === 'frequency_based' && (!targetCount || !targetPeriod)) {
-      return NextResponse.json({ error: '頻度ベースミッションには目標回数と期間が必要です' }, { status: 400 });
-    }
-
+    // ルーチン作成
     const newRoutine = await createRoutine({
-      ...routineData,
+      ...sanitizedData,
       userId: user.id,
-      description: description || null,
-      targetCount: targetCount || null,
     });
 
-    return NextResponse.json({
-      success: true,
-      message: 'ルーチンが作成されました',
-      data: newRoutine,
-    });
-  } catch {
-    return NextResponse.json({ error: getServerErrorMessage() }, { status: 500 });
+    const duration = Date.now() - startTime;
+    logRoutinePerformance(
+      { userId: user.id, routineId: newRoutine.id, action: 'CREATE_ROUTINE' },
+      'create_routine',
+      duration
+    );
+
+    logRoutineSuccess(
+      { userId: user.id, routineId: newRoutine.id, action: 'CREATE_ROUTINE' },
+      `Routine created: ${newRoutine.name}`
+    );
+
+    return createSuccessResponse(
+      { routine: newRoutine },
+      'ルーチンが作成されました',
+      201
+    );
+  } catch (error) {
+    const duration = Date.now() - startTime;
+    logRoutineError(
+      { 
+        userId,
+        action: 'CREATE_ROUTINE',
+        requestData,
+        error: error instanceof Error ? error : new Error(String(error)),
+        timestamp: new Date()
+      },
+      'Failed to create routine'
+    );
+    return createServerErrorResponse();
   }
 }

@@ -1,4 +1,9 @@
 import { ExecutionRecordId, UserId, RoutineId } from '../valueObjects';
+import { 
+  InvalidExecutionDateError,
+  InvalidDurationError,
+  MemoTooLongError
+} from '../../shared/types/ExecutionRecordErrors';
 
 export class ExecutionRecord {
   constructor(
@@ -133,6 +138,28 @@ export class ExecutionRecord {
 
   public hasMemo(): boolean {
     return this.memo !== null && this.memo.trim() !== '';
+  }
+
+  // 静的バリデーションメソッド
+  public static validateExecutionData(
+    executedAt: Date,
+    duration?: number | null,
+    memo?: string | null
+  ): void {
+    // 実行日時の未来チェック
+    if (executedAt > new Date()) {
+      throw new InvalidExecutionDateError();
+    }
+
+    // 実行時間のバリデーション
+    if (duration !== undefined && duration !== null && duration <= 0) {
+      throw new InvalidDurationError();
+    }
+
+    // メモの文字数制限
+    if (memo !== undefined && memo !== null && memo.length > 500) {
+      throw new MemoTooLongError();
+    }
   }
 
   // 永続化用メソッド

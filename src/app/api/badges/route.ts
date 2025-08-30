@@ -1,32 +1,64 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 
 import { 
   getAllBadges, 
   getBadgesByCategory,
+  getBadgesByRarity,
   createBadge,
   updateBadge,
   deleteBadge 
 } from '@/lib/db/queries/badges';
+import {
+  createSuccessResponse,
+  createErrorResponse,
+  createServerErrorResponse,
+} from '@/lib/routines/responses';
+import { validateBadgeQuery } from '@/lib/validation/common';
+import { sortBadges } from '@/lib/utils/sorting';
+import { paginateArray } from '@/lib/utils/pagination';
 
+// GET: Public badges API - no authentication required
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const category = searchParams.get('category');
+    
+    // Validate query parameters using consolidated utility
+    const { params, errors } = validateBadgeQuery(searchParams);
+    
+    if (errors.length > 0) {
+      return createErrorResponse(errors[0].message, 400);
+    }
+
+    const { category, rarity, sortBy, sortOrder, pagination } = params;
 
     let badges;
+    
+    // Query data based on filters
     if (category) {
       badges = await getBadgesByCategory(category);
+    } else if (rarity) {
+      badges = await getBadgesByRarity(rarity);
     } else {
       badges = await getAllBadges();
     }
 
-    return NextResponse.json(badges);
+    // Apply sorting using consolidated utility
+    if (sortBy) {
+      badges = sortBadges(badges, sortBy, sortOrder);
+    }
+
+    // Apply pagination using consolidated utility
+    const result = paginateArray(badges, pagination.page, pagination.limit);
+
+    return createSuccessResponse({
+      badges: result.data,
+      pagination: result.pagination
+    });
   } catch (error) {
     console.error('GET /api/badges error:', error);
-    return NextResponse.json(
-      { error: 'バッジの取得に失敗しました' },
-      { status: 500 }
-    );
+    console.error('Error details:', error instanceof Error ? error.message : String(error));
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace');
+    return createServerErrorResponse();
   }
 }
 

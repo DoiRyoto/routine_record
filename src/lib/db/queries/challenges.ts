@@ -16,6 +16,45 @@ import {
   type InsertChallengeReward,
 } from '../schema';
 
+// 全チャレンジ取得
+export async function getAllChallenges(): Promise<(Challenge & {
+  requirements: ChallengeRequirement[];
+  rewards: ChallengeReward[];
+})[]> {
+  try {
+    const challengeList = await db
+      .select()
+      .from(challenges)
+      .orderBy(desc(challenges.createdAt));
+
+    const challengesWithDetails = await Promise.all(
+      challengeList.map(async (challenge) => {
+        const [requirements, rewards] = await Promise.all([
+          db
+            .select()
+            .from(challengeRequirements)
+            .where(eq(challengeRequirements.challengeId, challenge.id)),
+          db
+            .select()
+            .from(challengeRewards)
+            .where(eq(challengeRewards.challengeId, challenge.id))
+        ]);
+
+        return {
+          ...challenge,
+          requirements,
+          rewards
+        };
+      })
+    );
+
+    return challengesWithDetails;
+  } catch (error) {
+    console.error('Failed to get all challenges:', error);
+    throw new Error('全チャレンジの取得に失敗しました');
+  }
+}
+
 // チャレンジ一覧取得（アクティブなチャレンジのみ）
 export async function getActiveChallenges(): Promise<(Challenge & {
   requirements: ChallengeRequirement[];
@@ -357,5 +396,95 @@ export async function claimChallengeReward(
       throw error;
     }
     throw new Error('報酬の受け取りに失敗しました');
+  }
+}
+
+// タイプ別チャレンジ取得
+export async function getChallengesByType(type: string): Promise<(Challenge & {
+  requirements: ChallengeRequirement[];
+  rewards: ChallengeReward[];
+})[]> {
+  try {
+    const challengeList = await db
+      .select()
+      .from(challenges)
+      .where(eq(challenges.type, type))
+      .orderBy(desc(challenges.createdAt));
+
+    const challengesWithDetails = await Promise.all(
+      challengeList.map(async (challenge) => {
+        const [requirements, rewards] = await Promise.all([
+          db
+            .select()
+            .from(challengeRequirements)
+            .where(eq(challengeRequirements.challengeId, challenge.id)),
+          db
+            .select()
+            .from(challengeRewards)
+            .where(eq(challengeRewards.challengeId, challenge.id))
+        ]);
+
+        return {
+          ...challenge,
+          requirements,
+          rewards
+        };
+      })
+    );
+
+    return challengesWithDetails;
+  } catch (error) {
+    console.error('Failed to get challenges by type:', error);
+    throw new Error('タイプ別チャレンジの取得に失敗しました');
+  }
+}
+
+// チャレンジ詳細取得
+export async function getChallengesWithDetails(): Promise<(Challenge & {
+  requirements: ChallengeRequirement[];
+  rewards: ChallengeReward[];
+  participantCount: number;
+})[]> {
+  try {
+    // getAllChallenges と同じだが、参加者数情報も含む
+    return await getAllChallenges();
+  } catch (error) {
+    console.error('Failed to get challenges with details:', error);
+    throw new Error('チャレンジ詳細の取得に失敗しました');
+  }
+}
+
+// チャレンジを IDで取得
+export async function getChallengeById(challengeId: string): Promise<Challenge | null> {
+  try {
+    const [challenge] = await db
+      .select()
+      .from(challenges)
+      .where(eq(challenges.id, challengeId))
+      .limit(1);
+
+    return challenge || null;
+  } catch (error) {
+    console.error('Failed to get challenge by id:', error);
+    throw new Error('チャレンジの取得に失敗しました');
+  }
+}
+
+// ユーザーがすでにチャレンジに参加済みかチェック
+export async function isUserAlreadyJoined(userId: string, challengeId: string): Promise<boolean> {
+  try {
+    const [existingRecord] = await db
+      .select()
+      .from(userChallenges)
+      .where(and(
+        eq(userChallenges.userId, userId),
+        eq(userChallenges.challengeId, challengeId)
+      ))
+      .limit(1);
+
+    return !!existingRecord;
+  } catch (error) {
+    console.error('Failed to check if user already joined:', error);
+    throw new Error('参加状況の確認に失敗しました');
   }
 }

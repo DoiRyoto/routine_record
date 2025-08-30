@@ -1,152 +1,69 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 
-// import { getStreakData } from '@/lib/db/queries/gamification'; // Removed non-existent module
 import { 
   getUserProfile, 
-  createUserProfile, 
-  updateUserProfile,
-  getUserBadges,
-  addXP,
-  updateStreak,
-  updateUserStats
+  getUserProfileWithStats 
 } from '@/lib/db/queries/user-profiles';
+import {
+  createSuccessResponse,
+  createErrorResponse,
+  createServerErrorResponse,
+} from '@/lib/routines/responses';
+import { requireAuth, validateUserAccess } from '@/lib/auth/middleware';
+import { validateBoolean } from '@/lib/validation/common';
 
+// GET: ユーザープロフィール取得
 export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
-    const includeDetails = searchParams.get('includeDetails') === 'true';
+  return requireAuth(request, async (authData) => {
+    try {
+      const { user } = authData;
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'userIdが必要です' },
-        { status: 400 }
-      );
-    }
+      // URLパラメータの解析
+      const { searchParams } = new URL(request.url);
+      const requestedUserId = searchParams.get('userId');
+      const includeDetails = searchParams.get('includeDetails');
 
-    const userProfile = await getUserProfile(userId);
-    
-    if (!userProfile) {
-      return NextResponse.json(
-        { error: 'ユーザープロフィールが見つかりません' },
-        { status: 404 }
-      );
-    }
+      // userIdのバリデーション
+      const userAccessError = validateUserAccess(requestedUserId, user.id);
+      if (userAccessError) {
+        return createErrorResponse(userAccessError, 
+          userAccessError.includes('他のユーザー') ? 403 : 400);
+      }
 
-    if (includeDetails) {
-      const badges = await getUserBadges(userId);
-      // const streakData = await getStreakData(userId); // Temporarily removed
+      // includeDetailsのバリデーション
+      const includeDetailsError = validateBoolean(includeDetails, 'includeDetails');
+      if (includeDetailsError) {
+        return createErrorResponse(includeDetailsError.message, 400);
+      }
 
-      return NextResponse.json({
-        success: true,
-        data: {
-          ...userProfile,
-          badges
-        },
-        // streakData // Temporarily removed
+      // 詳細データ取得
+      if (includeDetails === 'true') {
+        const profileWithStats = await getUserProfileWithStats(user.id);
+        
+        if (!profileWithStats) {
+          return createErrorResponse('ユーザープロフィールが見つかりません', 404);
+        }
+
+        return createSuccessResponse({
+          userProfile: profileWithStats.userProfile,
+          badges: profileWithStats.badges,
+          recentXPHistory: profileWithStats.recentXPHistory
+        });
+      }
+
+      // 基本プロフィール取得
+      const userProfile = await getUserProfile(user.id);
+      
+      if (!userProfile) {
+        return createErrorResponse('ユーザープロフィールが見つかりません', 404);
+      }
+
+      return createSuccessResponse({
+        userProfile
       });
+    } catch (error) {
+      console.error('GET /api/user-profiles error:', error);
+      return createServerErrorResponse();
     }
-
-    return NextResponse.json({
-      success: true,
-      data: userProfile
-    });
-  } catch (error) {
-    console.error('GET /api/user-profiles error:', error);
-    return NextResponse.json(
-      { error: 'ユーザープロフィールの取得に失敗しました' },
-      { status: 500 }
-    );
-  }
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { action, userId, ...data } = body;
-
-    switch (action) {
-      case 'create':
-        const newProfile = await createUserProfile({
-          userId,
-          level: 1,
-          totalXP: 0,
-          currentXP: 0,
-          nextLevelXP: 100,
-          streak: 0,
-          longestStreak: 0,
-          totalRoutines: 0,
-          totalExecutions: 0,
-          ...data
-        });
-        return NextResponse.json({
-          success: true,
-          data: newProfile
-        });
-
-      case 'update':
-        const updatedProfile = await updateUserProfile(userId, data);
-        return NextResponse.json({
-          success: true,
-          data: updatedProfile
-        });
-
-      case 'addXP':
-        const { amount, reason, sourceType, sourceId } = data;
-        if (!amount || !reason || !sourceType) {
-          return NextResponse.json(
-            { error: 'amount, reason, sourceTypeが必要です' },
-            { status: 400 }
-          );
-        }
-
-        const xpResult = await addXP(userId, amount, reason, sourceType, sourceId);
-        return NextResponse.json({
-          success: true,
-          data: xpResult
-        });
-
-      case 'updateStreak':
-        const { streak } = data;
-        if (streak === undefined) {
-          return NextResponse.json(
-            { error: 'streakが必要です' },
-            { status: 400 }
-          );
-        }
-
-        const updatedStreakProfile = await updateStreak(userId, streak);
-        return NextResponse.json({
-          success: true,
-          data: updatedStreakProfile
-        });
-
-      case 'updateStats':
-        const statsProfile = await updateUserStats(userId, data);
-        return NextResponse.json({
-          success: true,
-          data: statsProfile
-        });
-
-      default:
-        return NextResponse.json(
-          { error: '不正なアクションです' },
-          { status: 400 }
-        );
-    }
-  } catch (error) {
-    console.error('POST /api/user-profiles error:', error);
-    
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: 'ユーザープロフィールの処理に失敗しました' },
-      { status: 500 }
-    );
-  }
+  });
 }

@@ -6,8 +6,29 @@ import { db } from '@/lib/db';
 import { users, userSettings, userProfiles, categories, gameNotifications } from '@/lib/db/schema';
 import { supabaseAdmin } from '@/lib/supabase/server';
 
+// バリデーション関数
+function validateEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+function validatePassword(password: string): boolean {
+  return password && password.length >= 8;
+}
+
+function sanitizeInput(input: string): string {
+  return input.replace(/[<>]/g, '');
+}
+
 export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
+
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return NextResponse.json({ 
+      success: false,
+      error: '一時的なエラーが発生しました。しばらく経ってから再度お試しください' 
+    }, { status: 500 });
+  }
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,9 +40,16 @@ export async function POST(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
+            cookiesToSet.forEach(({ name, value, options }) => {
+              const secureOptions = {
+                ...options,
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax' as const,
+                path: '/',
+              };
+              cookieStore.set(name, value, secureOptions);
+            });
           } catch {
             // The `setAll` method was called from a Server Component.
             // This can be ignored if you have middleware refreshing
@@ -35,42 +63,66 @@ export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
 
+    // 入力値のサニタイズ
+    const sanitizedEmail = email ? sanitizeInput(email.trim()) : '';
+    const sanitizedPassword = password ? sanitizeInput(password) : '';
+
     // バリデーション
-    if (!email || !password) {
-      return NextResponse.json({ error: 'メールアドレスとパスワードが必要です' }, { status: 400 });
+    if (!sanitizedEmail) {
+      return NextResponse.json({ 
+        success: false,
+        error: '入力内容に誤りがあります: emailが必要です' 
+      }, { status: 400 });
     }
 
-    if (password.length < 6) {
-      return NextResponse.json(
-        { error: 'パスワードは6文字以上で入力してください' },
-        { status: 400 }
-      );
+    if (!validateEmail(sanitizedEmail)) {
+      return NextResponse.json({ 
+        success: false,
+        error: '入力内容に誤りがあります: email形式が正しくありません' 
+      }, { status: 400 });
+    }
+
+    if (!sanitizedPassword) {
+      return NextResponse.json({ 
+        success: false,
+        error: '入力内容に誤りがあります: passwordが必要です' 
+      }, { status: 400 });
+    }
+
+    if (!validatePassword(sanitizedPassword)) {
+      return NextResponse.json({ 
+        success: false,
+        error: '入力内容に誤りがあります: passwordは8文字以上である必要があります' 
+      }, { status: 400 });
     }
 
     // Supabase Authでユーザー作成
     const { data, error } = await supabaseAdmin.auth.admin.createUser({
-      email,
-      password,
+      email: sanitizedEmail,
+      password: sanitizedPassword,
       email_confirm: true, // 開発環境では自動確認
     });
 
     if (error) {
       // ユーザー向けには安全なエラーメッセージのみ返す
-      let userMessage = 'ユーザー登録に失敗しました';
-
       if (error.message?.includes('already registered')) {
-        userMessage = 'このメールアドレスは既に登録されています';
-      } else if (error.message?.includes('email')) {
-        userMessage = 'メールアドレスの形式が正しくありません';
-      } else if (error.message?.includes('password')) {
-        userMessage = 'パスワードの形式が正しくありません';
+        return NextResponse.json({ 
+          success: false,
+          error: 'このメールアドレスは既に登録されています' 
+        }, { status: 409 });
       }
-
-      return NextResponse.json({ error: userMessage }, { status: 400 });
+      
+      return NextResponse.json({ 
+        success: false,
+        error: '一時的なエラーが発生しました。しばらく経ってから再度お試しください' 
+      }, { status: 500 });
     }
 
     if (!data.user) {
-      return NextResponse.json({ error: 'ユーザー作成に失敗しました' }, { status: 500 });
+      return NextResponse.json({ 
+        success: false,
+        error: '一時的なエラーが発生しました。しばらく経ってから再度お試しください' 
+      }, { status: 500 });
     }
 
     // データベースにユーザー情報と設定の初期データを作成
@@ -156,36 +208,21 @@ export async function POST(request: NextRequest) {
         // クリーンアップに失敗
       }
 
-      return NextResponse.json({ error: 'ユーザー情報の作成に失敗しました' }, { status: 500 });
-    }
-
-    // ユーザー作成成功後、自動的にサインインしてセッションを開始
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (signInError) {
-      // サインインに失敗してもユーザー作成は成功しているので、成功として返す
-      return NextResponse.json({
-        success: true,
-        message: 'ユーザー登録が完了しました。サインインページでログインしてください。',
-        user: {
-          id: data.user.id,
-          email: data.user.email,
-        },
-      });
+      return NextResponse.json({ 
+        success: false,
+        error: '一時的なエラーが発生しました。しばらく経ってから再度お試しください' 
+      }, { status: 500 });
     }
 
     return NextResponse.json({
       success: true,
-      message: 'ユーザー登録が完了しました',
-      user: {
-        id: data.user.id,
-        email: data.user.email,
-      },
-    });
-  } catch {
-    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
+      message: 'アカウントが作成されました。確認メールをご確認ください。',
+    }, { status: 201 });
+  } catch (error) {
+    console.error('Signup error:', error);
+    return NextResponse.json({ 
+      success: false,
+      error: '一時的なエラーが発生しました。しばらく経ってから再度お試しください' 
+    }, { status: 500 });
   }
 }
