@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 import { WithLayoutAndAuth } from '@/components/StorybookWrapper';
-import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
+import type { UserSettingWithTimezone } from '@/lib/db/schema';
 import type { Routine, ExecutionRecord } from '@/lib/db/schema';
 import { getMockExecutionRecords } from '@/mocks/data/execution-records';
 import { getMockRoutines } from '@/mocks/data/routines';
 import { getMockUserSettings } from '@/mocks/data/user-settings';
 
 import CalendarPage from './CalendarPage';
+
 
 const meta: Meta<typeof CalendarPage> = {
   title: 'Pages/CalendarPage',
@@ -63,9 +64,9 @@ export const ManyRecords: Story = {
         userId: 'user1',
         routineId: mockRoutines[index % mockRoutines.length]?.id || '1',
         executedAt: new Date(Date.now() - index * 24 * 60 * 60 * 1000),
-        duration: null,
-        memo: null,
+        value: 1,
         isCompleted: true,
+        notes: `Day ${index + 1} completion`,
         createdAt: new Date(Date.now() - index * 24 * 60 * 60 * 1000),
         updatedAt: new Date(Date.now() - index * 24 * 60 * 60 * 1000),
       })),

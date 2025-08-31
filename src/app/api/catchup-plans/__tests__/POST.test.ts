@@ -24,7 +24,7 @@ jest.mock('@supabase/ssr', () => ({
 }));
 
 // Catchup plans queries mock
-jest.mock('@/lib/db/queries/catchup-plans', () => ({
+jest.mock('@/server/lib/db/queries/catchup-plans', () => ({
   createCatchupPlan: jest.fn(),
   updateCatchupPlanProgress: jest.fn(),
   updateCatchupPlan: jest.fn(),
@@ -103,7 +103,7 @@ describe('POST /api/catchup-plans', () => {
         },
       });
 
-      const { createCatchupPlan } = require('@/lib/db/queries/catchup-plans');
+      const { createCatchupPlan } = require('@/server/lib/db/queries/catchup-plans');
       createCatchupPlan.mockResolvedValue({ id: 'plan123' });
 
       const validCreateData = {
@@ -149,7 +149,7 @@ describe('POST /api/catchup-plans', () => {
         updatedAt: new Date()
       };
 
-      const { createCatchupPlan } = require('@/lib/db/queries/catchup-plans');
+      const { createCatchupPlan } = require('@/server/lib/db/queries/catchup-plans');
       createCatchupPlan.mockResolvedValue(mockCreatedPlan);
 
       // Mock calculation service
@@ -208,7 +208,7 @@ describe('POST /api/catchup-plans', () => {
       const mockCalculationService = new CatchupPlanCalculationService();
       mockCalculationService.calculateCatchupPlan.mockResolvedValue(mockCalculationResult);
 
-      const { createCatchupPlan } = require('@/lib/db/queries/catchup-plans');
+      const { createCatchupPlan } = require('@/server/lib/db/queries/catchup-plans');
       createCatchupPlan.mockResolvedValue({ id: 'plan123', ...mockCalculationResult });
 
       const request = createMockPostRequest(planData);
@@ -264,7 +264,7 @@ describe('POST /api/catchup-plans', () => {
         currentProgress: 8
       };
 
-      const { createCatchupPlan } = require('@/lib/db/queries/catchup-plans');
+      const { createCatchupPlan } = require('@/server/lib/db/queries/catchup-plans');
       createCatchupPlan.mockRejectedValue(new Error('Unique constraint violation'));
 
       const request = createMockPostRequest(planData);
@@ -300,7 +300,7 @@ describe('POST /api/catchup-plans', () => {
         updatedAt: new Date()
       };
 
-      const { updateCatchupPlanProgress } = require('@/lib/db/queries/catchup-plans');
+      const { updateCatchupPlanProgress } = require('@/server/lib/db/queries/catchup-plans');
       updateCatchupPlanProgress.mockResolvedValue(mockUpdatedPlan);
 
       const request = createMockPostRequest(updateData);
@@ -351,7 +351,7 @@ describe('POST /api/catchup-plans', () => {
         currentProgress: 15
       };
 
-      const { updateCatchupPlanProgress } = require('@/lib/db/queries/catchup-plans');
+      const { updateCatchupPlanProgress } = require('@/server/lib/db/queries/catchup-plans');
       updateCatchupPlanProgress.mockResolvedValue(null);
 
       const request = createMockPostRequest(updateData);
@@ -385,7 +385,7 @@ describe('POST /api/catchup-plans', () => {
         updatedAt: new Date()
       };
 
-      const { updateCatchupPlanProgress } = require('@/lib/db/queries/catchup-plans');
+      const { updateCatchupPlanProgress } = require('@/server/lib/db/queries/catchup-plans');
       updateCatchupPlanProgress.mockResolvedValue(mockUpdatedPlan);
 
       const request = createMockPostRequest(updateData);
@@ -419,7 +419,7 @@ describe('POST /api/catchup-plans', () => {
         updatedAt: new Date()
       };
 
-      const { deactivateCatchupPlan } = require('@/lib/db/queries/catchup-plans');
+      const { deactivateCatchupPlan } = require('@/server/lib/db/queries/catchup-plans');
       deactivateCatchupPlan.mockResolvedValue(mockDeactivatedPlan);
 
       const request = createMockPostRequest(deactivateData);
@@ -443,7 +443,7 @@ describe('POST /api/catchup-plans', () => {
         planId: 'non_existent_plan'
       };
 
-      const { deactivateCatchupPlan } = require('@/lib/db/queries/catchup-plans');
+      const { deactivateCatchupPlan } = require('@/server/lib/db/queries/catchup-plans');
       deactivateCatchupPlan.mockResolvedValue(null);
 
       const request = createMockPostRequest(deactivateData);
@@ -466,7 +466,7 @@ describe('POST /api/catchup-plans', () => {
         planId: 'plan_belonging_to_other_user'
       };
 
-      const { deactivateCatchupPlan } = require('@/lib/db/queries/catchup-plans');
+      const { deactivateCatchupPlan } = require('@/server/lib/db/queries/catchup-plans');
       deactivateCatchupPlan.mockResolvedValue(null); // Not found due to user filter
 
       const request = createMockPostRequest(deactivateData);
@@ -501,7 +501,7 @@ describe('POST /api/catchup-plans', () => {
         updatedAt: new Date()
       };
 
-      const { updateCatchupPlan } = require('@/lib/db/queries/catchup-plans');
+      const { updateCatchupPlan } = require('@/server/lib/db/queries/catchup-plans');
       updateCatchupPlan.mockResolvedValue(mockUpdatedPlan);
 
       const request = createMockPostRequest(updateData);
@@ -539,7 +539,7 @@ describe('POST /api/catchup-plans', () => {
         updatedAt: new Date()
       };
 
-      const { updateCatchupPlan } = require('@/lib/db/queries/catchup-plans');
+      const { updateCatchupPlan } = require('@/server/lib/db/queries/catchup-plans');
       updateCatchupPlan.mockResolvedValue(mockRecalculatedPlan);
 
       const request = createMockPostRequest(updateData);
@@ -733,7 +733,7 @@ describe('POST /api/catchup-plans', () => {
         currentProgress: 8
       };
 
-      const { createCatchupPlan } = require('@/lib/db/queries/catchup-plans');
+      const { createCatchupPlan } = require('@/server/lib/db/queries/catchup-plans');
       createCatchupPlan.mockRejectedValue(new Error('Foreign key constraint failed'));
 
       const request = createMockPostRequest(validData);
@@ -760,7 +760,7 @@ describe('POST /api/catchup-plans', () => {
         currentProgress: 8
       };
 
-      const { createCatchupPlan } = require('@/lib/db/queries/catchup-plans');
+      const { createCatchupPlan } = require('@/server/lib/db/queries/catchup-plans');
       createCatchupPlan.mockRejectedValue(new TypeError('Unexpected error'));
 
       const request = createMockPostRequest(validData);
@@ -842,7 +842,7 @@ describe('POST /api/catchup-plans', () => {
         },
       });
 
-      const { createCatchupPlan } = require('@/lib/db/queries/catchup-plans');
+      const { createCatchupPlan } = require('@/server/lib/db/queries/catchup-plans');
       createCatchupPlan.mockResolvedValue({ id: 'plan123', userId: 'user123' });
 
       const createData = {
@@ -871,7 +871,7 @@ describe('POST /api/catchup-plans', () => {
   describe('Response Format Tests', () => {
     it('should return consistent success response format', async () => {
       // Given: Successful operation
-      const { createCatchupPlan } = require('@/lib/db/queries/catchup-plans');
+      const { createCatchupPlan } = require('@/server/lib/db/queries/catchup-plans');
       createCatchupPlan.mockResolvedValue({
         id: 'plan123',
         userId: 'user123',

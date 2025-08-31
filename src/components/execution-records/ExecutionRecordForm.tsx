@@ -119,8 +119,8 @@ export const ExecutionRecordForm: React.FC<ExecutionRecordFormProps> = ({
       const formData: ExecutionRecordFormData = {
         routineId,
         executedAt: new Date(executedAt),
-        duration: duration ? parseInt(duration) : undefined,
-        memo: memo || undefined,
+        value: duration ? parseInt(duration) : undefined,
+        notes: memo || undefined,
         isCompleted,
       };
 

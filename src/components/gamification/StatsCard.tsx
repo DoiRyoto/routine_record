@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Card } from '@/components/ui/Card';
+import { Card } from '@/common/components/ui/Card';
 
 interface StatsCardProps {
   title: string;

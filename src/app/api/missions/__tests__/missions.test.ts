@@ -21,7 +21,7 @@ jest.mock('@supabase/ssr', () => ({
 }));
 
 // Database queries モック
-jest.mock('@/lib/db/queries/missions', () => ({
+jest.mock('@/server/lib/db/queries/missions', () => ({
   getAllMissions: jest.fn(),
   getMissionsByDifficulty: jest.fn(),
   getMissionsByType: jest.fn(),
@@ -68,7 +68,7 @@ describe('GET /api/missions', () => {
       };
       createServerClient.mockReturnValue(mockSupabase);
 
-      const { getAllMissions } = require('@/lib/db/queries/missions');
+      const { getAllMissions } = require('@/server/lib/db/queries/missions');
       getAllMissions.mockResolvedValue([
         {
           id: '1',
@@ -142,7 +142,7 @@ describe('GET /api/missions', () => {
     });
 
     it('難易度フィルターが正常に動作する', async () => {
-      const { getMissionsByDifficulty } = require('@/lib/db/queries/missions');
+      const { getMissionsByDifficulty } = require('@/server/lib/db/queries/missions');
       getMissionsByDifficulty.mockResolvedValue([
         {
           id: '1',
@@ -167,7 +167,7 @@ describe('GET /api/missions', () => {
     });
 
     it('タイプフィルターが正常に動作する', async () => {
-      const { getMissionsByType } = require('@/lib/db/queries/missions');
+      const { getMissionsByType } = require('@/server/lib/db/queries/missions');
       getMissionsByType.mockResolvedValue([
         {
           id: '2',
@@ -192,7 +192,7 @@ describe('GET /api/missions', () => {
     });
 
     it('複数フィルターの組み合わせで正常に動作する', async () => {
-      const { getAllMissions } = require('@/lib/db/queries/missions');
+      const { getAllMissions } = require('@/server/lib/db/queries/missions');
       getAllMissions.mockResolvedValue([
         {
           id: '1',
@@ -219,7 +219,7 @@ describe('GET /api/missions', () => {
     });
 
     it('isActiveフィルターが正常に動作する', async () => {
-      const { getAllMissions } = require('@/lib/db/queries/missions');
+      const { getAllMissions } = require('@/server/lib/db/queries/missions');
       getAllMissions.mockImplementation(() => {
         return Promise.resolve([
           {
@@ -256,7 +256,7 @@ describe('GET /api/missions', () => {
     });
 
     it('難易度順でソートできる', async () => {
-      const { getAllMissions } = require('@/lib/db/queries/missions');
+      const { getAllMissions } = require('@/server/lib/db/queries/missions');
       getAllMissions.mockResolvedValue([
         {
           id: '1',
@@ -288,7 +288,7 @@ describe('GET /api/missions', () => {
     });
 
     it('報酬XP順でソートできる', async () => {
-      const { getAllMissions } = require('@/lib/db/queries/missions');
+      const { getAllMissions } = require('@/server/lib/db/queries/missions');
       getAllMissions.mockResolvedValue([
         {
           id: '1',
@@ -392,7 +392,7 @@ describe('GET /api/missions', () => {
     });
 
     it('データベースエラー時に500エラーを返す', async () => {
-      const { getAllMissions } = require('@/lib/db/queries/missions');
+      const { getAllMissions } = require('@/server/lib/db/queries/missions');
       getAllMissions.mockRejectedValue(new Error('Database error'));
 
       const request = createMockRequest('/api/missions');
@@ -420,7 +420,7 @@ describe('GET /api/missions', () => {
     });
 
     it('ミッションが存在しない場合は空配列を返す', async () => {
-      const { getAllMissions } = require('@/lib/db/queries/missions');
+      const { getAllMissions } = require('@/server/lib/db/queries/missions');
       getAllMissions.mockResolvedValue([]);
 
       const request = createMockRequest('/api/missions');
@@ -433,7 +433,7 @@ describe('GET /api/missions', () => {
     });
 
     it('フィルター結果が0件の場合は空配列を返す', async () => {
-      const { getMissionsByDifficulty } = require('@/lib/db/queries/missions');
+      const { getMissionsByDifficulty } = require('@/server/lib/db/queries/missions');
       getMissionsByDifficulty.mockResolvedValue([]);
 
       const request = createMockRequest('/api/missions', { difficulty: 'extreme' });
@@ -446,7 +446,7 @@ describe('GET /api/missions', () => {
     });
 
     it('大量のミッションでもパフォーマンスが適切である', async () => {
-      const { getAllMissions } = require('@/lib/db/queries/missions');
+      const { getAllMissions } = require('@/server/lib/db/queries/missions');
       const largeMissionList = Array.from({ length: 100 }, (_, i) => ({
         id: `mission-${i}`,
         title: `ミッション${i}`,
@@ -485,7 +485,7 @@ describe('GET /api/missions', () => {
     });
 
     it('ミッション一覧取得のレスポンス時間が300ms以下である', async () => {
-      const { getAllMissions } = require('@/lib/db/queries/missions');
+      const { getAllMissions } = require('@/server/lib/db/queries/missions');
       getAllMissions.mockResolvedValue([
         {
           id: '1',

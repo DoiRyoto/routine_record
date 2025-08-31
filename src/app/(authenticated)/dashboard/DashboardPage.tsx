@@ -2,13 +2,21 @@
 
 import { useState, useEffect } from 'react';
 
-import { ExperiencePoints, LevelProgressBar, StreakDisplay, UserAvatar } from '@/components/gamification';
-import { DashboardSkeleton } from '@/components/ui/Skeleton';
-import { Toast } from '@/components/ui/Toast';
-import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
+import type { UserSettingWithTimezone } from '@/lib/db/schema';
 import type { ExecutionRecord, Routine, UserProfile } from '@/lib/db/schema';
 
+import { DashboardSkeleton } from '@/common/components/ui/Skeleton';
+import { Toast } from '@/common/components/ui/Toast';
+
+import { LevelProgressBar } from '@/model/gamification/components/level/LevelProgressBar';
+import { StreakDisplay } from '@/model/gamification/components/streak/StreakDisplay';
+import { ExperiencePoints } from '@/model/gamification/components/xp/ExperiencePoints';
+import { UserAvatar } from '@/model/user/components/avatar/UserAvatar';
+
+
 import Dashboard from './_components/Dashboard';
+
+
 
 interface DashboardPageProps {
   initialRoutines: Routine[];
@@ -192,7 +200,7 @@ export default function DashboardPage({
                 レベル {userProfile.level || 1}
               </h2>
               <p className="text-sm text-gray/70 dark:text-gray/90">
-                {(userProfile.totalXP || 0).toLocaleString()} XP
+                {(userProfile.totalXp || 0).toLocaleString()} XP
               </p>
               <p className="text-sm font-medium text-gray dark:text-white">
                 ユーザー
@@ -203,9 +211,9 @@ export default function DashboardPage({
           <div className="mb-4">
             <LevelProgressBar
               level={userProfile.level || 1}
-              currentXP={userProfile.currentXP || 0}
-              nextLevelXP={userProfile.nextLevelXP || 100}
-              totalXP={userProfile.totalXP || 0}
+              currentXP={userProfile.currentXp || 0}
+              nextLevelXP={userProfile.nextLevelXp || 100}
+              totalXP={userProfile.totalXp || 0}
               size="md"
             />
           </div>
@@ -213,7 +221,7 @@ export default function DashboardPage({
           <div className="flex space-x-4">
             <div className="bg-blue/10 dark:bg-blue/20 rounded-xl px-3 py-2">
               <ExperiencePoints
-                value={userProfile.totalXP || 0}
+                value={userProfile.totalXp || 0}
                 variant="badge"
                 size="sm"
               />
@@ -261,9 +269,9 @@ export default function DashboardPage({
                 <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
                   <LevelProgressBar
                     level={userProfile.level || 1}
-                    currentXP={userProfile.currentXP || 0}
-                    nextLevelXP={userProfile.nextLevelXP || 100}
-                    totalXP={userProfile.totalXP || 0}
+                    currentXP={userProfile.currentXp || 0}
+                    nextLevelXP={userProfile.nextLevelXp || 100}
+                    totalXP={userProfile.totalXp || 0}
                     size="md"
                   />
                 </div>
@@ -271,7 +279,7 @@ export default function DashboardPage({
                 <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
                   <div className="bg-white/15 rounded-xl px-4 py-2 backdrop-blur-sm">
                     <ExperiencePoints
-                      value={userProfile.totalXP || 0}
+                      value={userProfile.totalXp || 0}
                       variant="badge"
                       size="md"
                     />

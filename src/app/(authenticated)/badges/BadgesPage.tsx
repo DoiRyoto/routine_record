@@ -1,14 +1,17 @@
 'use client';
 
-import Image from 'next/image';
 import React, { useState, useEffect, useMemo } from 'react';
 
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/Dialog';
-import { Skeleton } from '@/components/ui/Skeleton';
+import Image from 'next/image';
+
 import { Badge, UserBadge } from '@/lib/db/schema';
-import { cn } from '@/lib/ui-utils';
+
+import { Button } from '@/common/components/ui/Button';
+import { Card } from '@/common/components/ui/Card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/Dialog';
+import { Skeleton } from '@/common/components/ui/Skeleton';
+import { cn } from '@/common/lib/ui-utils';
+
 
 // Types
 interface BadgeWithUserData extends Badge {

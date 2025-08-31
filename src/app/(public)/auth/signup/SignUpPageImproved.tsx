@@ -1,16 +1,19 @@
 'use client';
 
+import React, { useState } from 'react';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
-import { Label } from '@/components/ui/Label';
-import { useAuth } from '@/context/AuthContext';
 import { signUpSchema, type SignUpFormData } from '@/lib/validations/auth';
+
+import { Button } from '@/common/components/ui/Button';
+import { Card } from '@/common/components/ui/Card';
+import { Input } from '@/common/components/ui/Input';
+import { Label } from '@/common/components/ui/Label';
+import { useAuth } from '@/common/context/AuthContext';
+
 
 export default function SignUpPageImproved() {
   const [error, setError] = useState<string | null>(null);

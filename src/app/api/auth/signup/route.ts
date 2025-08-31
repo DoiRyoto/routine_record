@@ -2,9 +2,9 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { db } from '@/lib/db';
 import { users, userSettings, userProfiles, categories, gameNotifications } from '@/lib/db/schema';
 import { supabaseAdmin } from '@/lib/supabase/server';
+import { db } from '@/server/lib/db';
 
 // バリデーション関数
 function validateEmail(email: string): boolean {

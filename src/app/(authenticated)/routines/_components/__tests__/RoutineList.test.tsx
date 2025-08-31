@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 
-import RoutineList from '../RoutineList';
+import RoutineList from '@/model/routine/components/list/RoutineList';
 
 const mockRoutines = [
   {

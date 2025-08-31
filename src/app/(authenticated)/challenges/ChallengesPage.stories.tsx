@@ -6,6 +6,7 @@ import { getMockActiveChallenges } from '@/mocks/data/challenges';
 
 import { ChallengesPage } from './ChallengesPage';
 
+
 const meta: Meta<typeof ChallengesPage> = {
   title: 'Pages/ChallengesPage',
   component: ChallengesPage,

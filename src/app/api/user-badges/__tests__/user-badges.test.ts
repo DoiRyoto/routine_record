@@ -21,7 +21,7 @@ jest.mock('@supabase/ssr', () => ({
 }));
 
 // Database queries モック
-jest.mock('@/lib/db/queries/user-badges', () => ({
+jest.mock('@/server/lib/db/queries/user-badges', () => ({
   getUserBadges: jest.fn(),
   getUserBadgesByCategory: jest.fn(),
   getUserBadgesByRarity: jest.fn(),
@@ -70,7 +70,7 @@ describe('GET /api/user-badges', () => {
       };
       createServerClient.mockReturnValue(mockSupabase);
 
-      const { getUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getUserBadges } = require('@/server/lib/db/queries/user-badges');
       getUserBadges.mockResolvedValue([
         {
           id: '1',
@@ -164,7 +164,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('userIdパラメータなしで自分のバッジを取得できる', async () => {
-      const { getUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getUserBadges } = require('@/server/lib/db/queries/user-badges');
       getUserBadges.mockResolvedValue([
         {
           id: '1',
@@ -206,7 +206,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('カテゴリフィルターが正常に動作する', async () => {
-      const { getUserBadgesByCategory } = require('@/lib/db/queries/user-badges');
+      const { getUserBadgesByCategory } = require('@/server/lib/db/queries/user-badges');
       getUserBadgesByCategory.mockResolvedValue([
         {
           id: '1',
@@ -234,7 +234,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('レアリティフィルターが正常に動作する', async () => {
-      const { getUserBadgesByRarity } = require('@/lib/db/queries/user-badges');
+      const { getUserBadgesByRarity } = require('@/server/lib/db/queries/user-badges');
       getUserBadgesByRarity.mockResolvedValue([
         {
           id: '1',
@@ -262,7 +262,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('新着フィルターが正常に動作する', async () => {
-      const { getUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getUserBadges } = require('@/server/lib/db/queries/user-badges');
       getUserBadges.mockImplementation((userId, filters) => {
         if (filters && filters.isNew === true) {
           return Promise.resolve([
@@ -294,7 +294,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('特定のバッジIDでフィルターできる', async () => {
-      const { getUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getUserBadges } = require('@/server/lib/db/queries/user-badges');
       getUserBadges.mockImplementation((userId, filters) => {
         if (filters && filters.badgeId === 'badge-123') {
           return Promise.resolve([
@@ -326,7 +326,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('取得期間フィルターが正常に動作する', async () => {
-      const { getUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getUserBadges } = require('@/server/lib/db/queries/user-badges');
       getUserBadges.mockResolvedValue([
         {
           id: '1',
@@ -373,7 +373,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('includeBadgeDetails=trueでバッジ詳細を含む', async () => {
-      const { getUserBadgesWithDetails } = require('@/lib/db/queries/user-badges');
+      const { getUserBadgesWithDetails } = require('@/server/lib/db/queries/user-badges');
       getUserBadgesWithDetails.mockResolvedValue([
         {
           id: '1',
@@ -406,7 +406,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('includeBadgeDetails=falseで基本データのみ取得', async () => {
-      const { getUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getUserBadges } = require('@/server/lib/db/queries/user-badges');
       getUserBadges.mockResolvedValue([
         {
           id: '1',
@@ -434,7 +434,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('最近の取得バッジのみを取得できる', async () => {
-      const { getRecentUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getRecentUserBadges } = require('@/server/lib/db/queries/user-badges');
       getRecentUserBadges.mockResolvedValue([
         {
           id: '1',
@@ -476,7 +476,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('取得日順でソートできる', async () => {
-      const { getUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getUserBadges } = require('@/server/lib/db/queries/user-badges');
       getUserBadges.mockResolvedValue([
         {
           id: '1',
@@ -508,7 +508,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('レアリティ順でソートできる', async () => {
-      const { getUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getUserBadges } = require('@/server/lib/db/queries/user-badges');
       getUserBadges.mockResolvedValue([
         {
           id: '1',
@@ -552,7 +552,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('ページングパラメータが正しく処理される', async () => {
-      const { getUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getUserBadges } = require('@/server/lib/db/queries/user-badges');
       getUserBadges.mockImplementation((userId, filters, pagination) => {
         expect(pagination.page).toBe(2);
         expect(pagination.limit).toBe(10);
@@ -702,7 +702,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('データベースエラー時に500エラーを返す', async () => {
-      const { getUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getUserBadges } = require('@/server/lib/db/queries/user-badges');
       getUserBadges.mockRejectedValue(new Error('Database error'));
 
       const request = createMockRequest('/api/user-badges');
@@ -730,7 +730,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('ユーザーバッジが存在しない場合は空配列を返す', async () => {
-      const { getUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getUserBadges } = require('@/server/lib/db/queries/user-badges');
       getUserBadges.mockResolvedValue([]);
 
       const request = createMockRequest('/api/user-badges');
@@ -743,7 +743,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('フィルター結果が0件の場合は空配列を返す', async () => {
-      const { getUserBadgesByCategory } = require('@/lib/db/queries/user-badges');
+      const { getUserBadgesByCategory } = require('@/server/lib/db/queries/user-badges');
       getUserBadgesByCategory.mockResolvedValue([]);
 
       const request = createMockRequest('/api/user-badges', { category: '存在しないカテゴリ' });
@@ -756,7 +756,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('全て新着でないバッジの場合も正常に取得できる', async () => {
-      const { getUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getUserBadges } = require('@/server/lib/db/queries/user-badges');
       getUserBadges.mockResolvedValue([
         {
           id: '1',
@@ -778,7 +778,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('全て新着のバッジの場合も正常に取得できる', async () => {
-      const { getUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getUserBadges } = require('@/server/lib/db/queries/user-badges');
       getUserBadges.mockResolvedValue([
         {
           id: '1',
@@ -800,7 +800,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('レアリティの異なる複数のバッジを正常に取得できる', async () => {
-      const { getUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getUserBadges } = require('@/server/lib/db/queries/user-badges');
       getUserBadges.mockResolvedValue([
         {
           id: '1',
@@ -848,7 +848,7 @@ describe('GET /api/user-badges', () => {
     });
 
     it('ユーザーバッジ一覧取得のレスポンス時間が300ms以下である', async () => {
-      const { getUserBadges } = require('@/lib/db/queries/user-badges');
+      const { getUserBadges } = require('@/server/lib/db/queries/user-badges');
       getUserBadges.mockResolvedValue([
         {
           id: '1',

@@ -43,9 +43,9 @@ jest.mock('./_components/Dashboard', () => {
 const createMockUser = (overrides = {}) => ({
   userId: 'user123',
   level: 5,
-  totalXP: 2500,
-  currentXP: 200,
-  nextLevelXP: 500,
+  totalXp: 2500,
+  currentXp: 200,
+  nextLevelXp: 500,
   streak: 3,
   longestStreak: 10,
   totalRoutines: 5,
@@ -65,6 +65,7 @@ const createMockRoutines = () => [
     description: '毎朝の運動習慣',
     category: '運動',
     goalType: 'schedule_based' as const,
+    targetFrequency: 'daily' as const,
     targetCount: null,
     targetPeriod: null,
     recurrenceType: 'daily' as const,
@@ -173,7 +174,7 @@ describe('DashboardPage', () => {
       // このテストは現在の実装では失敗する（詳細なユーザー情報表示が未実装のため）
       const mockUser = createMockUser({
         level: 8,
-        totalXP: 4200,
+        totalXp: 4200,
       });
       
       render(

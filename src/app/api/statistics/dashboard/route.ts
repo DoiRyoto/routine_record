@@ -7,7 +7,7 @@ import {
   getMonthlyProgress,
   getCategoryDistribution,
   getPerformanceMetrics
-} from '@/lib/db/queries/statistics';
+} from '@/server/lib/db/queries/statistics';
 
 export async function GET(request: NextRequest) {
   try {

@@ -78,9 +78,9 @@ export const userProfilesHandlers = [
           const newProfile = mockCreateUserProfile({
             userId,
             level: 1,
-            totalXP: 0,
-            currentXP: 0,
-            nextLevelXP: 100,
+            totalXp: 0,
+            currentXp: 0,
+            nextLevelXp: 100,
             streak: 0,
             longestStreak: 0,
             totalRoutines: 0,

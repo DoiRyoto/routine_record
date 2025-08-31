@@ -21,7 +21,7 @@ jest.mock('@supabase/ssr', () => ({
 }));
 
 // Database queries モック
-jest.mock('@/lib/db/queries/user-missions', () => ({
+jest.mock('@/server/lib/db/queries/user-missions', () => ({
   getUserMissions: jest.fn(),
   getUserMissionsByStatus: jest.fn(),
   getUserMissionsWithMissionDetails: jest.fn(),
@@ -68,7 +68,7 @@ describe('GET /api/user-missions', () => {
       };
       createServerClient.mockReturnValue(mockSupabase);
 
-      const { getUserMissions } = require('@/lib/db/queries/user-missions');
+      const { getUserMissions } = require('@/server/lib/db/queries/user-missions');
       getUserMissions.mockResolvedValue([
         {
           id: '1',
@@ -149,7 +149,7 @@ describe('GET /api/user-missions', () => {
     });
 
     it('userIdパラメータなしで自分のミッションを取得できる', async () => {
-      const { getUserMissions } = require('@/lib/db/queries/user-missions');
+      const { getUserMissions } = require('@/server/lib/db/queries/user-missions');
       getUserMissions.mockResolvedValue([
         {
           id: '1',
@@ -185,7 +185,7 @@ describe('GET /api/user-missions', () => {
     });
 
     it('完了状態フィルターが正常に動作する（完了済み）', async () => {
-      const { getUserMissionsByStatus } = require('@/lib/db/queries/user-missions');
+      const { getUserMissionsByStatus } = require('@/server/lib/db/queries/user-missions');
       getUserMissionsByStatus.mockResolvedValue([
         {
           id: '1',
@@ -209,7 +209,7 @@ describe('GET /api/user-missions', () => {
     });
 
     it('完了状態フィルターが正常に動作する（進行中）', async () => {
-      const { getUserMissionsByStatus } = require('@/lib/db/queries/user-missions');
+      const { getUserMissionsByStatus } = require('@/server/lib/db/queries/user-missions');
       getUserMissionsByStatus.mockResolvedValue([
         {
           id: '2',
@@ -233,7 +233,7 @@ describe('GET /api/user-missions', () => {
     });
 
     it('報酬受取状態フィルターが正常に動作する（未受取）', async () => {
-      const { getUserMissions } = require('@/lib/db/queries/user-missions');
+      const { getUserMissions } = require('@/server/lib/db/queries/user-missions');
       getUserMissions.mockResolvedValue([
         {
           id: '1',
@@ -256,7 +256,7 @@ describe('GET /api/user-missions', () => {
     });
 
     it('特定のミッションIDでフィルターできる', async () => {
-      const { getUserMissions } = require('@/lib/db/queries/user-missions');
+      const { getUserMissions } = require('@/server/lib/db/queries/user-missions');
       getUserMissions.mockImplementation((userId, filters) => {
         if (filters && filters.missionId === 'mission-123') {
           return Promise.resolve([
@@ -297,7 +297,7 @@ describe('GET /api/user-missions', () => {
     });
 
     it('includeMissionDetails=trueでミッション詳細を含む', async () => {
-      const { getUserMissionsWithMissionDetails } = require('@/lib/db/queries/user-missions');
+      const { getUserMissionsWithMissionDetails } = require('@/server/lib/db/queries/user-missions');
       getUserMissionsWithMissionDetails.mockResolvedValue([
         {
           id: '1',
@@ -329,7 +329,7 @@ describe('GET /api/user-missions', () => {
     });
 
     it('includeMissionDetails=falseで基本データのみ取得', async () => {
-      const { getUserMissions } = require('@/lib/db/queries/user-missions');
+      const { getUserMissions } = require('@/server/lib/db/queries/user-missions');
       getUserMissions.mockResolvedValue([
         {
           id: '1',
@@ -365,7 +365,7 @@ describe('GET /api/user-missions', () => {
     });
 
     it('ページングパラメータが正しく処理される', async () => {
-      const { getUserMissions } = require('@/lib/db/queries/user-missions');
+      const { getUserMissions } = require('@/server/lib/db/queries/user-missions');
       getUserMissions.mockImplementation((userId, filters, pagination) => {
         expect(pagination.page).toBe(2);
         expect(pagination.limit).toBe(10);
@@ -391,7 +391,7 @@ describe('GET /api/user-missions', () => {
     });
 
     it('デフォルトページング値が適用される', async () => {
-      const { getUserMissions } = require('@/lib/db/queries/user-missions');
+      const { getUserMissions } = require('@/server/lib/db/queries/user-missions');
       getUserMissions.mockImplementation((userId, filters, pagination) => {
         expect(pagination.page).toBe(1);
         expect(pagination.limit).toBe(50);
@@ -498,7 +498,7 @@ describe('GET /api/user-missions', () => {
     });
 
     it('データベースエラー時に500エラーを返す', async () => {
-      const { getUserMissions } = require('@/lib/db/queries/user-missions');
+      const { getUserMissions } = require('@/server/lib/db/queries/user-missions');
       getUserMissions.mockRejectedValue(new Error('Database error'));
 
       const request = createMockRequest('/api/user-missions');
@@ -526,7 +526,7 @@ describe('GET /api/user-missions', () => {
     });
 
     it('ユーザーミッションが存在しない場合は空配列を返す', async () => {
-      const { getUserMissions } = require('@/lib/db/queries/user-missions');
+      const { getUserMissions } = require('@/server/lib/db/queries/user-missions');
       getUserMissions.mockResolvedValue([]);
 
       const request = createMockRequest('/api/user-missions');
@@ -539,7 +539,7 @@ describe('GET /api/user-missions', () => {
     });
 
     it('フィルター結果が0件の場合は空配列を返す', async () => {
-      const { getUserMissionsByStatus } = require('@/lib/db/queries/user-missions');
+      const { getUserMissionsByStatus } = require('@/server/lib/db/queries/user-missions');
       getUserMissionsByStatus.mockResolvedValue([]);
 
       const request = createMockRequest('/api/user-missions', { status: 'completed' });
@@ -552,7 +552,7 @@ describe('GET /api/user-missions', () => {
     });
 
     it('進行度100%だが未完了のミッションも正常に取得できる', async () => {
-      const { getUserMissions } = require('@/lib/db/queries/user-missions');
+      const { getUserMissions } = require('@/server/lib/db/queries/user-missions');
       getUserMissions.mockResolvedValue([
         {
           id: '1',
@@ -590,7 +590,7 @@ describe('GET /api/user-missions', () => {
     });
 
     it('ユーザーミッション一覧取得のレスポンス時間が300ms以下である', async () => {
-      const { getUserMissions } = require('@/lib/db/queries/user-missions');
+      const { getUserMissions } = require('@/server/lib/db/queries/user-missions');
       getUserMissions.mockResolvedValue([
         {
           id: '1',

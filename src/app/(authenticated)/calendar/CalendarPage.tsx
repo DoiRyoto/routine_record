@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 
-import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
+
+import type { UserSettingWithTimezone } from '@/lib/db/schema';
 import type { ExecutionRecord, Routine } from '@/lib/db/schema';
 
 import Calendar from './_components/Calendar';
+
 
 interface CalendarPageProps {
   initialRoutines: Routine[];

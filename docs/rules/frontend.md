@@ -1,6 +1,38 @@
 # フロントエンド実装ルール
 
-## 1. 型定義の統一
+## 1. App-Common-Model アーキテクチャ
+
+### 3層構造の概要
+- **App層** (`src/app/`): ページ固有のロジック・コンポーネント（高コンテキスト）
+- **Model層** (`src/model/`): ドメイン固有のコンポーネント・ロジック（中コンテキスト）
+- **Common層** (`src/common/`): 汎用的なコンポーネント・ユーティリティ（低コンテキスト）
+
+### 依存関係ルール
+- ✅ **許可**: App層 → Model層 → Common層 （一方向のみ）
+- ❌ **禁止**: Common層 → Model/App層、Model層 → App層、同一層間の相互依存
+
+### コンポーネント配置判断
+詳細は `docs/frontend/placement-guide.md` を参照
+
+### Import グループ化ルール
+```typescript
+// Group 1: 外部ライブラリ
+import React from 'react';
+
+// Group 2: Common層
+import { Button } from '@/common/components/ui/Button';
+
+// Group 3: Model層  
+import { UserAvatar } from '@/model/user/components/avatar/UserAvatar';
+
+// Group 4: App層（同一app内のみ）
+import { DashboardStats } from '../_components/DashboardStats';
+
+// Group 5: 相対パス
+import './styles.css';
+```
+
+## 2. 型定義の統一
 
 ### データベーススキーマとフロントエンド型の整合性
 - データベーススキーマ (`src/lib/db/schema.ts`) を用いる

@@ -1,10 +1,11 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
-import { useAuth } from '@/context/AuthContext';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+import { useAuth } from '@/common/context/AuthContext';
 
 import { Button } from '../ui/Button';
 

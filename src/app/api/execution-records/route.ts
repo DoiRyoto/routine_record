@@ -2,12 +2,13 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
+import { getServerErrorMessage } from '@/common/lib/errors';
+
 import {
   createExecutionRecord,
   getExecutionRecords,
   getExecutionRecordsByDateRange,
-} from '@/lib/db/queries/execution-records';
-import { getServerErrorMessage } from '@/utils/errorHandler';
+} from '@/server/lib/db/queries/execution-records';
 
 // GET: 実行記録一覧取得
 export async function GET(request: NextRequest) {
@@ -112,8 +113,8 @@ export async function POST(request: NextRequest) {
       routineId,
       userId: user.id,
       executedAt: executedAt ? new Date(executedAt) : new Date(),
-      duration: duration || null,
-      memo: memo || null,
+      value: duration || null,
+      notes: memo || null,
       isCompleted: isCompleted !== undefined ? isCompleted : false,
     });
 

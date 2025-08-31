@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 
-import RoutineForm from '../RoutineForm';
+import RoutineForm from '@/model/routine/components/form/RoutineForm';
 
 describe('RoutineForm', () => {
   const mockProps = {

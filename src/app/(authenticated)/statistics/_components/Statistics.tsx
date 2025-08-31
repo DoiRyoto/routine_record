@@ -2,16 +2,24 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-import { CategoryDistributionChart } from '@/components/charts/CategoryDistributionChart';
-import { ExecutionTrendChart } from '@/components/charts/ExecutionTrendChart';
-import { DateRangePicker, type DateRange } from '@/components/filters/DateRangePicker';
-import { Card } from '@/components/ui/Card';
-import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
+import type { UserSettingWithTimezone } from '@/lib/db/schema';
 import type { ExecutionRecord, Routine } from '@/lib/db/schema';
+
+import { CategoryDistributionChart } from '@/common/components/charts/CategoryDistributionChart';
+import { ExecutionTrendChart } from '@/common/components/charts/ExecutionTrendChart';
+import { DateRangePicker, type DateRange } from '@/common/components/filters/DateRangePicker';
+import { Card } from '@/common/components/ui/Card';
+import {
+  formatDateInUserTimezone,
+  getTodayStartInUserTimezone,
+  isSameDayInUserTimezone,
+} from '@/common/lib/date';
+
 import { 
   calculateDailyExecutions, 
   calculateCategoryDistribution 
-} from '@/utils/statistics';
+} from '@/model/gamification/lib/statistics';
+
 // Local interface for statistics display
 interface StatisticsData {
   routineId: string;
@@ -22,11 +30,6 @@ interface StatisticsData {
   completionRate: number;
   lastExecuted?: Date;
 }
-import {
-  formatDateInUserTimezone,
-  getTodayStartInUserTimezone,
-  isSameDayInUserTimezone,
-} from '@/utils/timezone';
 
 
 interface Props {

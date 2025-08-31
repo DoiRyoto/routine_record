@@ -11,7 +11,7 @@ import {
   deactivateCatchupPlan,
   getCatchupPlanByRoutine,
   deleteCatchupPlan
-} from '@/lib/db/queries/catchup-plans';
+} from '@/server/lib/db/queries/catchup-plans';
 
 // Remove the repository imports for now - using direct queries instead
 

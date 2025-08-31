@@ -2,17 +2,18 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { type NextRequest } from 'next/server';
 
-import { 
-  getAllChallenges,
-  getActiveChallenges,
-  getChallengesByType,
-  getChallengesWithDetails
-} from '@/lib/db/queries/challenges';
 import {
   createSuccessResponse,
   createErrorResponse,
   createServerErrorResponse,
 } from '@/lib/routines/responses';
+
+import { 
+  getAllChallenges,
+  getActiveChallenges,
+  getChallengesByType,
+  getChallengesWithDetails
+} from '@/server/lib/db/queries/challenges';
 
 // 認証ユーザー取得のヘルパー関数
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

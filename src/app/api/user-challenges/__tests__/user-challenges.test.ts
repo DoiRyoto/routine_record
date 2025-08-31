@@ -21,7 +21,7 @@ jest.mock('@supabase/ssr', () => ({
 }));
 
 // Database queries モック
-jest.mock('@/lib/db/queries/user-challenges', () => ({
+jest.mock('@/server/lib/db/queries/user-challenges', () => ({
   getUserChallenges: jest.fn(),
   getUserChallengesByStatus: jest.fn(),
   getUserChallengesWithDetails: jest.fn(),
@@ -68,7 +68,7 @@ describe('GET /api/user-challenges', () => {
       };
       createServerClient.mockReturnValue(mockSupabase);
 
-      const { getUserChallenges } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallenges } = require('@/server/lib/db/queries/user-challenges');
       getUserChallenges.mockResolvedValue([
         {
           id: '1',
@@ -149,7 +149,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('userIdパラメータなしで自分のチャレンジを取得できる', async () => {
-      const { getUserChallenges } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallenges } = require('@/server/lib/db/queries/user-challenges');
       getUserChallenges.mockResolvedValue([
         {
           id: '1',
@@ -185,7 +185,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('完了状態フィルターが正常に動作する（完了済み）', async () => {
-      const { getUserChallengesByStatus } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallengesByStatus } = require('@/server/lib/db/queries/user-challenges');
       getUserChallengesByStatus.mockResolvedValue([
         {
           id: '1',
@@ -209,7 +209,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('完了状態フィルターが正常に動作する（進行中）', async () => {
-      const { getUserChallengesByStatus } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallengesByStatus } = require('@/server/lib/db/queries/user-challenges');
       getUserChallengesByStatus.mockResolvedValue([
         {
           id: '2',
@@ -233,7 +233,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('特定のチャレンジIDでフィルターできる', async () => {
-      const { getUserChallenges } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallenges } = require('@/server/lib/db/queries/user-challenges');
       getUserChallenges.mockImplementation((userId, filters) => {
         if (filters && filters.challengeId === 'challenge-123') {
           return Promise.resolve([
@@ -259,7 +259,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('参加期間フィルターが正常に動作する', async () => {
-      const { getUserChallenges } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallenges } = require('@/server/lib/db/queries/user-challenges');
       getUserChallenges.mockResolvedValue([
         {
           id: '1',
@@ -301,7 +301,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('includeChallengeDetails=trueでチャレンジ詳細を含む', async () => {
-      const { getUserChallengesWithDetails } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallengesWithDetails } = require('@/server/lib/db/queries/user-challenges');
       getUserChallengesWithDetails.mockResolvedValue([
         {
           id: '1',
@@ -335,7 +335,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('includeChallengeDetails=falseで基本データのみ取得', async () => {
-      const { getUserChallenges } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallenges } = require('@/server/lib/db/queries/user-challenges');
       getUserChallenges.mockResolvedValue([
         {
           id: '1',
@@ -371,7 +371,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('進行度順でソートできる', async () => {
-      const { getUserChallenges } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallenges } = require('@/server/lib/db/queries/user-challenges');
       getUserChallenges.mockResolvedValue([
         {
           id: '1',
@@ -401,7 +401,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('参加日順でソートできる', async () => {
-      const { getUserChallenges } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallenges } = require('@/server/lib/db/queries/user-challenges');
       getUserChallenges.mockResolvedValue([
         {
           id: '1',
@@ -430,7 +430,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('順位順でソートできる', async () => {
-      const { getUserChallenges } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallenges } = require('@/server/lib/db/queries/user-challenges');
       getUserChallenges.mockResolvedValue([
         {
           id: '1',
@@ -477,7 +477,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('ページングパラメータが正しく処理される', async () => {
-      const { getUserChallenges } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallenges } = require('@/server/lib/db/queries/user-challenges');
       getUserChallenges.mockImplementation((userId, filters, pagination) => {
         expect(pagination.page).toBe(2);
         expect(pagination.limit).toBe(10);
@@ -611,7 +611,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('データベースエラー時に500エラーを返す', async () => {
-      const { getUserChallenges } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallenges } = require('@/server/lib/db/queries/user-challenges');
       getUserChallenges.mockRejectedValue(new Error('Database error'));
 
       const request = createMockRequest('/api/user-challenges');
@@ -639,7 +639,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('ユーザーチャレンジが存在しない場合は空配列を返す', async () => {
-      const { getUserChallenges } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallenges } = require('@/server/lib/db/queries/user-challenges');
       getUserChallenges.mockResolvedValue([]);
 
       const request = createMockRequest('/api/user-challenges');
@@ -652,7 +652,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('進行度100%だが未完了のチャレンジも正常に取得できる', async () => {
-      const { getUserChallenges } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallenges } = require('@/server/lib/db/queries/user-challenges');
       getUserChallenges.mockResolvedValue([
         {
           id: '1',
@@ -675,7 +675,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('完了済みで順位が未設定のチャレンジも正常に取得できる', async () => {
-      const { getUserChallenges } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallenges } = require('@/server/lib/db/queries/user-challenges');
       getUserChallenges.mockResolvedValue([
         {
           id: '1',
@@ -713,7 +713,7 @@ describe('GET /api/user-challenges', () => {
     });
 
     it('ユーザーチャレンジ一覧取得のレスポンス時間が300ms以下である', async () => {
-      const { getUserChallenges } = require('@/lib/db/queries/user-challenges');
+      const { getUserChallenges } = require('@/server/lib/db/queries/user-challenges');
       getUserChallenges.mockResolvedValue([
         {
           id: '1',

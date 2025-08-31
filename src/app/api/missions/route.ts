@@ -1,11 +1,5 @@
 import { type NextRequest } from 'next/server';
 
-import { requireAuth } from '@/lib/auth/middleware';
-import { 
-  getAllMissions,
-  getMissionsByDifficulty,
-  getMissionsByType
-} from '@/lib/db/queries/missions';
 import {
   createSuccessResponse,
   createErrorResponse,
@@ -14,6 +8,13 @@ import {
 import { paginateArray } from '@/lib/utils/pagination';
 import { sortMissions } from '@/lib/utils/sorting';
 import { validateMissionQuery } from '@/lib/validation/common';
+
+import { requireAuth } from '@/lib/auth/middleware';
+import { 
+  getAllMissions,
+  getMissionsByDifficulty,
+  getMissionsByType
+} from '@/server/lib/db/queries/missions';
 
 // Filter missions based on query parameters
 function filterMissions(missions: any[], filters: { 

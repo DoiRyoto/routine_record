@@ -91,6 +91,7 @@ export const routinesHandlers = [
         description: description || null,
         category,
         goalType,
+        targetFrequency: 'daily', // Add default targetFrequency
         recurrenceType,
         recurrenceInterval: 1,
         monthlyType: null,

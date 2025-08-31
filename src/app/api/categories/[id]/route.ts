@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getServerSession } from '@/lib/auth/server';
-import { deleteCategory, hardDeleteCategory, updateCategory } from '@/lib/db/queries/categories';
+
+import { deleteCategory, hardDeleteCategory, updateCategory } from '@/server/lib/db/queries/categories';
 
 interface RouteParams {
   params: Promise<{ id: string }>;

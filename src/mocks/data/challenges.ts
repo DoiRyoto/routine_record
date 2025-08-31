@@ -1,4 +1,4 @@
-import type { Challenge, UserChallenge, ChallengeReward, ChallengeRequirement } from '@/lib/db/schema';
+import type { Challenge, UserChallenge } from '@/lib/db/schema';
 
 // モックチャレンジデータ
 
@@ -65,10 +65,7 @@ export const mockUserChallenges: UserChallenge[] = [
   },
 ];
 
-export const mockChallenges: (Challenge & {
-  requirements: ChallengeRequirement[];
-  rewards: ChallengeReward[];
-})[] = [
+export const mockChallenges: Challenge[] = [
   {
     id: '1',
     title: '新年スタートダッシュ',
@@ -81,38 +78,38 @@ export const mockChallenges: (Challenge & {
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
-    requirements: [
-      {
-        id: '1',
-        challengeId: '1',
-        type: 'routine_count',
-        value: 100,
-        description: '1月中に100回のルーティンを実行',
-        createdAt: new Date(),
-      },
-    ],
-    rewards: [
-      {
-        id: '1',
-        challengeId: '1',
-        name: '新年マスターバッジ',
-        description: '2025年最初のチャレンジ完了者',
-        badgeId: 'new-year-2025',
-        xpAmount: null,
-        requirement: 'completion',
-        createdAt: new Date(),
-      },
-      {
-        id: '2',
-        challengeId: '1',
-        name: 'XPボーナス',
-        description: '完了報酬',
-        badgeId: null,
-        xpAmount: 500,
-        requirement: 'completion',
-        createdAt: new Date(),
-      },
-    ],
+//     requirements: [
+//       {
+//         id: '1',
+//         challengeId: '1',
+//         type: 'routine_count',
+//         value: 100,
+//         description: '1月中に100回のルーティンを実行',
+//         createdAt: new Date(),
+//       },
+//     ],
+//     rewards: [
+//       {
+//         id: '1',
+//         challengeId: '1',
+//         name: '新年マスターバッジ',
+//         description: '2025年最初のチャレンジ完了者',
+//         badgeId: 'new-year-2025',
+//         xpAmount: null,
+//         requirement: 'completion',
+//         createdAt: new Date(),
+//       },
+//       {
+//         id: '2',
+//         challengeId: '1',
+//         name: 'XPボーナス',
+//         description: '完了報酬',
+//         badgeId: null,
+//         xpAmount: 500,
+//         requirement: 'completion',
+//         createdAt: new Date(),
+//       },
+//     ],
   },
   {
     id: '2',
@@ -126,28 +123,28 @@ export const mockChallenges: (Challenge & {
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
-    requirements: [
-      {
-        id: '2',
-        challengeId: '2',
-        type: 'routine_count',
-        value: 21,
-        description: '週間で21回のルーティンを実行（毎日3回 × 7日）',
-        createdAt: new Date(),
-      },
-    ],
-    rewards: [
-      {
-        id: '3',
-        challengeId: '2',
-        name: 'XPブースト',
-        description: '週間完了報酬',
-        badgeId: null,
-        xpAmount: 200,
-        requirement: 'completion',
-        createdAt: new Date(),
-      },
-    ],
+//     requirements: [
+//       {
+//         id: '2',
+//         challengeId: '2',
+//         type: 'routine_count',
+//         value: 21,
+//         description: '週間で21回のルーティンを実行（毎日3回 × 7日）',
+//         createdAt: new Date(),
+//       },
+//     ],
+//     rewards: [
+//       {
+//         id: '3',
+//         challengeId: '2',
+//         name: 'XPブースト',
+//         description: '週間完了報酬',
+//         badgeId: null,
+//         xpAmount: 200,
+//         requirement: 'completion',
+//         createdAt: new Date(),
+//       },
+//     ],
   },
   {
     id: '3',
@@ -161,28 +158,28 @@ export const mockChallenges: (Challenge & {
     isActive: false,
     createdAt: new Date(),
     updatedAt: new Date(),
-    requirements: [
-      {
-        id: '3',
-        challengeId: '3',
-        type: 'category',
-        value: 3,
-        description: '3つの異なるカテゴリのルーティンを実行',
-        createdAt: new Date(),
-      },
-    ],
-    rewards: [
-      {
-        id: '4',
-        challengeId: '3',
-        name: '春の新習慣バッジ',
-        description: 'シーズナルチャレンジ完了者',
-        badgeId: 'spring-habits',
-        xpAmount: null,
-        requirement: 'completion',
-        createdAt: new Date(),
-      },
-    ],
+//     requirements: [
+//       {
+//         id: '3',
+//         challengeId: '3',
+//         type: 'category',
+//         value: 3,
+//         description: '3つの異なるカテゴリのルーティンを実行',
+//         createdAt: new Date(),
+//       },
+//     ],
+//     rewards: [
+//       {
+//         id: '4',
+//         challengeId: '3',
+//         name: '春の新習慣バッジ',
+//         description: 'シーズナルチャレンジ完了者',
+//         badgeId: 'spring-habits',
+//         xpAmount: null,
+//         requirement: 'completion',
+//         createdAt: new Date(),
+//       },
+//     ],
   },
   {
     id: '4',
@@ -196,38 +193,38 @@ export const mockChallenges: (Challenge & {
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
-    requirements: [
-      {
-        id: '4',
-        challengeId: '4',
-        type: 'streak_days',
-        value: 30,
-        description: '30日連続でルーティンを実行',
-        createdAt: new Date(),
-      },
-    ],
-    rewards: [
-      {
-        id: '5',
-        challengeId: '4',
-        name: '継続マスターバッジ',
-        description: '30日連続達成者',
-        badgeId: 'streak-master-30',
-        xpAmount: null,
-        requirement: 'completion',
-        createdAt: new Date(),
-      },
-      {
-        id: '6',
-        challengeId: '4',
-        name: 'ストリークボーナス',
-        description: '継続報酬',
-        badgeId: null,
-        xpAmount: 300,
-        requirement: 'completion',
-        createdAt: new Date(),
-      },
-    ],
+//     requirements: [
+//       {
+//         id: '4',
+//         challengeId: '4',
+//         type: 'streak_days',
+//         value: 30,
+//         description: '30日連続でルーティンを実行',
+//         createdAt: new Date(),
+//       },
+//     ],
+//     rewards: [
+//       {
+//         id: '5',
+//         challengeId: '4',
+//         name: '継続マスターバッジ',
+//         description: '30日連続達成者',
+//         badgeId: 'streak-master-30',
+//         xpAmount: null,
+//         requirement: 'completion',
+//         createdAt: new Date(),
+//       },
+//       {
+//         id: '6',
+//         challengeId: '4',
+//         name: 'ストリークボーナス',
+//         description: '継続報酬',
+//         badgeId: null,
+//         xpAmount: 300,
+//         requirement: 'completion',
+//         createdAt: new Date(),
+//       },
+//     ],
   },
   {
     id: '5',
@@ -241,28 +238,28 @@ export const mockChallenges: (Challenge & {
     isActive: false,
     createdAt: new Date(),
     updatedAt: new Date(),
-    requirements: [
-      {
-        id: '5',
-        challengeId: '5',
-        type: 'routine_count',
-        value: 60,
-        description: '健康カテゴリのルーティンを60回実行',
-        createdAt: new Date(),
-      },
-    ],
-    rewards: [
-      {
-        id: '7',
-        challengeId: '5',
-        name: '夏の健康バッジ',
-        description: '夏季健康チャレンジ完了者',
-        badgeId: 'summer-health',
-        xpAmount: null,
-        requirement: 'completion',
-        createdAt: new Date(),
-      },
-    ],
+//     requirements: [
+//       {
+//         id: '5',
+//         challengeId: '5',
+//         type: 'routine_count',
+//         value: 60,
+//         description: '健康カテゴリのルーティンを60回実行',
+//         createdAt: new Date(),
+//       },
+//     ],
+//     rewards: [
+//       {
+//         id: '7',
+//         challengeId: '5',
+//         name: '夏の健康バッジ',
+//         description: '夏季健康チャレンジ完了者',
+//         badgeId: 'summer-health',
+//         xpAmount: null,
+//         requirement: 'completion',
+//         createdAt: new Date(),
+//       },
+//     ],
   },
 ];
 

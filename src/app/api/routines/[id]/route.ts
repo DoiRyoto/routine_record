@@ -2,12 +2,6 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
-import {
-  getRoutineById,
-  restoreRoutine,
-  softDeleteRoutine,
-  updateRoutine,
-} from '@/lib/db/queries/routines';
 import { logRoutineError, logRoutineSuccess, logRoutinePerformance } from '@/lib/routines/logging';
 import {
   createSuccessResponse,
@@ -16,6 +10,13 @@ import {
   createNotFoundErrorResponse,
   createPermissionErrorResponse,
 } from '@/lib/routines/responses';
+
+import {
+  getRoutineById,
+  restoreRoutine,
+  softDeleteRoutine,
+  updateRoutine,
+} from '@/server/lib/db/queries/routines';
 
 // 認証ユーザー取得のヘルパー関数
 async function getAuthenticatedUser() {

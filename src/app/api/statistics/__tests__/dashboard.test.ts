@@ -24,7 +24,7 @@ jest.mock('@supabase/ssr', () => ({
 }));
 
 // Statistics Service モック
-jest.mock('@/lib/db/queries/statistics', () => ({
+jest.mock('@/server/lib/db/queries/statistics', () => ({
   getDashboardStatistics: jest.fn(),
   getWeeklyProgress: jest.fn(),
   getMonthlyProgress: jest.fn(),
@@ -67,7 +67,7 @@ describe('GET /api/statistics/dashboard', () => {
         currentStreak: 2
       };
 
-      const { getDashboardStatistics } = require('@/lib/db/queries/statistics');
+      const { getDashboardStatistics } = require('@/server/lib/db/queries/statistics');
       getDashboardStatistics.mockResolvedValue(mockStatistics);
 
       // When: ダッシュボード統計APIを呼び出す
@@ -91,7 +91,7 @@ describe('GET /api/statistics/dashboard', () => {
         currentStreak: 0
       };
 
-      const { getDashboardStatistics } = require('@/lib/db/queries/statistics');
+      const { getDashboardStatistics } = require('@/server/lib/db/queries/statistics');
       getDashboardStatistics.mockResolvedValue(mockEmptyStatistics);
 
       // When: ダッシュボード統計APIを呼び出す
@@ -109,16 +109,16 @@ describe('GET /api/statistics/dashboard', () => {
     it('should return weekly progress data for the last 7 days', async () => {
       // Given: 過去7日間の進捗データ
       const mockWeeklyProgress = [
-        { date: '2024-01-16', executions: 3, duration: 85 },
-        { date: '2024-01-15', executions: 2, duration: 55 },
-        { date: '2024-01-14', executions: 1, duration: 30 },
-        { date: '2024-01-13', executions: 0, duration: 0 },
-        { date: '2024-01-12', executions: 2, duration: 60 },
-        { date: '2024-01-11', executions: 1, duration: 25 },
-        { date: '2024-01-10', executions: 3, duration: 90 }
+        { date: '2024-01-16', executions: 3, value: 85 },
+        { date: '2024-01-15', executions: 2, value: 55 },
+        { date: '2024-01-14', executions: 1, value: 30 },
+        { date: '2024-01-13', executions: 0, value: 0 },
+        { date: '2024-01-12', executions: 2, value: 60 },
+        { date: '2024-01-11', executions: 1, value: 25 },
+        { date: '2024-01-10', executions: 3, value: 90 }
       ];
 
-      const { getWeeklyProgress } = require('@/lib/db/queries/statistics');
+      const { getWeeklyProgress } = require('@/server/lib/db/queries/statistics');
       getWeeklyProgress.mockResolvedValue(mockWeeklyProgress);
 
       // When: 週次進捗データを要求
@@ -133,7 +133,7 @@ describe('GET /api/statistics/dashboard', () => {
       expect(responseData.progress.weeklyProgress[0]).toEqual({
         date: '2024-01-16',
         executions: 3,
-        duration: 85
+        value: 85
       });
     });
   });
@@ -142,13 +142,13 @@ describe('GET /api/statistics/dashboard', () => {
     it('should return monthly progress data grouped by weeks', async () => {
       // Given: 過去1ヶ月の週別進捗データ
       const mockMonthlyProgress = [
-        { week: '2024-W03', executions: 15, duration: 420 },
-        { week: '2024-W02', executions: 12, duration: 350 },
-        { week: '2024-W01', executions: 8, duration: 240 },
-        { week: '2023-W52', executions: 10, duration: 300 }
+        { week: '2024-W03', executions: 15, value: 420 },
+        { week: '2024-W02', executions: 12, value: 350 },
+        { week: '2024-W01', executions: 8, value: 240 },
+        { week: '2023-W52', executions: 10, value: 300 }
       ];
 
-      const { getMonthlyProgress } = require('@/lib/db/queries/statistics');
+      const { getMonthlyProgress } = require('@/server/lib/db/queries/statistics');
       getMonthlyProgress.mockResolvedValue(mockMonthlyProgress);
 
       // When: 月次進捗データを要求
@@ -163,7 +163,7 @@ describe('GET /api/statistics/dashboard', () => {
       expect(responseData.progress.monthlyProgress[0]).toEqual({
         week: '2024-W03',
         executions: 15,
-        duration: 420
+        value: 420
       });
     });
   });
@@ -195,7 +195,7 @@ describe('GET /api/statistics/dashboard', () => {
         }
       ];
 
-      const { getCategoryDistribution } = require('@/lib/db/queries/statistics');
+      const { getCategoryDistribution } = require('@/server/lib/db/queries/statistics');
       getCategoryDistribution.mockResolvedValue(mockCategoryDistribution);
 
       // When: カテゴリ別分布を要求
@@ -219,7 +219,7 @@ describe('GET /api/statistics/dashboard', () => {
         completionRate: 78.5
       };
 
-      const { getPerformanceMetrics } = require('@/lib/db/queries/statistics');
+      const { getPerformanceMetrics } = require('@/server/lib/db/queries/statistics');
       getPerformanceMetrics.mockResolvedValue(mockPerformanceMetrics);
 
       // When: パフォーマンス指標を取得
@@ -279,7 +279,7 @@ describe('GET /api/statistics/dashboard', () => {
 
     it('should handle database errors gracefully', async () => {
       // Given: データベースエラー
-      const { getDashboardStatistics } = require('@/lib/db/queries/statistics');
+      const { getDashboardStatistics } = require('@/server/lib/db/queries/statistics');
       getDashboardStatistics.mockRejectedValue(new Error('Database connection failed'));
 
       // Reset auth mock to return valid user
@@ -319,7 +319,7 @@ describe('GET /api/statistics/dashboard', () => {
         currentStreak: 2
       };
 
-      const { getDashboardStatistics } = require('@/lib/db/queries/statistics');
+      const { getDashboardStatistics } = require('@/server/lib/db/queries/statistics');
       getDashboardStatistics.mockResolvedValue(mockStatistics);
 
       // Reset auth mock to return valid user

@@ -2,12 +2,13 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
+import { getServerErrorMessage } from '@/common/lib/errors';
+
 import {
   deleteExecutionRecord,
   getExecutionRecords,
   updateExecutionRecord,
-} from '@/lib/db/queries/execution-records';
-import { getServerErrorMessage } from '@/utils/errorHandler';
+} from '@/server/lib/db/queries/execution-records';
 
 // PUT: 実行記録更新
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {

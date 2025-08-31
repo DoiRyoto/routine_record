@@ -2,10 +2,10 @@
 
 import React from 'react';
 
-import Layout from '@/components/Layout/Layout';
-import { AuthProvider } from '@/context/AuthContext';
-import { SnackbarProvider } from '@/context/SnackbarContext';
-import { ThemeProvider } from '@/context/ThemeContext';
+import Layout from '@/common/components/layout/Layout';
+import { AuthProvider } from '@/common/context/AuthContext';
+import { SnackbarProvider } from '@/common/context/SnackbarContext';
+import { ThemeProvider } from '@/common/context/ThemeContext';
 
 interface StorybookWrapperProps {
   children: React.ReactNode;

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 import { WithLayoutAndAuth } from '@/components/StorybookWrapper';
-import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
+import type { UserSettingWithTimezone } from '@/lib/db/schema';
 import type { Routine, ExecutionRecord, UserProfile } from '@/lib/db/schema';
 import { getMockExecutionRecords } from '@/mocks/data/execution-records';
 import { getMockRoutines } from '@/mocks/data/routines';
@@ -9,6 +9,7 @@ import { getMockUserProfile } from '@/mocks/data/user-profiles';
 import { getMockUserSettings } from '@/mocks/data/user-settings';
 
 import DashboardPage from './DashboardPage';
+
 
 const meta: Meta<typeof DashboardPage> = {
   title: 'Pages/DashboardPage',
@@ -73,9 +74,9 @@ export const HighLevel: Story = {
     userProfile: {
       ...mockUserProfile!,
       level: 25,
-      totalXP: 50000,
-      currentXP: 1200,
-      nextLevelXP: 2500,
+      totalXp: 50000,
+      currentXp: 1200,
+      nextLevelXp: 2500,
       streak: 45,
       longestStreak: 67,
     },
@@ -90,9 +91,9 @@ export const NewUser: Story = {
     userProfile: {
       ...mockUserProfile!,
       level: 1,
-      totalXP: 0,
-      currentXP: 0,
-      nextLevelXP: 100,
+      totalXp: 0,
+      currentXp: 0,
+      nextLevelXp: 100,
       streak: 0,
       longestStreak: 0,
     },

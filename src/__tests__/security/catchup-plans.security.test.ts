@@ -27,7 +27,7 @@ const { createServerClient } = jest.requireMock('@supabase/ssr') as {
   createServerClient: jest.MockedFunction<() => MockSupabaseClient>;
 };
 
-const mockQueries = jest.requireMock('@/lib/db/queries/catchup-plans') as {
+const mockQueries = jest.requireMock('@/server/lib/db/queries/catchup-plans') as {
   getUserCatchupPlans: jest.MockedFunction<any>;
   updateCatchupPlanProgress: jest.MockedFunction<any>;
   deactivateCatchupPlan: jest.MockedFunction<any>;
@@ -58,7 +58,7 @@ jest.mock('@supabase/ssr', () => ({
   createServerClient: jest.fn() as jest.MockedFunction<() => MockSupabaseClient>,
 }));
 
-jest.mock('@/lib/db/queries/catchup-plans', () => ({
+jest.mock('@/server/lib/db/queries/catchup-plans', () => ({
   getUserCatchupPlans: jest.fn(),
   updateCatchupPlanProgress: jest.fn(),
   deactivateCatchupPlan: jest.fn(),
@@ -503,7 +503,7 @@ describe('Catchup Plans Security Tests', () => {
       // Given: Valid authentication for rate limiting test
       setupAuthMock({ id: 'user123', email: 'test@example.com' });
 
-      const { createCatchupPlan } = require('@/lib/db/queries/catchup-plans');
+      const { createCatchupPlan } = require('@/server/lib/db/queries/catchup-plans');
       createCatchupPlan.mockResolvedValue({ id: 'plan123' });
 
       const planData = {

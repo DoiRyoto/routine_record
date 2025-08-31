@@ -1,4 +1,4 @@
-import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
+import type { UserSettingWithTimezone } from '@/lib/db/schema';
 import type { UserSetting } from '@/lib/db/schema';
 
 export const mockUserSettings: UserSetting[] = [

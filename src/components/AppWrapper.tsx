@@ -1,17 +1,18 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import React, { useEffect } from 'react';
 
-import { SnackbarProvider } from '@/context/SnackbarContext';
-import { ThemeProvider } from '@/context/ThemeContext';
+import { usePathname } from 'next/navigation';
+
+import { SnackbarProvider } from '@/common/context/SnackbarContext';
+import { ThemeProvider } from '@/common/context/ThemeContext';
 
 interface AppWrapperProps {
   children: React.ReactNode;
 }
 
 export default function AppWrapper({ children }: AppWrapperProps) {
-  const pathname = usePathname();
+  const _pathname = usePathname();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

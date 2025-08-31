@@ -2,11 +2,14 @@
 
 import React, { useState } from 'react';
 
-import { ChallengeItem } from '@/components/gamification';
-import { Card } from '@/components/ui/Card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import type { Challenge, UserChallenge } from '@/lib/db/schema';
-import { cn } from '@/lib/ui-utils';
+
+import { Card } from '@/common/components/ui/Card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/Tabs';
+import { cn } from '@/common/lib/ui-utils';
+
+import { ChallengeItem } from '@/model/challenge/components/item/ChallengeItem';
+
 
 
 type ChallengeType = 'weekly' | 'monthly' | 'seasonal' | 'special';

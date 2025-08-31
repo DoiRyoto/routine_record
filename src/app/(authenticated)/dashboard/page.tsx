@@ -1,4 +1,3 @@
-import { serverTypedGet } from '@/lib/api-client/server-fetch';
 import { requireAuth } from '@/lib/auth/server';
 import {
   RoutinesGetResponseSchema,
@@ -7,10 +6,14 @@ import {
   UserProfileGetResponseSchema,
 } from '@/lib/schemas/api-response';
 
+import { serverTypedGet } from '@/common/lib/api-client/server-fetch';
+
 import DashboardPage from './DashboardPage';
 
+
+
 export default async function HomePage() {
-  const user = await requireAuth('/');
+  const user = await requireAuth();
 
   try {
     // API Routesを使用してデータを並行取得（エラーハンドリングを個別に行う）

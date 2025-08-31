@@ -2,16 +2,17 @@
 
 import React from 'react';
 
-import {
-  UserAvatar,
-  LevelProgressBar,
-  BadgeCollection,
-  StreakDisplay,
-  StatsCard
-} from '@/components/gamification';
-import { Card } from '@/components/ui/Card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import type { UserProfile, UserBadge, Badge } from '@/lib/db/schema';
+
+import { StatsCard } from '@/common/components/charts/StatsCard';
+import { Card } from '@/common/components/ui/Card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/Tabs';
+
+import { BadgeCollection } from '@/model/badge/components/collection/BadgeCollection';
+import { LevelProgressBar } from '@/model/gamification/components/level/LevelProgressBar';
+import { StreakDisplay } from '@/model/gamification/components/streak/StreakDisplay';
+import { UserAvatar } from '@/model/user/components/avatar/UserAvatar';
+
 
 // UserBadge with related Badge data
 type UserBadgeWithBadge = UserBadge & {

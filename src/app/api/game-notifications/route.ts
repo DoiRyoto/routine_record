@@ -2,6 +2,12 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
+import {
+  createSuccessResponse,
+  createErrorResponse,
+  createServerErrorResponse,
+} from '@/lib/routines/responses';
+
 import { 
   getUserNotifications,
   getUnreadNotifications,
@@ -10,12 +16,7 @@ import {
   deleteNotification,
   getNotificationsByType,
   getUnreadCount
-} from '@/lib/db/queries/game-notifications';
-import {
-  createSuccessResponse,
-  createErrorResponse,
-  createServerErrorResponse,
-} from '@/lib/routines/responses';
+} from '@/server/lib/db/queries/game-notifications';
 
 // 認証ユーザー取得のヘルパー関数
 async function getAuthenticatedUser() {

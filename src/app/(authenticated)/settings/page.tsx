@@ -1,11 +1,14 @@
-import { serverTypedGet } from '@/lib/api-client/server-fetch';
 import { requireAuth } from '@/lib/auth/server';
 import { UserSettingsGetResponseSchema } from '@/lib/schemas/api-response';
 
+import { serverTypedGet } from '@/common/lib/api-client/server-fetch';
+
 import SettingsPage from './SettingsPage';
 
+
+
 export default async function SettingsServerPage() {
-  await requireAuth('/settings');
+  await requireAuth();
 
   try {
     // API Routesを使用してユーザー設定を取得

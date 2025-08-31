@@ -1,11 +1,14 @@
-import { serverTypedGet } from '@/lib/api-client/server-fetch';
 import { getCurrentUser } from '@/lib/auth/server';
 import { 
   ChallengesGetResponseSchema, 
   UserChallengesGetResponseSchema 
 } from '@/lib/schemas/api-response';
 
+import { serverTypedGet } from '@/common/lib/api-client/server-fetch';
+
 import { ChallengesPage } from './ChallengesPage';
+
+
 
 async function handleJoinChallenge(challengeId: string) {
   'use server';

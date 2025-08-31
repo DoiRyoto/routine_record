@@ -1,8 +1,11 @@
-import { serverTypedGet } from '@/lib/api-client/server-fetch';
 import { getCurrentUser } from '@/lib/auth/server';
 import { UserProfileGetResponseSchema } from '@/lib/schemas/api-response';
 
+import { serverTypedGet } from '@/common/lib/api-client/server-fetch';
+
 import { ProfilePage } from './ProfilePage';
+
+
 
 export default async function Page() {
   const user = await getCurrentUser();

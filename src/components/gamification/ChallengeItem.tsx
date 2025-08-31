@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 
-import { Card } from '@/components/ui/Card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import type { Challenge, UserChallenge } from '@/lib/db/schema';
 
+import { Card } from '@/common/components/ui/Card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/Tabs';
+
 import { Leaderboard } from './Leaderboard';
+
+
 
 interface LeaderboardEntry extends UserChallenge {
   user: {

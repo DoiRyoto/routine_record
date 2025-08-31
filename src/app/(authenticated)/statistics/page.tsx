@@ -1,4 +1,3 @@
-import { serverTypedGet } from '@/lib/api-client/server-fetch';
 import { requireAuth } from '@/lib/auth/server';
 import {
   RoutinesGetResponseSchema,
@@ -6,10 +5,14 @@ import {
   UserSettingsGetResponseSchema,
 } from '@/lib/schemas/api-response';
 
+import { serverTypedGet } from '@/common/lib/api-client/server-fetch';
+
 import StatisticsPage from './StatisticsPage';
 
+
+
 export default async function StatisticsServerPage() {
-  await requireAuth('/statistics');
+  await requireAuth();
 
   try {
     // API Routesを使用してデータを並行取得

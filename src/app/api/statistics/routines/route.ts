@@ -6,7 +6,7 @@ import {
   getRoutineTimeSeries,
   getRoutinePatterns,
   getRoutineComparison
-} from '@/lib/db/queries/statistics';
+} from '@/server/lib/db/queries/statistics';
 
 export async function GET(request: NextRequest) {
   try {

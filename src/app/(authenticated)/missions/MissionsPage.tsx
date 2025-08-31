@@ -3,11 +3,15 @@
 import React, { useState } from 'react';
 
 
-import { TaskCard, StatsCard } from '@/components/gamification';
-import { Card } from '@/components/ui/Card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import type { Mission, UserMission } from '@/lib/db/schema';
+
+import { StatsCard } from '@/common/components/charts/StatsCard';
+import { Card } from '@/common/components/ui/Card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/common/components/ui/Select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/components/ui/Tabs';
+
+import { TaskCard } from '@/model/mission/components/TaskCard';
+
 
 type MissionType = 'streak' | 'count' | 'duration' | 'variety' | 'consistency';
 type MissionDifficulty = 'easy' | 'medium' | 'hard' | 'legendary';
@@ -28,7 +32,7 @@ interface MissionFilters {
 const missionTypeLabels = {
   streak: 'ストリーク',
   count: '回数',
-  duration: '時間',
+  value: '時間',
   variety: '多様性',
   consistency: '継続性'
 };

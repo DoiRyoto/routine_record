@@ -2,13 +2,14 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { type NextRequest } from 'next/server';
 
-import { JoinChallengeUseCase } from '@/application/usecases/JoinChallengeUseCase';
 import {
   createSuccessResponse,
   createErrorResponse,
   createServerErrorResponse,
   createConflictErrorResponse,
 } from '@/lib/routines/responses';
+
+import { JoinChallengeUseCase } from '@/application/usecases/JoinChallengeUseCase';
 
 // 認証ユーザー取得のヘルパー関数
 async function getAuthenticatedUser() {

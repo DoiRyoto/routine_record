@@ -1,8 +1,10 @@
 import React from 'react';
 
-import { Card } from '@/components/ui/Card';
-import { Progress } from '@/components/ui/Progress';
 import type { Mission, UserMission } from '@/lib/db/schema';
+
+import { Card } from '@/common/components/ui/Card';
+import { Progress } from '@/common/components/ui/Progress';
+
 
 interface TaskCardProps {
   mission: Mission;

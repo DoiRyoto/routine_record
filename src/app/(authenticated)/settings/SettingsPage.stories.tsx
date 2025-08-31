@@ -6,6 +6,7 @@ import { getMockUserSettings } from '@/mocks/data/user-settings';
 
 import SettingsPage from './SettingsPage';
 
+
 const meta: Meta<typeof SettingsPage> = {
   title: 'Pages/SettingsPage',
   component: SettingsPage,

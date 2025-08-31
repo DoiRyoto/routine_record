@@ -2,6 +2,8 @@ import type { UserProfile, UserBadge, Badge, XPTransaction } from '@/lib/db/sche
 
 import { mockBadges } from './badges';
 
+
+
 export const mockUserBadges: (UserBadge & { badge: Badge })[] = [
   {
     id: '1',
@@ -36,9 +38,9 @@ export const mockUserProfiles: UserProfile[] = [
   {
     userId: 'user1',
     level: 12,
-    totalXP: 2450,
-    currentXP: 450,
-    nextLevelXP: 600,
+    totalXp: 2450,
+    currentXp: 450,
+    nextLevelXp: 600,
     streak: 45,
     longestStreak: 67,
     totalRoutines: 15,
@@ -51,9 +53,9 @@ export const mockUserProfiles: UserProfile[] = [
   {
     userId: 'user2',
     level: 5,
-    totalXP: 680,
-    currentXP: 80,
-    nextLevelXP: 200,
+    totalXp: 680,
+    currentXp: 80,
+    nextLevelXp: 200,
     streak: 12,
     longestStreak: 20,
     totalRoutines: 8,
@@ -66,9 +68,9 @@ export const mockUserProfiles: UserProfile[] = [
   {
     userId: 'user3',
     level: 25,
-    totalXP: 8750,
-    currentXP: 150,
-    nextLevelXP: 1200,
+    totalXp: 8750,
+    currentXp: 150,
+    nextLevelXp: 1200,
     streak: 89,
     longestStreak: 156,
     totalRoutines: 32,
@@ -201,13 +203,13 @@ export const mockAddXP = (
   mockXPTransactions.push(xpTransaction);
   
   // 新しいXPを計算
-  const newTotalXP = profile.totalXP + amount;
-  const newCurrentXP = profile.currentXP + amount;
+  const newTotalXP = profile.totalXp + amount;
+  const newCurrentXP = profile.currentXp + amount;
   
   // レベルアップ計算（100XPごとにレベルアップ）
   let level = profile.level;
   let currentXP = newCurrentXP;
-  let nextLevelXP = profile.nextLevelXP;
+  let nextLevelXP = profile.nextLevelXp;
   let leveledUp = false;
   
   while (currentXP >= nextLevelXP) {
@@ -220,9 +222,9 @@ export const mockAddXP = (
   
   // プロフィール更新
   profile.level = level;
-  profile.totalXP = newTotalXP;
-  profile.currentXP = currentXP;
-  profile.nextLevelXP = nextLevelXP;
+  profile.totalXp = newTotalXP;
+  profile.currentXp = currentXP;
+  profile.nextLevelXp = nextLevelXP;
   profile.lastActiveAt = new Date();
   profile.updatedAt = new Date();
   

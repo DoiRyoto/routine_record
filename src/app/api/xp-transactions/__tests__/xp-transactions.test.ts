@@ -21,7 +21,7 @@ jest.mock('@supabase/ssr', () => ({
 }));
 
 // Database queries モック
-jest.mock('@/lib/db/queries/xp-transactions', () => ({
+jest.mock('@/server/lib/db/queries/xp-transactions', () => ({
   getXPTransactions: jest.fn(),
   getXPTransactionsBySource: jest.fn(),
   getXPTransactionsByDateRange: jest.fn(),
@@ -69,7 +69,7 @@ describe('GET /api/xp-transactions', () => {
       };
       createServerClient.mockReturnValue(mockSupabase);
 
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockResolvedValue([
         {
           id: 'xp-1',
@@ -149,7 +149,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('userIdパラメータなしで自分のXPトランザクションを取得できる', async () => {
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockResolvedValue([
         {
           id: 'xp-1',
@@ -187,7 +187,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('sourceTypeフィルターが正常に動作する', async () => {
-      const { getXPTransactionsBySource } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactionsBySource } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactionsBySource.mockResolvedValue([
         {
           id: 'xp-1',
@@ -220,7 +220,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('特定のsourceIdでフィルターできる', async () => {
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockImplementation((userId, filters) => {
         if (filters && filters.sourceId === 'routine-123') {
           return Promise.resolve([
@@ -248,7 +248,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('日付範囲フィルターが正常に動作する', async () => {
-      const { getXPTransactionsByDateRange } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactionsByDateRange } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactionsByDateRange.mockResolvedValue([
         {
           id: 'xp-1',
@@ -277,7 +277,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('XP量の範囲フィルターが正常に動作する', async () => {
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockImplementation((userId, filters) => {
         if (filters && filters.minAmount === 50 && filters.maxAmount === 100) {
           return Promise.resolve([
@@ -322,7 +322,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('作成日順でソートできる（デフォルト：降順）', async () => {
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockResolvedValue([
         {
           id: 'xp-1',
@@ -351,7 +351,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('XP量順でソートできる', async () => {
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockResolvedValue([
         {
           id: 'xp-1',
@@ -398,7 +398,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('includeSummary=trueで集計データを含む', async () => {
-      const { getXPTransactions, getXPSummaryByPeriod } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions, getXPSummaryByPeriod } = require('@/server/lib/db/queries/xp-transactions');
       
       getXPTransactions.mockResolvedValue([
         {
@@ -439,7 +439,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('includeSummary=falseで基本データのみ取得', async () => {
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockResolvedValue([
         {
           id: 'xp-1',
@@ -462,7 +462,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('期間指定での集計データを取得できる', async () => {
-      const { getXPSummaryByPeriod } = require('@/lib/db/queries/xp-transactions');
+      const { getXPSummaryByPeriod } = require('@/server/lib/db/queries/xp-transactions');
       getXPSummaryByPeriod.mockResolvedValue({
         totalXP: 200,
         transactionCount: 4,
@@ -497,7 +497,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('ページングパラメータが正しく処理される', async () => {
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockImplementation((userId, filters, pagination) => {
         expect(pagination.page).toBe(2);
         expect(pagination.limit).toBe(20);
@@ -524,7 +524,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('デフォルトページング値が適用される', async () => {
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockImplementation((userId, filters, pagination) => {
         expect(pagination.page).toBe(1);
         expect(pagination.limit).toBe(50);
@@ -676,7 +676,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('データベースエラー時に500エラーを返す', async () => {
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockRejectedValue(new Error('Database error'));
 
       const request = createMockRequest('/api/xp-transactions');
@@ -704,7 +704,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('XPトランザクションが存在しない場合は空配列を返す', async () => {
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockResolvedValue([]);
 
       const request = createMockRequest('/api/xp-transactions');
@@ -717,7 +717,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('フィルター結果が0件の場合は空配列を返す', async () => {
-      const { getXPTransactionsBySource } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactionsBySource } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactionsBySource.mockResolvedValue([]);
 
       const request = createMockRequest('/api/xp-transactions', { sourceType: 'mission_completion' });
@@ -730,7 +730,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('0XPのトランザクションも正常に取得できる', async () => {
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockResolvedValue([
         {
           id: 'xp-1',
@@ -753,7 +753,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('大きなXP量のトランザクションも正常に取得できる', async () => {
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockResolvedValue([
         {
           id: 'xp-1',
@@ -776,7 +776,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('sourceIdがnullのトランザクションも正常に取得できる', async () => {
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockResolvedValue([
         {
           id: 'xp-1',
@@ -799,7 +799,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('長い理由文を持つトランザクションも正常に取得できる', async () => {
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       const longReason = 'とても長い理由文'.repeat(20);
       getXPTransactions.mockResolvedValue([
         {
@@ -838,7 +838,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('XPトランザクション一覧取得のレスポンス時間が300ms以下である', async () => {
-      const { getXPTransactions } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockResolvedValue([
         {
           id: 'xp-1',
@@ -859,7 +859,7 @@ describe('GET /api/xp-transactions', () => {
     });
 
     it('集計データ付きXPトランザクション取得のレスポンス時間が500ms以下である', async () => {
-      const { getXPTransactions, getXPSummaryByPeriod } = require('@/lib/db/queries/xp-transactions');
+      const { getXPTransactions, getXPSummaryByPeriod } = require('@/server/lib/db/queries/xp-transactions');
       getXPTransactions.mockResolvedValue([]);
       getXPSummaryByPeriod.mockResolvedValue({
         totalXP: 1000,

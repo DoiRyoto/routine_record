@@ -21,7 +21,7 @@ jest.mock('@supabase/ssr', () => ({
 }));
 
 // Database queries モック
-jest.mock('@/lib/db/queries/challenges', () => ({
+jest.mock('@/server/lib/db/queries/challenges', () => ({
   getAllChallenges: jest.fn(),
   getActiveChallenges: jest.fn(),
   getChallengesByType: jest.fn(),
@@ -69,7 +69,7 @@ describe('GET /api/challenges', () => {
       };
       createServerClient.mockReturnValue(mockSupabase);
 
-      const { getAllChallenges } = require('@/lib/db/queries/challenges');
+      const { getAllChallenges } = require('@/server/lib/db/queries/challenges');
       getAllChallenges.mockResolvedValue([
         {
           id: '1',
@@ -119,7 +119,7 @@ describe('GET /api/challenges', () => {
       };
       createServerClient.mockReturnValue(mockSupabase);
 
-      const { getAllChallenges } = require('@/lib/db/queries/challenges');
+      const { getAllChallenges } = require('@/server/lib/db/queries/challenges');
       getAllChallenges.mockResolvedValue([
         {
           id: '1',
@@ -156,7 +156,7 @@ describe('GET /api/challenges', () => {
     });
 
     it('アクティブフィルターが正常に動作する', async () => {
-      const { getActiveChallenges } = require('@/lib/db/queries/challenges');
+      const { getActiveChallenges } = require('@/server/lib/db/queries/challenges');
       getActiveChallenges.mockResolvedValue([
         {
           id: '1',
@@ -179,7 +179,7 @@ describe('GET /api/challenges', () => {
     });
 
     it('タイプフィルターが正常に動作する', async () => {
-      const { getChallengesByType } = require('@/lib/db/queries/challenges');
+      const { getChallengesByType } = require('@/server/lib/db/queries/challenges');
       getChallengesByType.mockResolvedValue([
         {
           id: '1',
@@ -201,7 +201,7 @@ describe('GET /api/challenges', () => {
     });
 
     it('参加可能フィルターが正常に動作する', async () => {
-      const { getAllChallenges } = require('@/lib/db/queries/challenges');
+      const { getAllChallenges } = require('@/server/lib/db/queries/challenges');
       getAllChallenges.mockResolvedValue([
         {
           id: '1',
@@ -224,7 +224,7 @@ describe('GET /api/challenges', () => {
     });
 
     it('期間フィルターが正常に動作する', async () => {
-      const { getAllChallenges } = require('@/lib/db/queries/challenges');
+      const { getAllChallenges } = require('@/server/lib/db/queries/challenges');
       getAllChallenges.mockImplementation(() => {
         const now = new Date();
         return Promise.resolve([
@@ -268,7 +268,7 @@ describe('GET /api/challenges', () => {
     });
 
     it('includeDetails=trueで要件と報酬を含む', async () => {
-      const { getChallengesWithDetails } = require('@/lib/db/queries/challenges');
+      const { getChallengesWithDetails } = require('@/server/lib/db/queries/challenges');
       getChallengesWithDetails.mockResolvedValue([
         {
           id: '1',
@@ -312,7 +312,7 @@ describe('GET /api/challenges', () => {
     });
 
     it('includeDetails=falseで基本データのみ取得', async () => {
-      const { getAllChallenges } = require('@/lib/db/queries/challenges');
+      const { getAllChallenges } = require('@/server/lib/db/queries/challenges');
       getAllChallenges.mockResolvedValue([
         {
           id: '1',
@@ -349,7 +349,7 @@ describe('GET /api/challenges', () => {
     });
 
     it('参加者数順でソートできる', async () => {
-      const { getAllChallenges } = require('@/lib/db/queries/challenges');
+      const { getAllChallenges } = require('@/server/lib/db/queries/challenges');
       getAllChallenges.mockResolvedValue([
         {
           id: '1',
@@ -377,7 +377,7 @@ describe('GET /api/challenges', () => {
     });
 
     it('開始日順でソートできる', async () => {
-      const { getAllChallenges } = require('@/lib/db/queries/challenges');
+      const { getAllChallenges } = require('@/server/lib/db/queries/challenges');
       getAllChallenges.mockResolvedValue([
         {
           id: '1',
@@ -417,7 +417,7 @@ describe('GET /api/challenges', () => {
     });
 
     it('ページングパラメータが正しく処理される', async () => {
-      const { getAllChallenges } = require('@/lib/db/queries/challenges');
+      const { getAllChallenges } = require('@/server/lib/db/queries/challenges');
       getAllChallenges.mockImplementation((filters, pagination) => {
         expect(pagination.page).toBe(2);
         expect(pagination.limit).toBe(10);
@@ -547,7 +547,7 @@ describe('GET /api/challenges', () => {
     });
 
     it('データベースエラー時に500エラーを返す', async () => {
-      const { getAllChallenges } = require('@/lib/db/queries/challenges');
+      const { getAllChallenges } = require('@/server/lib/db/queries/challenges');
       getAllChallenges.mockRejectedValue(new Error('Database error'));
 
       const request = createMockRequest('/api/challenges');
@@ -575,7 +575,7 @@ describe('GET /api/challenges', () => {
     });
 
     it('チャレンジが存在しない場合は空配列を返す', async () => {
-      const { getAllChallenges } = require('@/lib/db/queries/challenges');
+      const { getAllChallenges } = require('@/server/lib/db/queries/challenges');
       getAllChallenges.mockResolvedValue([]);
 
       const request = createMockRequest('/api/challenges');
@@ -588,7 +588,7 @@ describe('GET /api/challenges', () => {
     });
 
     it('満員のチャレンジは参加不可として扱われる', async () => {
-      const { getAllChallenges } = require('@/lib/db/queries/challenges');
+      const { getAllChallenges } = require('@/server/lib/db/queries/challenges');
       getAllChallenges.mockResolvedValue([
         {
           id: '1',
@@ -609,7 +609,7 @@ describe('GET /api/challenges', () => {
     });
 
     it('期限切れのチャレンジは非アクティブとして扱われる', async () => {
-      const { getActiveChallenges } = require('@/lib/db/queries/challenges');
+      const { getActiveChallenges } = require('@/server/lib/db/queries/challenges');
       getActiveChallenges.mockResolvedValue([]); // 期限切れのため空
 
       const request = createMockRequest('/api/challenges', { isActive: 'true' });
@@ -636,7 +636,7 @@ describe('GET /api/challenges', () => {
     });
 
     it('チャレンジ一覧取得のレスポンス時間が300ms以下である', async () => {
-      const { getAllChallenges } = require('@/lib/db/queries/challenges');
+      const { getAllChallenges } = require('@/server/lib/db/queries/challenges');
       getAllChallenges.mockResolvedValue([
         {
           id: '1',
@@ -656,7 +656,7 @@ describe('GET /api/challenges', () => {
     });
 
     it('詳細データ付きチャレンジ一覧取得のレスポンス時間が500ms以下である', async () => {
-      const { getChallengesWithDetails } = require('@/lib/db/queries/challenges');
+      const { getChallengesWithDetails } = require('@/server/lib/db/queries/challenges');
       getChallengesWithDetails.mockResolvedValue([
         {
           id: '1',

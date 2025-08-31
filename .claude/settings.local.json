@@ -46,7 +46,12 @@
       "Bash(chmod:*)",
       "Bash(./test-notification.sh:*)",
       "Bash(cat:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(for domain in user routine challenge mission badge gamification category)",
+      "Bash(do)",
+      "Bash(done)",
+      "Bash(sed:*)",
+      "Bash(ls:*)"
     ],
     "defaultMode": "acceptEdits",
     "additionalDirectories": []
@@ -57,7 +62,7 @@
         "matcher": "^/(kairo|tdd|rev|init-tech-stack)-.*",
         "hooks": [
           {
-            "type": "command", 
+            "type": "command",
             "command": "echo '📋 【必須】実装コマンド実行:' && echo '以下のルールファイルを必ずReadツールで読み込んでから実装を開始してください:' && echo '' && echo '❌ これらのファイルを読まずに実装を開始することは絶対に禁止されています。' && echo '' && echo '✅ 利用可能なルールファイル:' && find docs/rules -name '*.md' -exec basename {} \\; 2>/dev/null || echo 'docs/rules/*.md' && echo '' && echo '📝 各ルールファイルの内容:' && echo '• TypeScript実装・型管理' && echo '• コメント更新フロー・品質管理' && echo '• 開発ワークフロー・品質チェック' && echo '' && echo '⚠️ 実装手順:' && echo '1. Read toolでルールファイルをコンテキストに追加' && echo '2. ルール内容を確認・理解' && echo '3. ルールに従って実装' && echo '4. 品質チェック実行' && echo '' && echo '🔒 これらのルールは必須遵守事項です。' && echo '🚫 ルールファイル未読での実装開始は禁止されています。'"
           }
         ]

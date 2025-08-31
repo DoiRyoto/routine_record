@@ -2,11 +2,15 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/Dialog';
-import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
+import type { UserSettingWithTimezone } from '@/lib/db/schema';
 import type { ExecutionRecord, Routine } from '@/lib/db/schema';
+
+import { Button } from '@/common/components/ui/Button';
+import { Card } from '@/common/components/ui/Card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/components/ui/Dialog';
+import { getUserTimezone, isSameDayInUserTimezone } from '@/common/lib/date';
+
+
 // Local interface for calendar display
 interface CalendarData {
   date: string;
@@ -19,7 +23,6 @@ interface CalendarData {
     isCompleted: boolean;
   }[];
 }
-import { getUserTimezone, isSameDayInUserTimezone } from '@/utils/timezone';
 
 
 interface Props {

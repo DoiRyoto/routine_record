@@ -6,7 +6,7 @@ import SignUpPageImproved from './SignUpPageImproved';
 
 // Mock useAuth
 const mockSignUp = jest.fn();
-jest.mock('@/context/AuthContext', () => ({
+jest.mock('@/common/context/AuthContext', () => ({
   useAuth: () => ({
     signUp: mockSignUp,
   }),

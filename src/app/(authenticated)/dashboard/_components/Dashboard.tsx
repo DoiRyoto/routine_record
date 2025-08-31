@@ -2,21 +2,24 @@
 
 import { useMemo, useState } from 'react';
 
-import { StatsCard } from '@/components/gamification';
-import { Card } from '@/components/ui/Card';
-import { apiClient } from '@/lib/api-client/endpoints';
-import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
+import type { UserSettingWithTimezone } from '@/lib/db/schema';
 import type { ExecutionRecord, Routine, UserProfile, InsertExecutionRecord } from '@/lib/db/schema';
+
+import { StatsCard } from '@/common/components/charts/StatsCard';
+import { Card } from '@/common/components/ui/Card';
+import { apiClient } from '@/common/lib/api-client/endpoints';
 import {
   getMonthStartInUserTimezone,
   getWeekStartInUserTimezone,
   isSameDayInUserTimezone,
-} from '@/utils/timezone';
+} from '@/common/lib/date';
 
+
+import ProgressRoutineItem from '@/model/routine/components/item/ProgressRoutineItem';
+import TodayRoutineItem from '@/model/routine/components/item/TodayRoutineItem';
 
 import CatchupSuggestions from './CatchupSuggestions';
-import ProgressRoutineItem from './ProgressRoutineItem';
-import TodayRoutineItem from './TodayRoutineItem';
+
 
 interface Props {
   routines: Routine[];

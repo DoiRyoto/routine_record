@@ -2,18 +2,19 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { type NextRequest } from 'next/server';
 
+import {
+  createSuccessResponse,
+  createErrorResponse,
+  createServerErrorResponse,
+} from '@/lib/routines/responses';
+
 import { 
   getUserMissions,
   getUserMissionsByStatus,
   getUserMissionsWithMissionDetails,
   type UserMissionFilters,
   type UserMissionPagination
-} from '@/lib/db/queries/user-missions';
-import {
-  createSuccessResponse,
-  createErrorResponse,
-  createServerErrorResponse,
-} from '@/lib/routines/responses';
+} from '@/server/lib/db/queries/user-missions';
 
 // 認証ユーザー取得のヘルパー関数
 async function getAuthenticatedUser() {

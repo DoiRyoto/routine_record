@@ -21,7 +21,7 @@ jest.mock('@supabase/ssr', () => ({
 }));
 
 // Database queries モック
-jest.mock('@/lib/db/queries/game-notifications', () => ({
+jest.mock('@/server/lib/db/queries/game-notifications', () => ({
   getGameNotifications: jest.fn(),
   getUnreadNotifications: jest.fn(),
   getNotificationsByType: jest.fn(),
@@ -70,7 +70,7 @@ describe('GET /api/game-notifications', () => {
       };
       createServerClient.mockReturnValue(mockSupabase);
 
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([
         {
           id: '1',
@@ -152,7 +152,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('userIdパラメータなしで自分の通知を取得できる', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([
         {
           id: '1',
@@ -191,7 +191,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('通知タイプフィルターが正常に動作する', async () => {
-      const { getNotificationsByType } = require('@/lib/db/queries/game-notifications');
+      const { getNotificationsByType } = require('@/server/lib/db/queries/game-notifications');
       getNotificationsByType.mockResolvedValue([
         {
           id: '1',
@@ -226,7 +226,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('未読フィルターが正常に動作する', async () => {
-      const { getUnreadNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getUnreadNotifications } = require('@/server/lib/db/queries/game-notifications');
       getUnreadNotifications.mockResolvedValue([
         {
           id: '1',
@@ -251,7 +251,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('既読フィルターが正常に動作する', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockImplementation((userId, filters) => {
         if (filters && filters.isRead === true) {
           return Promise.resolve([
@@ -280,7 +280,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('日付範囲フィルターが正常に動作する', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([
         {
           id: '1',
@@ -324,7 +324,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('作成日順でソートできる（デフォルト：降順）', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([
         {
           id: '1',
@@ -357,7 +357,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('通知タイプ順でソートできる', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([
         {
           id: '1',
@@ -388,7 +388,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('既読状態順でソートできる', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([
         {
           id: '1',
@@ -437,7 +437,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('ページングパラメータが正しく処理される', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockImplementation((userId, filters, pagination) => {
         expect(pagination.page).toBe(2);
         expect(pagination.limit).toBe(10);
@@ -465,7 +465,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('デフォルトページング値が適用される', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockImplementation((userId, filters, pagination) => {
         expect(pagination.page).toBe(1);
         expect(pagination.limit).toBe(50);
@@ -494,7 +494,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('includeStats=trueで統計データを含む', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([
         {
           id: '1',
@@ -521,7 +521,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('includeStats=falseで基本データのみ取得', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([
         {
           id: '1',
@@ -680,7 +680,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('データベースエラー時に500エラーを返す', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockRejectedValue(new Error('Database error'));
 
       const request = createMockRequest('/api/game-notifications');
@@ -708,7 +708,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('ゲーム通知が存在しない場合は空配列を返す', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([]);
 
       const request = createMockRequest('/api/game-notifications');
@@ -721,7 +721,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('フィルター結果が0件の場合は空配列を返す', async () => {
-      const { getNotificationsByType } = require('@/lib/db/queries/game-notifications');
+      const { getNotificationsByType } = require('@/server/lib/db/queries/game-notifications');
       getNotificationsByType.mockResolvedValue([]);
 
       const request = createMockRequest('/api/game-notifications', { type: 'challenge_completed' });
@@ -734,7 +734,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('全て未読の通知も正常に取得できる', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([
         {
           id: '1',
@@ -766,7 +766,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('全て既読の通知も正常に取得できる', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([
         {
           id: '1',
@@ -789,7 +789,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('dataフィールドがnullの通知も正常に取得できる', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([
         {
           id: '1',
@@ -813,7 +813,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('長いタイトルとメッセージを持つ通知も正常に取得できる', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       const longTitle = 'とても長いタイトル'.repeat(10);
       const longMessage = 'とても長いメッセージ'.repeat(20);
       
@@ -841,7 +841,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('古い通知と新しい通知の混在も正常に取得できる', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([
         {
           id: '1',
@@ -891,7 +891,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('全通知タイプを正常に取得できる', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([
         {
           id: '1',
@@ -981,7 +981,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('ゲーム通知一覧取得のレスポンス時間が300ms以下である', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([
         {
           id: '1',
@@ -1003,7 +1003,7 @@ describe('GET /api/game-notifications', () => {
     });
 
     it('統計データ付きゲーム通知取得のレスポンス時間が500ms以下である', async () => {
-      const { getGameNotifications } = require('@/lib/db/queries/game-notifications');
+      const { getGameNotifications } = require('@/server/lib/db/queries/game-notifications');
       getGameNotifications.mockResolvedValue([]);
 
       const startTime = Date.now();

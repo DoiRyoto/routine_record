@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 import { WithLayoutAndAuth } from '@/components/StorybookWrapper';
-import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
+import type { UserSettingWithTimezone } from '@/lib/db/schema';
 import type { Routine } from '@/lib/db/schema';
 import { getMockRoutines } from '@/mocks/data/routines';
 import { getMockUserSettings } from '@/mocks/data/user-settings';
 
 import RoutinesPage from './RoutinesPage';
+
 
 const meta: Meta<typeof RoutinesPage> = {
   title: 'Pages/RoutinesPage',

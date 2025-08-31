@@ -1,8 +1,8 @@
 import { and, isNotNull, lt } from 'drizzle-orm';
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { db } from '@/lib/db';
 import { routines } from '@/lib/db/schema';
+import { db } from '@/server/lib/db';
 
 // 削除されてから24時間経過したルーチンを物理削除するクリーンアップジョブ
 export async function POST(request: NextRequest) {

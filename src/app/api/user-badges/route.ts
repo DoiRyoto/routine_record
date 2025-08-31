@@ -2,6 +2,12 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
+import {
+  createSuccessResponse,
+  createErrorResponse,
+  createServerErrorResponse,
+} from '@/lib/routines/responses';
+
 import { 
   getUserBadges,
   getUserBadgesByCategory,
@@ -10,12 +16,7 @@ import {
   awardBadge,
   markBadgeAsViewed,
   markAllBadgesAsViewed as _markAllBadgesAsViewed
-} from '@/lib/db/queries/user-badges';
-import {
-  createSuccessResponse,
-  createErrorResponse,
-  createServerErrorResponse,
-} from '@/lib/routines/responses';
+} from '@/server/lib/db/queries/user-badges';
 
 // 認証ユーザー取得のヘルパー関数
 async function getAuthenticatedUser() {

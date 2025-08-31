@@ -56,7 +56,7 @@ describe('Catchup Plans E2E Tests', () => {
             routineId: routine.id,
             userId: testUser.id,
             executedAt: new Date(`2024-01-${i + 1}T09:00:00Z`).toISOString(),
-            duration: 30,
+            value: 30,
             isCompleted: true
           },
           headers: { Authorization: `Bearer ${authToken}` }
@@ -94,7 +94,7 @@ describe('Catchup Plans E2E Tests', () => {
             routineId: routine.id,
             userId: testUser.id,
             executedAt: new Date(`2024-01-${i + 1}T09:00:00Z`).toISOString(),
-            duration: 30,
+            value: 30,
             isCompleted: true
           },
           headers: { Authorization: `Bearer ${authToken}` }
@@ -126,7 +126,7 @@ describe('Catchup Plans E2E Tests', () => {
             routineId: routine.id,
             userId: testUser.id,
             executedAt: new Date(`2024-01-${i + 1}T09:00:00Z`).toISOString(),
-            duration: 30,
+            value: 30,
             isCompleted: true
           },
           headers: { Authorization: `Bearer ${authToken}` }
@@ -192,7 +192,7 @@ describe('Catchup Plans E2E Tests', () => {
               routineId: routines[routineIndex].id,
               userId: testUser.id,
               executedAt: new Date(`2024-01-${execIndex + 1}T0${9 + routineIndex}:00:00Z`).toISOString(),
-              duration: 25 + routineIndex * 5,
+              value: 25 + routineIndex * 5,
               isCompleted: true
             },
             headers: { Authorization: `Bearer ${authToken}` }
@@ -282,7 +282,7 @@ describe('Catchup Plans E2E Tests', () => {
             routineId: routine.id,
             userId: testUser.id,
             executedAt: new Date(`2024-01-${i + 1}T09:00:00Z`).toISOString(),
-            duration: 30,
+            value: 30,
             isCompleted: true
           },
           headers: { Authorization: `Bearer ${authToken}` }
@@ -483,7 +483,7 @@ describe('Catchup Plans E2E Tests', () => {
               routineId: routine.id,
               userId: testUser.id,
               executedAt: new Date(`2024-01-${i + 1}T09:00:00Z`).toISOString(),
-              duration: 30,
+              value: 30,
               isCompleted: true
             },
             headers: { Authorization: `Bearer ${authToken}` }
@@ -558,7 +558,7 @@ describe('Catchup Plans E2E Tests', () => {
               routineId: routine.id,
               userId: testUser.id,
               executedAt: new Date(`2024-01-${execIndex + 1}T${9 + (index % 12)}:00:00Z`).toISOString(),
-              duration: 20 + index % 30,
+              value: 20 + index % 30,
               isCompleted: true
             },
             headers: { Authorization: `Bearer ${authToken}` }

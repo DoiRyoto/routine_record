@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getServerSession } from '@/lib/auth/server';
+
 import {
   createCategory,
   getUserCategories,
   getUserCategoryNames,
-} from '@/lib/db/queries/categories';
+} from '@/server/lib/db/queries/categories';
 
 // GET: ユーザーのカテゴリ一覧を取得
 export async function GET(request: NextRequest) {

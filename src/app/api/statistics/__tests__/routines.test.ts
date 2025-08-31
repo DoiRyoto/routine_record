@@ -24,7 +24,7 @@ jest.mock('@supabase/ssr', () => ({
 }));
 
 // Statistics Service モック
-jest.mock('@/lib/db/queries/statistics', () => ({
+jest.mock('@/server/lib/db/queries/statistics', () => ({
   getRoutineStatistics: jest.fn(),
   getRoutineTimeSeries: jest.fn(),
   getRoutinePatterns: jest.fn(),
@@ -73,7 +73,7 @@ describe('GET /api/statistics/routines', () => {
         }
       ];
 
-      const { getRoutineStatistics } = require('@/lib/db/queries/statistics');
+      const { getRoutineStatistics } = require('@/server/lib/db/queries/statistics');
       getRoutineStatistics.mockResolvedValue(mockRoutineStatistics);
 
       // When: ルーチン分析APIを呼び出す
@@ -104,7 +104,7 @@ describe('GET /api/statistics/routines', () => {
         }
       ];
 
-      const { getRoutineStatistics } = require('@/lib/db/queries/statistics');
+      const { getRoutineStatistics } = require('@/server/lib/db/queries/statistics');
       getRoutineStatistics.mockResolvedValue(mockAllRoutineStatistics);
 
       // When: 全ルーチンの統計を要求
@@ -122,12 +122,12 @@ describe('GET /api/statistics/routines', () => {
     it('should return time series data for routine executions', async () => {
       // Given: 時系列データ
       const mockTimeSeries = [
-        { date: '2024-01-16', executions: 1, duration: 30 },
-        { date: '2024-01-15', executions: 1, duration: 25 },
-        { date: '2024-01-14', executions: 0, duration: 0 }
+        { date: '2024-01-16', executions: 1, value: 30 },
+        { date: '2024-01-15', executions: 1, value: 25 },
+        { date: '2024-01-14', executions: 0, value: 0 }
       ];
 
-      const { getRoutineTimeSeries } = require('@/lib/db/queries/statistics');
+      const { getRoutineTimeSeries } = require('@/server/lib/db/queries/statistics');
       getRoutineTimeSeries.mockResolvedValue(mockTimeSeries);
 
       // When: 時系列分析を要求
@@ -158,7 +158,7 @@ describe('GET /api/statistics/routines', () => {
         }
       };
 
-      const { getRoutinePatterns } = require('@/lib/db/queries/statistics');
+      const { getRoutinePatterns } = require('@/server/lib/db/queries/statistics');
       getRoutinePatterns.mockResolvedValue(mockPatterns);
 
       // When: パターン分析を要求
@@ -189,7 +189,7 @@ describe('GET /api/statistics/routines', () => {
         ]
       };
 
-      const { getRoutineComparison } = require('@/lib/db/queries/statistics');
+      const { getRoutineComparison } = require('@/server/lib/db/queries/statistics');
       getRoutineComparison.mockResolvedValue(mockComparison);
 
       // When: 期間比較分析を要求
@@ -216,7 +216,7 @@ describe('GET /api/statistics/routines', () => {
         { routineId: 'r3', statistics: { totalExecutions: 10 } }
       ];
 
-      const { getRoutineStatistics } = require('@/lib/db/queries/statistics');
+      const { getRoutineStatistics } = require('@/server/lib/db/queries/statistics');
       getRoutineStatistics.mockResolvedValue(mockSortedRoutines);
 
       // When: 実行回数でソートを要求
@@ -239,7 +239,7 @@ describe('GET /api/statistics/routines', () => {
         statistics: { totalExecutions: i }
       }));
 
-      const { getRoutineStatistics } = require('@/lib/db/queries/statistics');
+      const { getRoutineStatistics } = require('@/server/lib/db/queries/statistics');
       getRoutineStatistics.mockResolvedValue(mockManyRoutines.slice(0, 10));
 
       // When: 制限数を指定して要求
@@ -257,7 +257,7 @@ describe('GET /api/statistics/routines', () => {
   describe('Error Handling', () => {
     it('should handle non-existent routine ID', async () => {
       // Given: 存在しないルーチンID
-      const { getRoutineStatistics } = require('@/lib/db/queries/statistics');
+      const { getRoutineStatistics } = require('@/server/lib/db/queries/statistics');
       getRoutineStatistics.mockResolvedValue([]);
 
       // When: 存在しないルーチンの統計を要求
@@ -295,7 +295,7 @@ describe('GET /api/statistics/routines', () => {
 
     it('should handle database errors gracefully', async () => {
       // Given: データベースエラー
-      const { getRoutineStatistics } = require('@/lib/db/queries/statistics');
+      const { getRoutineStatistics } = require('@/server/lib/db/queries/statistics');
       getRoutineStatistics.mockRejectedValue(new Error('Database query failed'));
 
       // When: APIを呼び出す
@@ -320,7 +320,7 @@ describe('GET /api/statistics/routines', () => {
         statistics: { totalExecutions: Math.floor(Math.random() * 100) }
       }));
 
-      const { getRoutineStatistics } = require('@/lib/db/queries/statistics');
+      const { getRoutineStatistics } = require('@/server/lib/db/queries/statistics');
       getRoutineStatistics.mockResolvedValue(largeDataset);
 
       // When: 大量データでAPIを呼び出す

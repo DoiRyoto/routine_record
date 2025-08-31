@@ -1,16 +1,17 @@
 import { type NextRequest } from 'next/server';
 
-import { requireAuth, validateUserAccess } from '@/lib/auth/middleware';
-import { 
-  getUserProfile, 
-  getUserProfileWithStats 
-} from '@/lib/db/queries/user-profiles';
 import {
   createSuccessResponse,
   createErrorResponse,
   createServerErrorResponse,
 } from '@/lib/routines/responses';
 import { validateBoolean } from '@/lib/validation/common';
+
+import { requireAuth, validateUserAccess } from '@/lib/auth/middleware';
+import { 
+  getUserProfile, 
+  getUserProfileWithStats 
+} from '@/server/lib/db/queries/user-profiles';
 
 // GET: ユーザープロフィール取得
 export async function GET(request: NextRequest) {

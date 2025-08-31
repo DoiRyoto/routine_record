@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 
-import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
+
+import type { UserSettingWithTimezone } from '@/lib/db/schema';
 import type { ExecutionRecord, Routine } from '@/lib/db/schema';
 
 import Statistics from './_components/Statistics';
+
 
 interface StatisticsPageProps {
   initialRoutines: Routine[];

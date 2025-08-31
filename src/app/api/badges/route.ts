@@ -1,13 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { 
-  getAllBadges, 
-  getBadgesByCategory,
-  getBadgesByRarity,
-  createBadge,
-  updateBadge,
-  deleteBadge 
-} from '@/lib/db/queries/badges';
 import {
   createSuccessResponse,
   createErrorResponse,
@@ -16,6 +8,15 @@ import {
 import { paginateArray } from '@/lib/utils/pagination';
 import { sortBadges } from '@/lib/utils/sorting';
 import { validateBadgeQuery } from '@/lib/validation/common';
+
+import { 
+  getAllBadges, 
+  getBadgesByCategory,
+  getBadgesByRarity,
+  createBadge,
+  updateBadge,
+  deleteBadge 
+} from '@/server/lib/db/queries/badges';
 
 // GET: Public badges API - no authentication required
 export async function GET(request: NextRequest) {

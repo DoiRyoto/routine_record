@@ -2,7 +2,7 @@ import {
   calculateDailyExecutions,
   calculateCategoryDistribution,
   generateHeatmapData 
-} from '@/utils/statistics';
+} from '@/model/gamification/lib/statistics';
 
 // モックデータ型定義
 type MockExecutionRecord = {

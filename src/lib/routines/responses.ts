@@ -1,101 +1,72 @@
-/**
- * Routine Management API Response Utilities
- * TASK-102: ルーチン管理API実装 - 統一レスポンス形式
- */
+// API Response utilities for routine and related endpoints
 
-import { NextResponse } from 'next/server';
-
-export interface RoutineResponse {
-  success: boolean;
+// Standard success response format
+export interface SuccessResponse<T = unknown> {
+  success: true;
+  data: T;
   message?: string;
-  error?: string;
-  data?: any;
 }
 
-/**
- * 成功レスポンスの生成
- */
-export function createSuccessResponse(
-  data: any,
-  message?: string,
-  statusCode: number = 200
-): NextResponse<RoutineResponse> {
-  const response: RoutineResponse = {
+// Standard error response format
+export interface ErrorResponse {
+  success: false;
+  error: string;
+  details?: unknown;
+}
+
+// Combined response type
+export type APIResponse<T = unknown> = SuccessResponse<T> | ErrorResponse;
+
+// Helper functions for creating responses
+export function createSuccessResponse<T>(data: T, message?: string): SuccessResponse<T> {
+  return {
     success: true,
     data,
+    ...(message && { message }),
   };
-
-  if (message) {
-    response.message = message;
-  }
-
-  return NextResponse.json(response, { status: statusCode });
 }
 
-/**
- * エラーレスポンスの生成
- */
-export function createErrorResponse(
-  error: string,
-  statusCode: number = 500
-): NextResponse<RoutineResponse> {
-  return NextResponse.json(
-    {
-      success: false,
-      error,
-    },
-    { status: statusCode }
-  );
+export function createErrorResponse(error: string, details?: unknown): ErrorResponse {
+  return {
+    success: false,
+    error,
+    ...(details && { details }),
+  };
 }
 
-/**
- * バリデーションエラーレスポンス
- */
-export function createValidationErrorResponse(error: string): NextResponse<RoutineResponse> {
-  return createErrorResponse(error, 400);
+// Response creators for common HTTP status codes
+export function ok<T>(data: T, message?: string): Response {
+  return Response.json(createSuccessResponse(data, message));
 }
 
-/**
- * 認証エラーレスポンス
- */
-export function createAuthErrorResponse(): NextResponse<RoutineResponse> {
-  return createErrorResponse('認証が必要です', 401);
+export function created<T>(data: T, message?: string): Response {
+  return Response.json(createSuccessResponse(data, message), { status: 201 });
 }
 
-/**
- * 権限エラーレスポンス
- */
-export function createPermissionErrorResponse(): NextResponse<RoutineResponse> {
-  return createErrorResponse('このルーチンにアクセスする権限がありません', 403);
+export function badRequest(error: string, details?: unknown): Response {
+  return Response.json(createErrorResponse(error, details), { status: 400 });
 }
 
-/**
- * リソース未発見エラーレスポンス
- */
-export function createNotFoundErrorResponse(): NextResponse<RoutineResponse> {
-  return createErrorResponse('指定されたルーチンが見つかりません', 404);
+export function unauthorized(error = 'Unauthorized'): Response {
+  return Response.json(createErrorResponse(error), { status: 401 });
 }
 
-/**
- * REQ-102 実行制限エラーレスポンス
- */
-export function createUnavailableErrorResponse(): NextResponse<RoutineResponse> {
-  return createErrorResponse('このルーチンは現在利用できません', 400);
+export function forbidden(error = 'Forbidden'): Response {
+  return Response.json(createErrorResponse(error), { status: 403 });
 }
 
-/**
- * 重複エラーレスポンス
- */
-export function createConflictErrorResponse(message: string): NextResponse<RoutineResponse> {
-  return createErrorResponse(message, 409);
+export function notFound(error = 'Not found'): Response {
+  return Response.json(createErrorResponse(error), { status: 404 });
 }
 
-/**
- * サーバーエラーレスポンス
- */
-export function createServerErrorResponse(): NextResponse<RoutineResponse> {
-  return createErrorResponse(
-    '一時的なエラーが発生しました。しばらく経ってから再度お試しください',
-    500
-  );
+export function conflict(error: string, details?: unknown): Response {
+  return Response.json(createErrorResponse(error, details), { status: 409 });
+}
+
+export function unprocessableEntity(error: string, details?: unknown): Response {
+  return Response.json(createErrorResponse(error, details), { status: 422 });
+}
+
+export function internalServerError(error = 'Internal server error'): Response {
+  return Response.json(createErrorResponse(error), { status: 500 });
 }

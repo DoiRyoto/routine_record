@@ -21,7 +21,7 @@ jest.mock('@supabase/ssr', () => ({
 }));
 
 // Database queries モック
-jest.mock('@/lib/db/queries/challenges', () => ({
+jest.mock('@/server/lib/db/queries/challenges', () => ({
   getChallengeById: jest.fn(),
   joinChallenge: jest.fn(),
   isUserAlreadyJoined: jest.fn(),

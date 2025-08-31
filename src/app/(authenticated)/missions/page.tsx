@@ -1,11 +1,14 @@
-import { serverTypedGet } from '@/lib/api-client/server-fetch';
 import { getCurrentUser } from '@/lib/auth/server';
 import { 
   MissionsGetResponseSchema,
   UserMissionsGetResponseSchema
 } from '@/lib/schemas/api-response';
 
+import { serverTypedGet } from '@/common/lib/api-client/server-fetch';
+
 import { MissionsPage } from './MissionsPage';
+
+
 
 async function handleClaimReward(missionId: string) {
   'use server';

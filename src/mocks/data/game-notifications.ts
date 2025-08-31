@@ -57,7 +57,7 @@ export const mockGameNotifications: GameNotification[] = [
     type: 'xp_milestone',
     title: 'XP記録達成！',
     message: '総XP 500を達成しました！',
-    data: JSON.stringify({ totalXP: 680, milestone: 500 }),
+    data: JSON.stringify({ totalXp: 680, milestone: 500 }),
     isRead: false,
     createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000),
   },

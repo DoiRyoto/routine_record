@@ -2,17 +2,18 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
 
-import { 
-  getXPHistory,
-  getXPHistoryByDateRange,
-  getXPHistoryBySource,
-  getXPSummary
-} from '@/lib/db/queries/xp-transactions';
 import {
   createSuccessResponse,
   createErrorResponse,
   createServerErrorResponse,
 } from '@/lib/routines/responses';
+
+import { 
+  getXPHistory,
+  getXPHistoryByDateRange,
+  getXPHistoryBySource,
+  getXPSummary
+} from '@/server/lib/db/queries/xp-transactions';
 
 // 認証ユーザー取得のヘルパー関数
 async function getAuthenticatedUser() {

@@ -92,8 +92,8 @@ export const executionRecordsHandlers = [
         routineId,
         userId,
         executedAt: executedAt ? new Date(executedAt) : new Date(),
-        duration: duration || null,
-        memo: memo || null,
+        value: duration || null,
+        notes: memo || null,
         isCompleted: isCompleted !== undefined ? isCompleted : false,
       });
 

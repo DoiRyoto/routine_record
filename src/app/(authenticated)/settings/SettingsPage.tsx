@@ -2,13 +2,15 @@
 
 import React, { useState } from 'react';
 
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/AlertDialog';
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
-import { useTheme } from '@/context/ThemeContext';
-import { apiClient } from '@/lib/api-client/endpoints';
 import type { UserSetting } from '@/lib/db/schema';
+
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/common/components/ui/AlertDialog';
+import { Button } from '@/common/components/ui/Button';
+import { Card } from '@/common/components/ui/Card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/common/components/ui/Select';
+import { useTheme } from '@/common/context/ThemeContext';
+import { apiClient } from '@/common/lib/api-client/endpoints';
+
 
 interface SettingsPageProps {
   initialSettings: UserSetting;

@@ -3,7 +3,8 @@ import { Noto_Sans_JP, Roboto } from 'next/font/google';
 
 import './globals.css';
 import AppWrapper from '@/components/AppWrapper';
-import { AuthProvider } from '@/context/AuthContext';
+
+import { AuthProvider } from '@/common/context/AuthContext';
 
 const notoSansJP = Noto_Sans_JP({
   variable: '--font-noto-sans-jp',

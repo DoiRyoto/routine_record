@@ -2,12 +2,15 @@
 
 import { useCallback, useState } from 'react';
 
-import { useSnackbar } from '@/context/SnackbarContext';
-import { apiClient } from '@/lib/api-client/endpoints';
-import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
+import type { UserSettingWithTimezone } from '@/lib/db/schema';
 import type { Routine, InsertRoutine } from '@/lib/db/schema';
 
-import RoutineList from './_components/RoutineList';
+import { useSnackbar } from '@/common/context/SnackbarContext';
+import { apiClient } from '@/common/lib/api-client/endpoints';
+
+import RoutineList from '@/model/routine/components/list/RoutineList';
+
+
 
 interface RoutinesPageProps {
   initialRoutines: Routine[];

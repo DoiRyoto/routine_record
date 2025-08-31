@@ -24,7 +24,7 @@ jest.mock('@supabase/ssr', () => ({
 }));
 
 // Catchup plans queries mock
-jest.mock('@/lib/db/queries/catchup-plans', () => ({
+jest.mock('@/server/lib/db/queries/catchup-plans', () => ({
   getUserCatchupPlans: jest.fn(),
   getActiveCatchupPlans: jest.fn(),
   getCatchupPlanByRoutine: jest.fn(),
@@ -166,7 +166,7 @@ describe('GET /api/catchup-plans', () => {
         }
       ];
 
-      const { getUserCatchupPlans } = require('@/lib/db/queries/catchup-plans');
+      const { getUserCatchupPlans } = require('@/server/lib/db/queries/catchup-plans');
       getUserCatchupPlans.mockResolvedValue(mockPlans);
 
       const searchParams = new URLSearchParams({ userId: 'user123' });
@@ -185,7 +185,7 @@ describe('GET /api/catchup-plans', () => {
 
     it('should return empty array for user with no plans', async () => {
       // Given: User with no catchup plans
-      const { getUserCatchupPlans } = require('@/lib/db/queries/catchup-plans');
+      const { getUserCatchupPlans } = require('@/server/lib/db/queries/catchup-plans');
       getUserCatchupPlans.mockResolvedValue([]);
 
       const searchParams = new URLSearchParams({ userId: 'user123' });
@@ -223,7 +223,7 @@ describe('GET /api/catchup-plans', () => {
         }
       ];
 
-      const { getUserCatchupPlans } = require('@/lib/db/queries/catchup-plans');
+      const { getUserCatchupPlans } = require('@/server/lib/db/queries/catchup-plans');
       getUserCatchupPlans.mockResolvedValue(mockPlansWithRoutines);
 
       const searchParams = new URLSearchParams({ userId: 'user123' });
@@ -257,7 +257,7 @@ describe('GET /api/catchup-plans', () => {
         }
       };
 
-      const { getCatchupPlanByRoutine } = require('@/lib/db/queries/catchup-plans');
+      const { getCatchupPlanByRoutine } = require('@/server/lib/db/queries/catchup-plans');
       getCatchupPlanByRoutine.mockResolvedValue(mockFilteredPlan);
 
       const searchParams = new URLSearchParams({ 
@@ -289,7 +289,7 @@ describe('GET /api/catchup-plans', () => {
         }
       ];
 
-      const { getActiveCatchupPlans } = require('@/lib/db/queries/catchup-plans');
+      const { getActiveCatchupPlans } = require('@/server/lib/db/queries/catchup-plans');
       getActiveCatchupPlans.mockResolvedValue(mockActivePlans);
 
       const searchParams = new URLSearchParams({ 
@@ -315,7 +315,7 @@ describe('GET /api/catchup-plans', () => {
         { id: 'plan2', isActive: false, userId: 'user123' }
       ];
 
-      const { getUserCatchupPlans } = require('@/lib/db/queries/catchup-plans');
+      const { getUserCatchupPlans } = require('@/server/lib/db/queries/catchup-plans');
       getUserCatchupPlans.mockResolvedValue(mockAllPlans);
 
       const searchParams = new URLSearchParams({ 
@@ -336,7 +336,7 @@ describe('GET /api/catchup-plans', () => {
 
     it('should handle invalid activeOnly parameter', async () => {
       // Given: Invalid activeOnly value
-      const { getUserCatchupPlans } = require('@/lib/db/queries/catchup-plans');
+      const { getUserCatchupPlans } = require('@/server/lib/db/queries/catchup-plans');
       getUserCatchupPlans.mockResolvedValue([]);
 
       const searchParams = new URLSearchParams({ 
@@ -356,7 +356,7 @@ describe('GET /api/catchup-plans', () => {
 
     it('should return 404 when specific routine plan not found', async () => {
       // Given: Non-existent routine plan
-      const { getCatchupPlanByRoutine } = require('@/lib/db/queries/catchup-plans');
+      const { getCatchupPlanByRoutine } = require('@/server/lib/db/queries/catchup-plans');
       getCatchupPlanByRoutine.mockResolvedValue(null);
 
       const searchParams = new URLSearchParams({ 
@@ -428,7 +428,7 @@ describe('GET /api/catchup-plans', () => {
   describe('Error Handling Tests', () => {
     it('should handle database errors gracefully', async () => {
       // Given: Database error
-      const { getUserCatchupPlans } = require('@/lib/db/queries/catchup-plans');
+      const { getUserCatchupPlans } = require('@/server/lib/db/queries/catchup-plans');
       getUserCatchupPlans.mockRejectedValue(new Error('Database connection failed'));
 
       const searchParams = new URLSearchParams({ userId: 'user123' });
@@ -446,7 +446,7 @@ describe('GET /api/catchup-plans', () => {
 
     it('should handle query timeout errors', async () => {
       // Given: Database timeout
-      const { getUserCatchupPlans } = require('@/lib/db/queries/catchup-plans');
+      const { getUserCatchupPlans } = require('@/server/lib/db/queries/catchup-plans');
       getUserCatchupPlans.mockRejectedValue(new Error('Query timeout'));
 
       const searchParams = new URLSearchParams({ userId: 'user123' });
@@ -482,7 +482,7 @@ describe('GET /api/catchup-plans', () => {
 
     it('should handle unexpected errors with fallback', async () => {
       // Given: Unexpected error type
-      const { getUserCatchupPlans } = require('@/lib/db/queries/catchup-plans');
+      const { getUserCatchupPlans } = require('@/server/lib/db/queries/catchup-plans');
       getUserCatchupPlans.mockRejectedValue(new TypeError('Unexpected error'));
 
       const searchParams = new URLSearchParams({ userId: 'user123' });
@@ -512,7 +512,7 @@ describe('GET /api/catchup-plans', () => {
         },
       });
 
-      const { getUserCatchupPlans } = require('@/lib/db/queries/catchup-plans');
+      const { getUserCatchupPlans } = require('@/server/lib/db/queries/catchup-plans');
       getUserCatchupPlans.mockResolvedValue([]); // No plans returned for wrong user
 
       const searchParams = new URLSearchParams({ userId: 'userB' }); // Different user
@@ -530,7 +530,7 @@ describe('GET /api/catchup-plans', () => {
 
     it('should validate user ownership for routine-specific requests', async () => {
       // Given: User trying to access routine they don't own
-      const { getCatchupPlanByRoutine } = require('@/lib/db/queries/catchup-plans');
+      const { getCatchupPlanByRoutine } = require('@/server/lib/db/queries/catchup-plans');
       getCatchupPlanByRoutine.mockResolvedValue(null); // No plan found for unauthorized access
 
       const searchParams = new URLSearchParams({ 
@@ -553,7 +553,7 @@ describe('GET /api/catchup-plans', () => {
     it('should return consistent response format for success', async () => {
       // Given: Successful query
       const mockPlans = [{ id: 'plan123', userId: 'user123' }];
-      const { getUserCatchupPlans } = require('@/lib/db/queries/catchup-plans');
+      const { getUserCatchupPlans } = require('@/server/lib/db/queries/catchup-plans');
       getUserCatchupPlans.mockResolvedValue(mockPlans);
 
       const searchParams = new URLSearchParams({ userId: 'user123' });
@@ -588,7 +588,7 @@ describe('GET /api/catchup-plans', () => {
 
     it('should include proper Content-Type headers', async () => {
       // Given: Any valid request
-      const { getUserCatchupPlans } = require('@/lib/db/queries/catchup-plans');
+      const { getUserCatchupPlans } = require('@/server/lib/db/queries/catchup-plans');
       getUserCatchupPlans.mockResolvedValue([]);
 
       const searchParams = new URLSearchParams({ userId: 'user123' });

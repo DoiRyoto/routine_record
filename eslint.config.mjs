@@ -1,5 +1,6 @@
 // For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
 import storybook from "eslint-plugin-storybook";
+import architecturePlugin from "./eslint-rules/index.js";
 
 import { FlatCompat } from '@eslint/eslintrc';
 import { dirname } from 'path';
@@ -36,6 +37,9 @@ const eslintConfig = [...compat.extends('next/core-web-vitals', 'next/typescript
   ],
 }, {
   files: ['**/*.{js,jsx,ts,tsx}'],
+  plugins: {
+    architecture: architecturePlugin,
+  },
   rules: {
     // TypeScript基本ルール
     '@typescript-eslint/no-unused-vars': ['warn', { 
@@ -89,8 +93,53 @@ const eslintConfig = [...compat.extends('next/core-web-vitals', 'next/typescript
           order: 'asc',
           caseInsensitive: true,
         },
+        pathGroups: [
+          {
+            pattern: 'react',
+            group: 'external',
+            position: 'before',
+          },
+          {
+            pattern: '@/common/**',
+            group: 'internal',
+            position: 'after',
+          },
+          {
+            pattern: '@/model/**',
+            group: 'internal',
+            position: 'after',
+          },
+          {
+            pattern: '@/app/**',
+            group: 'internal',
+            position: 'after',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['react'],
       },
     ],
+
+    // App-Common-Model アーキテクチャルール
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: ['@/model/**'],
+            importNames: ['*'],
+            message: 'Common layer cannot import from Model layer. Please move shared logic to Common layer.',
+          },
+          {
+            group: ['@/app/**'],
+            importNames: ['*'],
+            message: 'Common layer cannot import from App layer. Please move shared logic to Common layer.',
+          },
+        ],
+      },
+    ],
+
+    // App-Common-Model アーキテクチャ制約ルール
+    'architecture/no-cross-layer-imports': 'error',
 
     // 一般的な実用ルール
     'no-console': ['error', { allow: ['error', 'warn'] }], // warn も許可

@@ -4,11 +4,13 @@ import React, { useState } from 'react';
 
 
 // RoutineContext is no longer needed
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Label } from '@/components/ui/Label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import type { Routine, InsertRoutine } from '@/lib/db/schema';
+
+import { Button } from '@/common/components/ui/Button';
+import { Input } from '@/common/components/ui/Input';
+import { Label } from '@/common/components/ui/Label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/common/components/ui/Select';
+
 
 interface RoutineFormProps {
   routine?: Routine;

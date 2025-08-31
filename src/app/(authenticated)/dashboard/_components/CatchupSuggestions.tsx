@@ -2,14 +2,17 @@
 
 import { useMemo } from 'react';
 
-import { Card } from '@/components/ui/Card';
-import type { UserSettingWithTimezone } from '@/lib/db/queries/user-settings';
+import type { UserSettingWithTimezone } from '@/lib/db/schema';
 import type { ExecutionRecord, Routine } from '@/lib/db/schema';
+
+import { Card } from '@/common/components/ui/Card';
+
 import {
   analyzeAllCatchupNeeds,
   generateDailyMissionSuggestions,
   getCatchupProgressMessage,
-} from '@/utils/catchupUtils';
+} from '@/model/routine/lib/catchup';
+
 
 
 interface Props {

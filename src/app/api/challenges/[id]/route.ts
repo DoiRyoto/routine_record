@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { leaveChallenge, updateChallengeProgress, getChallengeLeaderboard } from '@/lib/db/queries/challenges';
+import { leaveChallenge, updateChallengeProgress, getChallengeLeaderboard } from '@/server/lib/db/queries/challenges';
 
 export async function DELETE(
   request: NextRequest,

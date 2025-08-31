@@ -3,7 +3,9 @@ import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { getOrCreateUserSettings, updateUserSettings } from '@/lib/db/queries/user-settings';
-import { getServerErrorMessage } from '@/utils/errorHandler';
+
+import { getServerErrorMessage } from '@/common/lib/errors';
+
 
 // GET: ユーザー設定取得
 export async function GET(_request: NextRequest) {

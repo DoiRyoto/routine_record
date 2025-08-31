@@ -21,7 +21,7 @@ jest.mock('@supabase/ssr', () => ({
 }));
 
 // Database queries モック
-jest.mock('@/lib/db/queries/routines', () => ({
+jest.mock('@/server/lib/db/queries/routines', () => ({
   getRoutines: jest.fn(),
   createRoutine: jest.fn(),
 }));
@@ -67,7 +67,7 @@ describe('GET /api/routines', () => {
       };
       createServerClient.mockReturnValue(mockSupabase);
 
-      const { getRoutines } = require('@/lib/db/queries/routines');
+      const { getRoutines } = require('@/server/lib/db/queries/routines');
       getRoutines.mockResolvedValue({
         routines: [
           {
@@ -126,7 +126,7 @@ describe('GET /api/routines', () => {
     });
 
     it('カテゴリフィルターが正常に動作する', async () => {
-      const { getRoutines } = require('@/lib/db/queries/routines');
+      const { getRoutines } = require('@/server/lib/db/queries/routines');
       getRoutines.mockResolvedValue({
         routines: [
           {
@@ -147,7 +147,7 @@ describe('GET /api/routines', () => {
     });
 
     it('ページングパラメータが正しく処理される', async () => {
-      const { getRoutines } = require('@/lib/db/queries/routines');
+      const { getRoutines } = require('@/server/lib/db/queries/routines');
       getRoutines.mockImplementation((userId, options) => {
         expect(options.page).toBe(2);
         expect(options.limit).toBe(10);
@@ -187,7 +187,7 @@ describe('POST /api/routines', () => {
 
   describe('スケジュールベース作成', () => {
     it('有効なスケジュールベースルーチンが作成できる', async () => {
-      const { createRoutine } = require('@/lib/db/queries/routines');
+      const { createRoutine } = require('@/server/lib/db/queries/routines');
       createRoutine.mockResolvedValue({
         id: 'routine-123',
         name: '朝の運動',
@@ -219,7 +219,7 @@ describe('POST /api/routines', () => {
 
   describe('頻度ベース作成 (REQ-101)', () => {
     it('有効な頻度ベースルーチンが作成できる', async () => {
-      const { createRoutine } = require('@/lib/db/queries/routines');
+      const { createRoutine } = require('@/server/lib/db/queries/routines');
       createRoutine.mockResolvedValue({
         id: 'routine-123',
         name: '読書',
@@ -415,7 +415,7 @@ describe('POST /api/routines', () => {
 
   describe('Input Sanitization', () => {
     it('XSSペイロードがサニタイズされる', async () => {
-      const { createRoutine } = require('@/lib/db/queries/routines');
+      const { createRoutine } = require('@/server/lib/db/queries/routines');
       createRoutine.mockResolvedValue({
         id: 'routine-123',
         name: 'alert("xss")',
@@ -475,7 +475,7 @@ describe('POST /api/routines', () => {
 
   describe('エラーハンドリング', () => {
     it('データベースエラー時に500エラーを返す', async () => {
-      const { createRoutine } = require('@/lib/db/queries/routines');
+      const { createRoutine } = require('@/server/lib/db/queries/routines');
       createRoutine.mockRejectedValue(new Error('Database error'));
 
       const payload = {
@@ -511,7 +511,7 @@ describe('パフォーマンステスト', () => {
   });
 
   it('ルーチン一覧取得のレスポンス時間が300ms以下である', async () => {
-    const { getRoutines } = require('@/lib/db/queries/routines');
+    const { getRoutines } = require('@/server/lib/db/queries/routines');
     getRoutines.mockResolvedValue({
       routines: [],
       pagination: { page: 1, limit: 50, total: 0, pages: 0 },
@@ -526,7 +526,7 @@ describe('パフォーマンステスト', () => {
   });
 
   it('ルーチン作成のレスポンス時間が500ms以下である', async () => {
-    const { createRoutine } = require('@/lib/db/queries/routines');
+    const { createRoutine } = require('@/server/lib/db/queries/routines');
     createRoutine.mockResolvedValue({
       id: 'routine-123',
       name: 'パフォーマンステスト',
