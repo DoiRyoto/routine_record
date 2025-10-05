@@ -5,20 +5,19 @@ import * as React from 'react';
 
 import { cn } from '@/lib/ui-utils';
 
+import { progressRootVariants, progressIndicatorVariants } from './variants';
+
 const Progress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
 >(({ className, value, ...props }, ref) => (
   <ProgressPrimitive.Root
     ref={ref}
-    className={cn(
-      'relative h-3 w-full overflow-hidden rounded-full bg-white shadow-inner dark:bg-black',
-      className
-    )}
+    className={cn(progressRootVariants(), className)}
     {...props}
   >
     <ProgressPrimitive.Indicator
-      className="h-full w-full flex-1 rounded-full bg-black shadow-sm transition-all duration-500 ease-out dark:bg-white"
+      className={progressIndicatorVariants()}
       style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
     />
   </ProgressPrimitive.Root>
