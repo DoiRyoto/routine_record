@@ -61,7 +61,7 @@ export default function DashboardPage({
       });
 
       if (!response.ok) throw new Error('Failed to execute habit');
-      
+
       // ページを再読み込みして最新の状態を取得
       window.location.reload();
     } catch (error) {
@@ -107,21 +107,19 @@ export default function DashboardPage({
                     <span className="text-sm font-medium">
                       今{progress.period}の進捗
                     </span>
-                    <span className={`text-sm font-semibold ${progress.isAchieved ? 'text-green-600' : 'text-gray-600'}`}>
+                    <span className="text-sm font-semibold text-black dark:text-white">
                       {progress.current}/{progress.target}回
                       {progress.isAchieved && ' 🎉'}
                     </span>
                   </div>
-                  
-                  <div className="h-2 w-full rounded-full bg-gray-200">
+
+                  <div className="h-2 w-full rounded-full bg-white dark:bg-black">
                     <div
-                      className={`h-2 rounded-full transition-all duration-300 ${
-                        progress.isAchieved ? 'bg-green-500' : 'bg-blue-500'
-                      }`}
+                      className="h-2 rounded-full bg-black transition-all duration-300 dark:bg-white"
                       style={{ width: `${progressPercentage}%` }}
                     />
                   </div>
-                  
+
                   <p className="text-muted-foreground text-xs">
                     目標: {progress.period}{habit.targetCount}回
                   </p>

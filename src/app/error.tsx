@@ -16,13 +16,13 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray px-4 py-12 sm:px-6 lg:px-8 dark:bg-gray">
+    <div className="flex min-h-screen items-center justify-center bg-white px-4 py-12 sm:px-6 lg:px-8 dark:bg-black">
       <div className="w-full max-w-md space-y-8 text-center">
         <div>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray dark:text-gray">
+          <h2 className="mt-6 text-3xl font-extrabold text-black dark:text-white">
             エラーが発生しました
           </h2>
-          <p className="mt-2 text-sm text-gray dark:text-gray">
+          <p className="mt-2 text-sm text-black dark:text-white">
             予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。
           </p>
         </div>
