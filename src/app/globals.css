@@ -31,11 +31,37 @@
   --deep-gray: hsl(200, 15%, 25%);
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-japanese: var(--font-noto-sans-jp);
   --font-english: var(--font-roboto);
+
+  /* カラーシステム - これらのみ使用可能 */
+  --color-white: var(--white);
+  --color-black: var(--black);
+  --color-blue: var(--blue);
+  --color-green: var(--green);
+  --color-red: var(--red);
+  --color-yellow: var(--yellow);
+  --color-purple: var(--purple);
+  --color-orange: var(--orange);
+  --color-pink: var(--pink);
+  --color-teal: var(--teal);
+  --color-indigo: var(--indigo);
+  --color-gray: var(--gray);
+
+  /* 濃い色 */
+  --color-deep-blue: var(--deep-blue);
+  --color-deep-green: var(--deep-green);
+  --color-deep-red: var(--deep-red);
+  --color-deep-yellow: var(--deep-yellow);
+  --color-deep-purple: var(--deep-purple);
+  --color-deep-orange: var(--deep-orange);
+  --color-deep-pink: var(--deep-pink);
+  --color-deep-teal: var(--deep-teal);
+  --color-deep-indigo: var(--deep-indigo);
+  --color-deep-gray: var(--deep-gray);
 }
 
 body {

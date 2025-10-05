@@ -31,17 +31,17 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="bg-gray flex min-h-screen items-center justify-center px-4 py-12 dark:bg-gray sm:px-6 lg:px-8">
+    <div className="flex min-h-screen items-center justify-center bg-gray px-4 py-12 sm:px-6 lg:px-8 dark:bg-gray">
       <div className="w-full max-w-md space-y-8">
         <div>
-          <h2 className="text-gray mt-6 text-center text-3xl font-extrabold dark:text-gray">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray dark:text-gray">
             サインイン
           </h2>
-          <p className="text-gray mt-2 text-center text-sm dark:text-gray">
+          <p className="mt-2 text-center text-sm text-gray dark:text-gray">
             アカウントをお持ちでない方は{' '}
             <Link
               href="/auth/signup"
-              className="text-blue font-medium hover:text-blue dark:text-blue"
+              className="font-medium text-blue hover:text-blue dark:text-blue"
             >
               こちらから登録
             </Link>
@@ -59,7 +59,7 @@ export default function SignInPage() {
             <div>
               <label
                 htmlFor="email"
-                className="text-gray block text-sm font-medium dark:text-gray"
+                className="block text-sm font-medium text-gray dark:text-gray"
               >
                 メールアドレス
               </label>
@@ -71,7 +71,7 @@ export default function SignInPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="border-gray placeholder-gray text-gray relative mt-1 block w-full appearance-none rounded-md border bg-white px-3 py-2 dark:border-dark-gray dark:placeholder-gray dark:text-gray dark:bg-dark-gray focus:ring-blue focus:border-blue focus:z-10 focus:outline-none sm:text-sm"
+                className="dark:border-dark-gray dark:bg-dark-gray dark:text-gray dark:placeholder-gray relative mt-1 block w-full appearance-none rounded-md border border-gray bg-white px-3 py-2 text-gray placeholder-gray focus:z-10 focus:border-blue focus:ring-blue focus:outline-none sm:text-sm"
                 placeholder="メールアドレスを入力"
               />
             </div>
@@ -79,7 +79,7 @@ export default function SignInPage() {
             <div>
               <label
                 htmlFor="password"
-                className="text-gray block text-sm font-medium dark:text-gray"
+                className="block text-sm font-medium text-gray dark:text-gray"
               >
                 パスワード
               </label>
@@ -91,7 +91,7 @@ export default function SignInPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="border-gray placeholder-gray text-gray relative mt-1 block w-full appearance-none rounded-md border bg-white px-3 py-2 dark:border-dark-gray dark:placeholder-gray dark:text-gray dark:bg-dark-gray focus:ring-blue focus:border-blue focus:z-10 focus:outline-none sm:text-sm"
+                className="dark:border-dark-gray dark:bg-dark-gray dark:text-gray dark:placeholder-gray relative mt-1 block w-full appearance-none rounded-md border border-gray bg-white px-3 py-2 text-gray placeholder-gray focus:z-10 focus:border-blue focus:ring-blue focus:outline-none sm:text-sm"
                 placeholder="パスワードを入力"
               />
             </div>

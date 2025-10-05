@@ -136,7 +136,7 @@ export const FormCard: Story = {
               id="email"
               type="email"
               placeholder="name@example.com"
-              className="border-gray/30 w-full rounded-lg border px-3 py-2"
+              className="w-full rounded-lg border border-gray/30 px-3 py-2"
             />
           </div>
           <div className="space-y-2">
@@ -147,7 +147,7 @@ export const FormCard: Story = {
               id="password"
               type="password"
               placeholder="••••••••"
-              className="border-gray/30 w-full rounded-lg border px-3 py-2"
+              className="w-full rounded-lg border border-gray/30 px-3 py-2"
             />
           </div>
         </form>
@@ -167,7 +167,7 @@ export const StatCard: Story = {
         <CardTitle className="text-3xl">24</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-gray/70 text-sm">+12% from last month</p>
+        <p className="text-sm text-gray/70">+12% from last month</p>
       </CardContent>
     </Card>
   ),

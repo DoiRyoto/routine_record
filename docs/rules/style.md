@@ -3,9 +3,10 @@
 ## 1. 基本原則
 
 ### カラーシステム
-- **Tailwind設定で定義された色のみ使用可能**
+- **globals.cssの@themeで定義された色のみ使用可能**
 - `text-blue-600` や `bg-red-500` などのTailwind標準色は使用不可
-- カスタムカラー変数（globals.cssとtailwind.config.tsで定義）を使用する
+- カスタムカラー変数（globals.cssの@themeブロックで定義）を使用する
+- Tailwind CSS v4の@theme機能により、定義された色以外は使用できない
 
 ### コンポーネント優先
 - **基本的にUIコンポーネント（components/ui配下）を使用して実装する**
@@ -15,36 +16,34 @@
 ## 2. 利用可能なカラー
 
 ### 基本カラー
-```typescript
-// tailwind.config.ts で定義されている色のみ使用可能
-colors: {
-  white: 'var(--white)',      // hsl(0, 0%, 100%)
-  black: 'var(--black)',      // hsl(0, 0%, 0%)
-  blue: 'var(--blue)',        // hsl(210, 35%, 75%)
-  green: 'var(--green)',      // hsl(140, 30%, 75%)
-  red: 'var(--red)',          // hsl(0, 35%, 75%)
-  yellow: 'var(--yellow)',    // hsl(45, 40%, 75%)
-  purple: 'var(--purple)',    // hsl(270, 35%, 75%)
-  orange: 'var(--orange)',    // hsl(25, 40%, 75%)
-  pink: 'var(--pink)',        // hsl(330, 30%, 75%)
-  teal: 'var(--teal)',        // hsl(180, 30%, 75%)
-  indigo: 'var(--indigo)',    // hsl(240, 35%, 75%)
-  gray: 'var(--gray)',        // hsl(200, 15%, 75%)
-}
+```css
+/* globals.cssの@themeで定義されている色のみ使用可能 */
+--color-white: var(--white);      /* hsl(0, 0%, 100%) */
+--color-black: var(--black);      /* hsl(0, 0%, 0%) */
+--color-blue: var(--blue);        /* hsl(210, 35%, 75%) */
+--color-green: var(--green);      /* hsl(140, 30%, 75%) */
+--color-red: var(--red);          /* hsl(0, 35%, 75%) */
+--color-yellow: var(--yellow);    /* hsl(45, 40%, 75%) */
+--color-purple: var(--purple);    /* hsl(270, 35%, 75%) */
+--color-orange: var(--orange);    /* hsl(25, 40%, 75%) */
+--color-pink: var(--pink);        /* hsl(330, 30%, 75%) */
+--color-teal: var(--teal);        /* hsl(180, 30%, 75%) */
+--color-indigo: var(--indigo);    /* hsl(240, 35%, 75%) */
+--color-gray: var(--gray);        /* hsl(200, 15%, 75%) */
 ```
 
 ### 濃い色（Deep Colors）
-```typescript
-"deep-blue": 'var(--deep-blue)',      // hsl(210, 35%, 25%)
-"deep-green": 'var(--deep-green)',    // hsl(140, 30%, 25%)
-"deep-red": 'var(--deep-red)',        // hsl(0, 35%, 25%)
-"deep-yellow": 'var(--deep-yellow)',  // hsl(45, 40%, 25%)
-"deep-purple": 'var(--deep-purple)',  // hsl(270, 35%, 25%)
-"deep-orange": 'var(--deep-orange)',  // hsl(25, 40%, 25%)
-"deep-pink": 'var(--deep-pink)',      // hsl(330, 30%, 25%)
-"deep-teal": 'var(--deep-teal)',      // hsl(180, 30%, 25%)
-"deep-indigo": 'var(--deep-indigo)',  // hsl(240, 35%, 25%)
-"deep-gray": 'var(--deep-gray)',      // hsl(200, 15%, 25%)
+```css
+--color-deep-blue: var(--deep-blue);      /* hsl(210, 35%, 25%) */
+--color-deep-green: var(--deep-green);    /* hsl(140, 30%, 25%) */
+--color-deep-red: var(--deep-red);        /* hsl(0, 35%, 25%) */
+--color-deep-yellow: var(--deep-yellow);  /* hsl(45, 40%, 25%) */
+--color-deep-purple: var(--deep-purple);  /* hsl(270, 35%, 25%) */
+--color-deep-orange: var(--deep-orange);  /* hsl(25, 40%, 25%) */
+--color-deep-pink: var(--deep-pink);      /* hsl(330, 30%, 25%) */
+--color-deep-teal: var(--deep-teal);      /* hsl(180, 30%, 25%) */
+--color-deep-indigo: var(--deep-indigo);  /* hsl(240, 35%, 25%) */
+--color-deep-gray: var(--deep-gray);      /* hsl(200, 15%, 25%) */
 ```
 
 ## 3. カラー使用例
@@ -79,30 +78,12 @@ colors: {
 <p className="text-secondary">
 ```
 
-## 4. セマンティックカラー（ライトモード/ダークモード対応）
+## 4. カラーの使用方法
 
-### テキストカラー
-```typescript
-// ライトモード: 濃い色、ダークモード: 薄い色
-text: {
-  blue: 'light-dark(var(--deep-blue), var(--blue))',
-  green: 'light-dark(var(--deep-green), var(--green))',
-  red: 'light-dark(var(--deep-red), var(--red))',
-  // ... 以下同様
-}
-```
-
-### 背景カラー
-```typescript
-// ライトモード: 薄い色、ダークモード: 濃い色
-bg: {
-  white: 'light-dark(var(--white), var(--black))',
-  black: 'light-dark(var(--black), var(--white))',
-  blue: 'light-dark(var(--blue), var(--deep-blue))',
-  green: 'light-dark(var(--green), var(--deep-green))',
-  // ... 以下同様
-}
-```
+### Tailwind CSS v4での使用
+- `@theme`ブロックで定義した色は、`bg-*`、`text-*`、`border-*`などのユーティリティクラスとして使用できる
+- 例: `bg-blue`、`text-red`、`border-gray`
+- デフォルトのTailwind色（`blue-500`など）は使用できない
 
 ## 5. UIコンポーネントの使用
 
@@ -222,7 +203,7 @@ fontFamily: {
 ### 作成時のルール
 1. `src/components/ui/` 配下に配置
 2. class-variance-authority（cva）を使用してバリアント定義
-3. Tailwind設定の色のみ使用
+3. globals.cssの@themeで定義された色のみ使用
 4. ダークモード対応を含める
 5. TypeScript型定義を明確にする
 6. Storybookストーリーを作成する
@@ -301,7 +282,6 @@ rules: {
 settings: {
   'better-tailwindcss': {
     callees: ['cn', 'cva', 'clsx'],  // 関数内のクラスも検証
-    config: 'tailwind.config.ts',     // Tailwind設定ファイル
     entryPoint: 'src/app/globals.css', // CSSエントリポイント
   },
 }
@@ -360,7 +340,7 @@ npm run type-check && npm run lint
 ## 11. 品質チェック
 
 ### スタイリング実装時の確認項目
-- [ ] Tailwind設定で定義された色のみ使用している
+- [ ] globals.cssの@themeで定義された色のみ使用している
 - [ ] 可能な限りUIコンポーネントを使用している
 - [ ] `text-blue-600` などの未定義色を使用していない
 - [ ] ダークモード対応が必要な場合、適切に実装している

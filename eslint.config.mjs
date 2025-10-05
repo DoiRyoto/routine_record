@@ -117,7 +117,6 @@ const eslintConfig = [...compat.extends('next/core-web-vitals', 'next/typescript
     },
     'better-tailwindcss': {
       callees: ['cn', 'cva', 'clsx'],
-      config: 'tailwind.config.ts',
       entryPoint: 'src/app/globals.css',
     },
   },
