@@ -183,6 +183,29 @@ decorators: [
 ],
 ```
 
+### AuthProvider
+認証が必要なコンポーネント（useAuthフックを使用するコンポーネント）には、必ずAuthProviderをdecoratorとして追加する。
+
+```typescript
+import { AuthProvider } from '@/context/AuthContext';
+
+const meta = {
+  title: 'Pages/Auth/SignInPage',
+  component: SignInPage,
+  parameters: {
+    layout: 'fullscreen',
+  },
+  tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <AuthProvider>
+        <Story />
+      </AuthProvider>
+    ),
+  ],
+} satisfies Meta<typeof SignInPage>;
+```
+
 ## 9. 品質チェック
 
 ### Storybook起動確認

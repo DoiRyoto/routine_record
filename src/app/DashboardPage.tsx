@@ -3,7 +3,7 @@
 import { Plus } from 'lucide-react';
 
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Progress } from '@/components/ui/Progress';
 import type { Habit, HabitLog } from '@/lib/db/schema';
 
@@ -87,12 +87,12 @@ export default function DashboardPage({
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
                 <div>
                   <CardTitle className="text-lg" data-testid="habit-title">{habit.name}</CardTitle>
-                  <p className="text-muted-foreground text-sm">
+                  <CardDescription>
                     {habit.frequencyType === 'weekly' ? '週間' : '月間'}習慣
-                  </p>
+                  </CardDescription>
                 </div>
                 <Button
-                  size="sm"
+                  size="icon"
                   onClick={() => executeHabit(habit.id)}
                   className="shrink-0"
                 >
@@ -107,15 +107,14 @@ export default function DashboardPage({
                     </span>
                     <span className="text-sm font-semibold text-black dark:text-white">
                       {progress.current}/{progress.target}回
-                      {progress.isAchieved && ' 🎉'}
                     </span>
                   </div>
 
                   <Progress value={progressPercentage} className="h-2" />
 
-                  <p className="text-muted-foreground text-xs">
+                  <CardDescription className="text-xs">
                     目標: {progress.period}{habit.targetCount}回
-                  </p>
+                  </CardDescription>
                 </div>
               </CardContent>
             </Card>
@@ -125,7 +124,7 @@ export default function DashboardPage({
 
       {habits.length === 0 && (
         <div className="py-12 text-center">
-          <p className="text-muted-foreground mb-4">まだ習慣が登録されていません</p>
+          <CardDescription className="mb-4">まだ習慣が登録されていません</CardDescription>
           <Button>
             <Plus className="mr-2 h-4 w-4" />
             最初の習慣を追加

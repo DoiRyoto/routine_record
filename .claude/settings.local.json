@@ -22,7 +22,9 @@
       "Bash(npx next build:*)",
       "Bash(curl:*)",
       "Bash(rg:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs"
     ],
     "defaultMode": "acceptEdits",
     "additionalDirectories": [

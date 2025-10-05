@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority';
 
 export const cardVariants = cva(
-  'overflow-hidden rounded-xl border border-black bg-white text-black shadow-md backdrop-blur-sm transition-all duration-300 hover:shadow-lg dark:border-white dark:bg-black dark:text-white'
+  'overflow-hidden rounded-xl border border-black bg-white text-black dark:border-white dark:bg-black dark:text-white'
 );
 
 export const cardHeaderVariants = cva('flex flex-col space-y-2 p-6 pb-4');
