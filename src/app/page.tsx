@@ -1,11 +1,10 @@
+import DashboardPage from '@/app/DashboardPage';
 import { serverTypedGet } from '@/lib/api-client/server-fetch';
 import { requireAuth } from '@/lib/auth/server';
 import {
   HabitLogsGetResponseSchema,
   HabitsGetResponseSchema,
 } from '@/lib/schemas/api-response';
-
-import DashboardPage from './DashboardPage';
 
 export default async function HomePage() {
   await requireAuth('/');

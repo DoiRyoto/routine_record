@@ -1,7 +1,9 @@
 'use client';
 
 import { Plus } from 'lucide-react';
+import * as React from 'react';
 
+import { HabitForm } from '@/components/feature/HabitForm';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Progress } from '@/components/ui/Progress';
@@ -16,6 +18,7 @@ export default function DashboardPage({
   habits,
   habitLogs,
 }: DashboardPageProps) {
+  const [isFormOpen, setIsFormOpen] = React.useState(false);
 
   // 今週/今月の進捗を計算する関数
   const getProgress = (habit: Habit) => {
@@ -71,11 +74,13 @@ export default function DashboardPage({
     <div className="container mx-auto p-6">
       <div className="mb-8 flex items-center justify-between">
         <h1 className="text-3xl font-bold">習慣記録</h1>
-        <Button>
+        <Button onClick={() => setIsFormOpen(true)} data-testid="add-habit-button">
           <Plus className="mr-2 h-4 w-4" />
           新しい習慣
         </Button>
       </div>
+
+      <HabitForm open={isFormOpen} onOpenChange={setIsFormOpen} />
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {habits.map((habit) => {
@@ -125,7 +130,7 @@ export default function DashboardPage({
       {habits.length === 0 && (
         <div className="py-12 text-center">
           <CardDescription className="mb-4">まだ習慣が登録されていません</CardDescription>
-          <Button>
+          <Button onClick={() => setIsFormOpen(true)} data-testid="add-first-habit-button">
             <Plus className="mr-2 h-4 w-4" />
             最初の習慣を追加
           </Button>

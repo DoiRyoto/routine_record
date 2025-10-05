@@ -58,6 +58,19 @@ export async function getCurrentUser(): Promise<User | null> {
  * 認証が必要なページで使用。未認証の場合はサインインページにリダイレクト
  */
 export async function requireAuth(redirectTo?: string): Promise<User> {
+  // E2Eテストモード: 認証をスキップし、ダミーユーザーを返す
+  if (process.env.E2E_TEST_MODE === 'true') {
+    return {
+      id: 'test-user-id',
+      email: 'test@example.com',
+      aud: 'authenticated',
+      role: 'authenticated',
+      created_at: new Date().toISOString(),
+      app_metadata: {},
+      user_metadata: {},
+    } as User;
+  }
+
   const user = await getCurrentUser();
 
   if (!user) {

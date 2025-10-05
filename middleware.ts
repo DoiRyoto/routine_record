@@ -17,6 +17,11 @@ export async function middleware(request: NextRequest) {
     },
   });
 
+  // E2Eテストモード: 認証をスキップ
+  if (process.env.E2E_TEST_MODE === 'true') {
+    return response;
+  }
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
