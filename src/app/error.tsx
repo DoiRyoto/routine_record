@@ -34,7 +34,7 @@ export default function Error({
 
           <Button
             onClick={() => (window.location.href = '/')}
-            variant="secondary"
+            variant="outline"
             className="w-full"
           >
             ホームに戻る

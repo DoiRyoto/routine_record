@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority';
 
 export const progressRootVariants = cva(
-  'relative h-3 w-full overflow-hidden rounded-full bg-white shadow-inner dark:bg-black'
+  'relative h-3 w-full overflow-hidden rounded-full border border-black bg-white dark:border-white dark:bg-black'
 );
 
 export const progressIndicatorVariants = cva(

@@ -49,102 +49,12 @@ export const Vertical: Story = {
   ],
 };
 
-export const InText: Story = {
+export const InContent: Story = {
   render: () => (
-    <div className="w-[400px] space-y-4">
-      <p className="text-sm">
-        This is some text content that appears above the separator.
-      </p>
+    <div className="w-[400px] space-y-3">
+      <p className="text-sm">Content above separator.</p>
       <Separator />
-      <p className="text-sm">
-        This is some text content that appears below the separator.
-      </p>
-    </div>
-  ),
-};
-
-export const InCard: Story = {
-  render: () => (
-    <div className="w-[350px] rounded-xl border border-gray bg-white p-6 shadow-md">
-      <h3 className="mb-2 text-lg font-bold">Card Title</h3>
-      <p className="mb-4 text-sm text-gray">Card description goes here</p>
-      <Separator className="my-4" />
-      <p className="text-sm">Main content of the card.</p>
-      <Separator className="my-4" />
-      <div className="flex justify-end gap-2">
-        <button className="px-4 py-2 text-sm">Cancel</button>
-        <button className="rounded-lg bg-blue px-4 py-2 text-sm text-white">
-          Confirm
-        </button>
-      </div>
-    </div>
-  ),
-};
-
-export const VerticalInFlex: Story = {
-  render: () => (
-    <div className="flex h-[100px] items-center gap-4">
-      <div className="text-center">
-        <p className="text-2xl font-bold">24</p>
-        <p className="text-sm text-gray">Routines</p>
-      </div>
-      <Separator orientation="vertical" />
-      <div className="text-center">
-        <p className="text-2xl font-bold">156</p>
-        <p className="text-sm text-gray">Completed</p>
-      </div>
-      <Separator orientation="vertical" />
-      <div className="text-center">
-        <p className="text-2xl font-bold">7</p>
-        <p className="text-sm text-gray">Day Streak</p>
-      </div>
-    </div>
-  ),
-};
-
-export const Navigation: Story = {
-  render: () => (
-    <nav className="w-[400px]">
-      <ul className="space-y-1">
-        <li className="cursor-pointer rounded px-4 py-2 hover:bg-gray">Home</li>
-        <li className="cursor-pointer rounded px-4 py-2 hover:bg-gray">Dashboard</li>
-        <li className="cursor-pointer rounded px-4 py-2 hover:bg-gray">Routines</li>
-        <Separator className="my-2" />
-        <li className="cursor-pointer rounded px-4 py-2 hover:bg-gray">Settings</li>
-        <li className="cursor-pointer rounded px-4 py-2 hover:bg-gray">Help</li>
-        <Separator className="my-2" />
-        <li className="cursor-pointer rounded px-4 py-2 text-red hover:bg-gray">
-          Sign Out
-        </li>
-      </ul>
-    </nav>
-  ),
-};
-
-export const WithCustomColor: Story = {
-  render: () => (
-    <div className="w-[400px] space-y-4">
-      <p className="text-sm">Default gray separator</p>
-      <Separator />
-      <p className="text-sm">Blue separator</p>
-      <Separator className="bg-blue" />
-      <p className="text-sm">Green separator</p>
-      <Separator className="bg-green" />
-      <p className="text-sm">Red separator</p>
-      <Separator className="bg-red" />
-    </div>
-  ),
-};
-
-export const WithDifferentThickness: Story = {
-  render: () => (
-    <div className="w-[400px] space-y-4">
-      <p className="text-sm">Thin (1px)</p>
-      <Separator className="h-[1px]" />
-      <p className="text-sm">Medium (2px)</p>
-      <Separator className="h-[2px]" />
-      <p className="text-sm">Thick (4px)</p>
-      <Separator className="h-[4px]" />
+      <p className="text-sm">Content below separator.</p>
     </div>
   ),
 };
