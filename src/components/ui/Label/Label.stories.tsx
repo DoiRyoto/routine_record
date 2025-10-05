@@ -25,7 +25,7 @@ export const Default: Story = {
 export const Required: Story = {
   render: () => (
     <Label>
-      Email <span className="text-red">*</span>
+      Email <span className="text-black">*</span>
     </Label>
   ),
 };
@@ -43,7 +43,7 @@ export const WithRequiredInput: Story = {
   render: () => (
     <div className="w-[300px] space-y-2">
       <Label htmlFor="password">
-        Password <span className="text-red">*</span>
+        Password <span className="text-black">*</span>
       </Label>
       <Input id="password" type="password" placeholder="••••••••" />
     </div>
@@ -59,13 +59,13 @@ export const FormWithLabels: Story = {
       </div>
       <div className="space-y-2">
         <Label htmlFor="email">
-          Email <span className="text-red">*</span>
+          Email <span className="text-black">*</span>
         </Label>
         <Input id="email" type="email" placeholder="name@example.com" />
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">
-          Password <span className="text-red">*</span>
+          Password <span className="text-black">*</span>
         </Label>
         <Input id="password" type="password" placeholder="••••••••" />
       </div>
@@ -73,7 +73,7 @@ export const FormWithLabels: Story = {
         <Label htmlFor="bio">Bio</Label>
         <textarea
           id="bio"
-          className="flex min-h-[80px] w-full rounded-lg border-2 border-gray bg-white px-4 py-2 text-sm"
+          className="flex min-h-[80px] w-full rounded-lg border-2 border-black bg-white px-4 py-2 text-sm dark:border-white dark:bg-black dark:text-white"
           placeholder="Tell us about yourself"
         />
       </div>
