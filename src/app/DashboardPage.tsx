@@ -1,23 +1,21 @@
 'use client';
 
 import { Plus } from 'lucide-react';
-import { useState } from 'react';
 
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Progress } from '@/components/ui/Progress';
 import type { Habit, HabitLog } from '@/lib/db/schema';
 
 interface DashboardPageProps {
-  initialHabits: Habit[];
-  initialHabitLogs: HabitLog[];
+  habits: Habit[];
+  habitLogs: HabitLog[];
 }
 
 export default function DashboardPage({
-  initialHabits,
-  initialHabitLogs,
+  habits,
+  habitLogs,
 }: DashboardPageProps) {
-  const [habits] = useState(initialHabits);
-  const [habitLogs] = useState(initialHabitLogs);
 
   // 今週/今月の進捗を計算する関数
   const getProgress = (habit: Habit) => {
@@ -113,12 +111,7 @@ export default function DashboardPage({
                     </span>
                   </div>
 
-                  <div className="h-2 w-full rounded-full bg-white dark:bg-black">
-                    <div
-                      className="h-2 rounded-full bg-black transition-all duration-300 dark:bg-white"
-                      style={{ width: `${progressPercentage}%` }}
-                    />
-                  </div>
+                  <Progress value={progressPercentage} className="h-2" />
 
                   <p className="text-muted-foreground text-xs">
                     目標: {progress.period}{habit.targetCount}回

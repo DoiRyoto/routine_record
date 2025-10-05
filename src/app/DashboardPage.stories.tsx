@@ -141,29 +141,29 @@ const mockHabitLogs: HabitLog[] = [
 
 export const Default: Story = {
   args: {
-    initialHabits: mockHabits,
-    initialHabitLogs: mockHabitLogs,
+    habits: mockHabits,
+    habitLogs: mockHabitLogs,
   },
 };
 
 export const NoHabits: Story = {
   args: {
-    initialHabits: [],
-    initialHabitLogs: [],
+    habits: [],
+    habitLogs: [],
   },
 };
 
 export const OneHabit: Story = {
   args: {
-    initialHabits: [mockHabits[0]],
-    initialHabitLogs: mockHabitLogs.filter(log => log.habitId === 'habit-1'),
+    habits: [mockHabits[0]],
+    habitLogs: mockHabitLogs.filter(log => log.habitId === 'habit-1'),
   },
 };
 
 export const AllAchieved: Story = {
   args: {
-    initialHabits: mockHabits,
-    initialHabitLogs: [
+    habits: mockHabits,
+    habitLogs: [
       // ランニング（週3回達成）
       { id: 'log-a1', habitId: 'habit-1', doneAt: new Date() },
       { id: 'log-a2', habitId: 'habit-1', doneAt: new Date(Date.now() - 24 * 60 * 60 * 1000) },
@@ -186,14 +186,14 @@ export const AllAchieved: Story = {
 
 export const NoProgress: Story = {
   args: {
-    initialHabits: mockHabits,
-    initialHabitLogs: [],
+    habits: mockHabits,
+    habitLogs: [],
   },
 };
 
 export const ManyHabits: Story = {
   args: {
-    initialHabits: [
+    habits: [
       ...mockHabits,
       {
         id: 'habit-4',
@@ -223,6 +223,6 @@ export const ManyHabits: Story = {
         updatedAt: new Date('2025-01-01'),
       },
     ],
-    initialHabitLogs: mockHabitLogs,
+    habitLogs: mockHabitLogs,
   },
 };

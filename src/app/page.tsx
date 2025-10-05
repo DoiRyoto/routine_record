@@ -1,8 +1,8 @@
 import { serverTypedGet } from '@/lib/api-client/server-fetch';
 import { requireAuth } from '@/lib/auth/server';
 import {
-  HabitsGetResponseSchema,
   HabitLogsGetResponseSchema,
+  HabitsGetResponseSchema,
 } from '@/lib/schemas/api-response';
 
 import DashboardPage from './DashboardPage';
@@ -23,8 +23,8 @@ export default async function HomePage() {
 
     return (
       <DashboardPage
-        initialHabits={habits}
-        initialHabitLogs={habitLogs}
+        habits={habits}
+        habitLogs={habitLogs}
       />
     );
   } catch (error) {

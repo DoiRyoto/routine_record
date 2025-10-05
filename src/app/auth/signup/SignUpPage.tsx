@@ -5,7 +5,9 @@ import React, { useState } from 'react';
 
 
 import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/Label';
 import { useAuth } from '@/context/AuthContext';
 
 export default function SignUpPage() {
@@ -52,7 +54,7 @@ export default function SignUpPage() {
       <div className="flex min-h-screen items-center justify-center bg-white px-4 py-12 sm:px-6 lg:px-8 dark:bg-black">
         <div className="w-full max-w-md space-y-8">
           <Card>
-            <div className="text-center">
+            <CardContent className="pt-6 text-center">
               <h2 className="mb-4 text-2xl font-bold text-black dark:text-white">✅ 登録完了</h2>
               <p className="mb-6 text-black dark:text-white">
                 確認メールを送信しました。
@@ -62,7 +64,7 @@ export default function SignUpPage() {
               <Link href="/auth/signin">
                 <Button>サインインページへ</Button>
               </Link>
-            </div>
+            </CardContent>
           </Card>
         </div>
       </div>
@@ -88,79 +90,63 @@ export default function SignUpPage() {
         </div>
 
         <Card>
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div className="rounded-md border border-black p-4 dark:border-white">
-                <p className="text-sm text-black dark:text-white">{error}</p>
+          <CardContent className="pt-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              {error && (
+                <div className="rounded-md border border-black p-4 dark:border-white">
+                  <p className="text-sm text-black dark:text-white">{error}</p>
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="email">メールアドレス</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="メールアドレスを入力"
+                />
               </div>
-            )}
 
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-black dark:text-white"
-              >
-                メールアドレス
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="relative mt-1 block w-full appearance-none rounded-md border border-black bg-white px-3 py-2 text-black focus:z-10 focus:border-black focus:ring-black focus:outline-none sm:text-sm dark:border-white dark:bg-black dark:text-white"
-                placeholder="メールアドレスを入力"
-              />
-            </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">パスワード</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="new-password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="パスワードを入力（6文字以上）"
+                />
+              </div>
 
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-black dark:text-white"
-              >
-                パスワード
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="relative mt-1 block w-full appearance-none rounded-md border border-black bg-white px-3 py-2 text-black focus:z-10 focus:border-black focus:ring-black focus:outline-none sm:text-sm dark:border-white dark:bg-black dark:text-white"
-                placeholder="パスワードを入力（6文字以上）"
-              />
-            </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">パスワード確認</Label>
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  autoComplete="new-password"
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="パスワードを再入力"
+                />
+              </div>
 
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-black dark:text-white"
-              >
-                パスワード確認
-              </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-                required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="relative mt-1 block w-full appearance-none rounded-md border border-black bg-white px-3 py-2 text-black focus:z-10 focus:border-black focus:ring-black focus:outline-none sm:text-sm dark:border-white dark:bg-black dark:text-white"
-                placeholder="パスワードを再入力"
-              />
-            </div>
-
-            <div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? '登録中...' : 'アカウント登録'}
-              </Button>
-            </div>
-          </form>
+              <div>
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? '登録中...' : 'アカウント登録'}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
         </Card>
       </div>
     </div>
