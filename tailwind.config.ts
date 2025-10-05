@@ -19,7 +19,6 @@ const config: Config = {
     colors: {
       white: 'var(--white)',
       black: 'var(--black)',
-
       blue: 'var(--blue)',
       green: 'var(--green)',
       red: 'var(--red)',
@@ -31,16 +30,16 @@ const config: Config = {
       indigo: 'var(--indigo)',
       gray: 'var(--gray)',
 
-      "dark-blue": 'var(--deep-blue)',
-      "dark-green": 'var(--deep-green)',
-      "dark-red": 'var(--deep-red)',
-      "dark-yellow": 'var(--deep-yellow)',
-      "dark-purple": 'var(--deep-purple)',
-      "dark-orange": 'var(--deep-orange)',
-      "dark-pink": 'var(--deep-pink)',
-      "dark-teal": 'var(--deep-teal)',
-      "dark-indigo": 'var(--deep-indigo)',
-      "dark-gray": 'var(--deep-gray)',
+      "deep-blue": 'var(--deep-blue)',
+      "deep-green": 'var(--deep-green)',
+      "deep-red": 'var(--deep-red)',
+      "deep-yellow": 'var(--deep-yellow)',
+      "deep-purple": 'var(--deep-purple)',
+      "deep-orange": 'var(--deep-orange)',
+      "deep-pink": 'var(--deep-pink)',
+      "deep-teal": 'var(--deep-teal)',
+      "deep-indigo": 'var(--deep-indigo)',
+      "deep-gray": 'var(--deep-gray)',
     },
     text: {
       // セマンティックテキスト色（ライト:濃い色, ダーク:薄い色）

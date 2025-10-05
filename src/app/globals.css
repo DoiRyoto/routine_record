@@ -3,8 +3,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --black: hsl(0, 0%, 0%);
+  --white: hsl(0, 0%, 100%);
   
   /* ライト色変数 */
   --blue: hsl(210, 35%, 75%);
@@ -29,13 +29,6 @@
   --deep-teal: hsl(180, 30%, 25%);
   --deep-indigo: hsl(240, 35%, 25%);
   --deep-gray: hsl(200, 15%, 25%);
-}
-
-:root.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  
-  /* ダークモードでは値はそのまま（CSS variablesの値は変えない） */
 }
 
 @theme inline {
