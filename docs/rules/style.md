@@ -3,10 +3,12 @@
 ## 1. 基本原則
 
 ### カラーシステム
-- **globals.cssの@themeで定義された色のみ使用可能**
+- **白（white）と黒（black）のみを使用**
+- **不透明度（opacity）は使用禁止**
+  - `text-black/60`、`bg-white/20`、`opacity-*`などは使用不可
+- **gray は disabled 状態などの特定の用途でのみ使用可能**
+- Tailwind CSS v4の@theme機能により、`--color-*: initial;`でデフォルト色を無効化
 - `text-blue-600` や `bg-red-500` などのTailwind標準色は使用不可
-- カスタムカラー変数（globals.cssの@themeブロックで定義）を使用する
-- Tailwind CSS v4の@theme機能により、定義された色以外は使用できない
 
 ### コンポーネント優先
 - **基本的にUIコンポーネント（components/ui配下）を使用して実装する**
@@ -15,56 +17,61 @@
 
 ## 2. 利用可能なカラー
 
-### 基本カラー
+### 基本カラー（主要）
 ```css
-/* globals.cssの@themeで定義されている色のみ使用可能 */
---color-white: var(--white);      /* hsl(0, 0%, 100%) */
---color-black: var(--black);      /* hsl(0, 0%, 0%) */
---color-blue: var(--blue);        /* hsl(210, 35%, 75%) */
---color-green: var(--green);      /* hsl(140, 30%, 75%) */
---color-red: var(--red);          /* hsl(0, 35%, 75%) */
---color-yellow: var(--yellow);    /* hsl(45, 40%, 75%) */
---color-purple: var(--purple);    /* hsl(270, 35%, 75%) */
---color-orange: var(--orange);    /* hsl(25, 40%, 75%) */
---color-pink: var(--pink);        /* hsl(330, 30%, 75%) */
---color-teal: var(--teal);        /* hsl(180, 30%, 75%) */
---color-indigo: var(--indigo);    /* hsl(240, 35%, 75%) */
+/* 白と黒のみ使用 */
+--color-white: var(--white);      /* hsl(0, 0%, 100%) - #ffffff */
+--color-black: var(--black);      /* hsl(0, 0%, 0%) - #000000 */
+```
+
+### 補助カラー（特定用途のみ）
+```css
+/* disabled状態などの特定用途でのみ使用可能 */
 --color-gray: var(--gray);        /* hsl(200, 15%, 75%) */
 ```
 
-### 濃い色（Deep Colors）
+### 廃止されたカラー（使用禁止）
+以下の色は定義されていますが、使用禁止です：
 ```css
---color-deep-blue: var(--deep-blue);      /* hsl(210, 35%, 25%) */
---color-deep-green: var(--deep-green);    /* hsl(140, 30%, 25%) */
---color-deep-red: var(--deep-red);        /* hsl(0, 35%, 25%) */
---color-deep-yellow: var(--deep-yellow);  /* hsl(45, 40%, 25%) */
---color-deep-purple: var(--deep-purple);  /* hsl(270, 35%, 25%) */
---color-deep-orange: var(--deep-orange);  /* hsl(25, 40%, 25%) */
---color-deep-pink: var(--deep-pink);      /* hsl(330, 30%, 25%) */
---color-deep-teal: var(--deep-teal);      /* hsl(180, 30%, 25%) */
---color-deep-indigo: var(--deep-indigo);  /* hsl(240, 35%, 25%) */
---color-deep-gray: var(--deep-gray);      /* hsl(200, 15%, 25%) */
+/* ❌ 使用禁止 - 白と黒のみ使用 */
+--color-blue、--color-green、--color-red、--color-yellow、
+--color-purple、--color-orange、--color-pink、--color-teal、
+--color-indigo、--color-deep-*系すべて
 ```
 
 ## 3. カラー使用例
 
 ### 正しい使用例
 ```tsx
-// ✅ 正しい - tailwind.config.tsで定義された色を使用
-<div className="bg-blue text-white">
-<Button variant="primary" className="bg-green">
-<p className="text-red">
-<Card className="border-gray">
+// ✅ 正しい - 白と黒のみ使用
+<div className="bg-black text-white dark:bg-white dark:text-black">
+<Button variant="primary">Primary Button</Button>
+<p className="text-black dark:text-white">Text</p>
+<Card className="border-black dark:border-white">
+
+// ✅ 正しい - disabled状態でgrayを使用
+<Button disabled className="disabled:bg-gray">
+<Input disabled className="disabled:text-gray">
 
 // ✅ 正しい - UIコンポーネントのvariantを使用
 <Button variant="primary">
-<Button variant="danger">
-<Button variant="success">
+<Button variant="outline">
+<Button variant="ghost">
 ```
 
 ### 間違った使用例
 ```tsx
-// ❌ 間違い - Tailwind標準色は定義されていない
+// ❌ 間違い - 不透明度の使用
+<div className="bg-black/60">
+<p className="text-white/80">
+<div className="opacity-50">
+
+// ❌ 間違い - 白黒以外の色の使用
+<div className="bg-blue">
+<p className="text-red">
+<Card className="border-green">
+
+// ❌ 間違い - Tailwind標準色
 <div className="bg-blue-500">
 <p className="text-red-600">
 <Card className="border-gray-300">
@@ -72,10 +79,6 @@
 // ❌ 間違い - カスタム16進数カラーを直接使用
 <div className="bg-[#3b82f6]">
 <p className="text-[#ef4444]">
-
-// ❌ 間違い - 定義されていない色
-<div className="bg-primary">
-<p className="text-secondary">
 ```
 
 ## 4. カラーの使用方法
@@ -140,26 +143,21 @@
 
 ## 6. 直接スタイリングが必要な場合
 
-### 透明度の指定
-```tsx
-// ✅ 正しい - 定義された色に透明度を追加
-<div className="bg-blue/20">
-<p className="text-gray/70">
-<div className="border-gray/30">
-```
-
-### グラデーション
-```tsx
-// ✅ 正しい - 定義された色でグラデーション
-<div className="bg-gradient-to-r from-blue to-teal">
-<div className="bg-gradient-to-b from-purple to-pink">
-```
-
 ### ホバーやフォーカス
 ```tsx
-// ✅ 正しい - 定義された色でインタラクション
-<button className="bg-blue hover:bg-deep-blue">
-<input className="border-gray/30 focus:border-blue">
+// ✅ 正しい - 白黒でインタラクション
+<button className="bg-black text-white hover:bg-white hover:text-black dark:bg-white dark:text-black dark:hover:bg-black dark:hover:text-white">
+<input className="border-black focus:border-black dark:border-white dark:focus:border-white">
+
+// ✅ 正しい - grayを使った控えめなホバー
+<div className="hover:bg-gray">
+```
+
+### 無効化状態
+```tsx
+// ✅ 正しい - grayを使った無効化
+<button disabled className="disabled:bg-gray">
+<input disabled className="disabled:text-gray">
 ```
 
 ## 7. ダークモード対応
@@ -340,25 +338,27 @@ npm run type-check && npm run lint
 ## 11. 品質チェック
 
 ### スタイリング実装時の確認項目
-- [ ] globals.cssの@themeで定義された色のみ使用している
+- [ ] 白（white）と黒（black）のみを使用している
+- [ ] 不透明度（`/数値`、`opacity-*`）を使用していない
+- [ ] grayはdisabled状態などの特定用途でのみ使用している
 - [ ] 可能な限りUIコンポーネントを使用している
-- [ ] `text-blue-600` などの未定義色を使用していない
 - [ ] ダークモード対応が必要な場合、適切に実装している
 - [ ] 新しいコンポーネントにはStorybookストーリーがある
 - [ ] TypeScript型チェックが通る
 - [ ] ESLintエラー・警告がない
 
 ### 禁止事項
-- ❌ Tailwind標準色（blue-500, red-600など）の使用
+- ❌ 白黒以外の色の使用（blue、red、greenなど全て禁止）
+- ❌ 不透明度の使用（`text-black/60`、`bg-white/20`、`opacity-*`など）
+- ❌ Tailwind標準色（blue-500、red-600など）の使用
 - ❌ 16進数カラーコードの直接指定
 - ❌ RGBカラーの直接指定
-- ❌ 未定義のカスタムカラー名の使用
 - ❌ インラインstyle属性でのカラー指定（特別な理由がない限り）
 
 ### 推奨事項
 - ✅ UIコンポーネントのvariantを優先的に使用
 - ✅ 新しいスタイルパターンはUIコンポーネント化
-- ✅ 透明度が必要な場合は `/20`, `/50`, `/70` などを使用
+- ✅ 白と黒のコントラストを活用したデザイン
 - ✅ ダークモード対応は `dark:` プレフィックスで実装
 - ✅ Storybookで全バリエーションを確認
 - ✅ コミット前に必ず `npm run type-check && npm run lint` を実行

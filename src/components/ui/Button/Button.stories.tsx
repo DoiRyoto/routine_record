@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
+import { Plus } from 'lucide-react';
 
 import { Button } from './Button';
 
@@ -126,7 +127,7 @@ export const ExtraLarge: Story = {
 
 export const Icon: Story = {
   args: {
-    children: '🎯',
+    children: <Plus className="h-4 w-4" />,
     variant: 'primary',
     size: 'icon',
   },
@@ -134,7 +135,7 @@ export const Icon: Story = {
 
 export const IconSmall: Story = {
   args: {
-    children: '🎯',
+    children: <Plus className="h-4 w-4" />,
     variant: 'primary',
     size: 'icon-sm',
   },
@@ -142,7 +143,7 @@ export const IconSmall: Story = {
 
 export const IconLarge: Story = {
   args: {
-    children: '🎯',
+    children: <Plus className="h-4 w-4" />,
     variant: 'primary',
     size: 'icon-lg',
   },
@@ -191,9 +192,9 @@ export const AllSizes: Story = {
 export const AllIconSizes: Story = {
   render: () => (
     <div className="flex items-center gap-4">
-      <Button size="icon-sm">🎯</Button>
-      <Button size="icon">🎯</Button>
-      <Button size="icon-lg">🎯</Button>
+      <Button size="icon-sm"><Plus className="h-4 w-4" /></Button>
+      <Button size="icon"><Plus className="h-4 w-4" /></Button>
+      <Button size="icon-lg"><Plus className="h-4 w-4" /></Button>
     </div>
   ),
 };

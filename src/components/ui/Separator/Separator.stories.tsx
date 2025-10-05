@@ -65,9 +65,9 @@ export const InText: Story = {
 
 export const InCard: Story = {
   render: () => (
-    <div className="w-[350px] rounded-xl border border-gray/20 bg-white p-6 shadow-md">
+    <div className="w-[350px] rounded-xl border border-gray bg-white p-6 shadow-md">
       <h3 className="mb-2 text-lg font-bold">Card Title</h3>
-      <p className="mb-4 text-sm text-gray/70">Card description goes here</p>
+      <p className="mb-4 text-sm text-gray">Card description goes here</p>
       <Separator className="my-4" />
       <p className="text-sm">Main content of the card.</p>
       <Separator className="my-4" />
@@ -86,17 +86,17 @@ export const VerticalInFlex: Story = {
     <div className="flex h-[100px] items-center gap-4">
       <div className="text-center">
         <p className="text-2xl font-bold">24</p>
-        <p className="text-sm text-gray/70">Routines</p>
+        <p className="text-sm text-gray">Routines</p>
       </div>
       <Separator orientation="vertical" />
       <div className="text-center">
         <p className="text-2xl font-bold">156</p>
-        <p className="text-sm text-gray/70">Completed</p>
+        <p className="text-sm text-gray">Completed</p>
       </div>
       <Separator orientation="vertical" />
       <div className="text-center">
         <p className="text-2xl font-bold">7</p>
-        <p className="text-sm text-gray/70">Day Streak</p>
+        <p className="text-sm text-gray">Day Streak</p>
       </div>
     </div>
   ),
@@ -106,14 +106,14 @@ export const Navigation: Story = {
   render: () => (
     <nav className="w-[400px]">
       <ul className="space-y-1">
-        <li className="cursor-pointer rounded px-4 py-2 hover:bg-gray/10">Home</li>
-        <li className="cursor-pointer rounded px-4 py-2 hover:bg-gray/10">Dashboard</li>
-        <li className="cursor-pointer rounded px-4 py-2 hover:bg-gray/10">Routines</li>
+        <li className="cursor-pointer rounded px-4 py-2 hover:bg-gray">Home</li>
+        <li className="cursor-pointer rounded px-4 py-2 hover:bg-gray">Dashboard</li>
+        <li className="cursor-pointer rounded px-4 py-2 hover:bg-gray">Routines</li>
         <Separator className="my-2" />
-        <li className="cursor-pointer rounded px-4 py-2 hover:bg-gray/10">Settings</li>
-        <li className="cursor-pointer rounded px-4 py-2 hover:bg-gray/10">Help</li>
+        <li className="cursor-pointer rounded px-4 py-2 hover:bg-gray">Settings</li>
+        <li className="cursor-pointer rounded px-4 py-2 hover:bg-gray">Help</li>
         <Separator className="my-2" />
-        <li className="cursor-pointer rounded px-4 py-2 text-red hover:bg-gray/10">
+        <li className="cursor-pointer rounded px-4 py-2 text-red hover:bg-gray">
           Sign Out
         </li>
       </ul>

@@ -73,7 +73,7 @@ export const FormWithLabels: Story = {
         <Label htmlFor="bio">Bio</Label>
         <textarea
           id="bio"
-          className="flex min-h-[80px] w-full rounded-lg border-2 border-gray/30 bg-white px-4 py-2 text-sm"
+          className="flex min-h-[80px] w-full rounded-lg border-2 border-gray bg-white px-4 py-2 text-sm"
           placeholder="Tell us about yourself"
         />
       </div>
