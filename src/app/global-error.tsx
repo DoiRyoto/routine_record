@@ -16,11 +16,11 @@ export default function GlobalError({
   return (
     <html>
       <body>
-        <div className="min-h-screen flex items-center justify-center bg-gray py-12 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-md w-full space-y-8 text-center">
+        <div className="bg-gray flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+          <div className="w-full max-w-md space-y-8 text-center">
             <div>
-              <h2 className="mt-6 text-3xl font-extrabold text-gray">システムエラー</h2>
-              <p className="mt-2 text-sm text-gray">
+              <h2 className="text-gray mt-6 text-3xl font-extrabold">システムエラー</h2>
+              <p className="text-gray mt-2 text-sm">
                 申し訳ございません。システムで問題が発生しました。
                 サポートまでお問い合わせください。
               </p>
@@ -29,14 +29,14 @@ export default function GlobalError({
             <div className="space-y-4">
               <button
                 onClick={reset}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue"
+                className="bg-blue flex w-full justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue focus:ring-blue focus:ring-2 focus:ring-offset-2 focus:outline-none"
               >
                 再試行
               </button>
 
               <button
                 onClick={() => (window.location.href = '/')}
-                className="w-full flex justify-center py-2 px-4 border border-gray rounded-md shadow-sm text-sm font-medium text-gray bg-white hover:bg-gray focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue"
+                className="border-gray text-gray flex w-full justify-center rounded-md border bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray focus:ring-blue focus:ring-2 focus:ring-offset-2 focus:outline-none"
               >
                 ホームに戻る
               </button>

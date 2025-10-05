@@ -160,13 +160,13 @@ export const Disabled: Story = {
 export const AllVariants: Story = {
   render: () => (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         <Button variant="primary">Primary</Button>
         <Button variant="secondary">Secondary</Button>
         <Button variant="outline">Outline</Button>
         <Button variant="ghost">Ghost</Button>
       </div>
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         <Button variant="danger">Danger</Button>
         <Button variant="success">Success</Button>
         <Button variant="warning">Warning</Button>
@@ -178,7 +178,7 @@ export const AllVariants: Story = {
 
 export const AllSizes: Story = {
   render: () => (
-    <div className="flex flex-col gap-4 items-start">
+    <div className="flex flex-col items-start gap-4">
       <Button size="xs">Extra Small</Button>
       <Button size="sm">Small</Button>
       <Button size="default">Default</Button>
@@ -190,7 +190,7 @@ export const AllSizes: Story = {
 
 export const AllIconSizes: Story = {
   render: () => (
-    <div className="flex gap-4 items-center">
+    <div className="flex items-center gap-4">
       <Button size="icon-sm">🎯</Button>
       <Button size="icon">🎯</Button>
       <Button size="icon-lg">🎯</Button>

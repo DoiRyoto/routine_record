@@ -32,7 +32,7 @@ export const Required: Story = {
 
 export const WithInput: Story = {
   render: () => (
-    <div className="space-y-2 w-[300px]">
+    <div className="w-[300px] space-y-2">
       <Label htmlFor="email">Email Address</Label>
       <Input id="email" type="email" placeholder="name@example.com" />
     </div>
@@ -41,7 +41,7 @@ export const WithInput: Story = {
 
 export const WithRequiredInput: Story = {
   render: () => (
-    <div className="space-y-2 w-[300px]">
+    <div className="w-[300px] space-y-2">
       <Label htmlFor="password">
         Password <span className="text-red">*</span>
       </Label>
@@ -73,7 +73,7 @@ export const FormWithLabels: Story = {
         <Label htmlFor="bio">Bio</Label>
         <textarea
           id="bio"
-          className="flex min-h-[80px] w-full rounded-lg border-2 border-gray/30 bg-white px-4 py-2 text-sm"
+          className="border-gray/30 flex min-h-[80px] w-full rounded-lg border-2 bg-white px-4 py-2 text-sm"
           placeholder="Tell us about yourself"
         />
       </div>
@@ -83,7 +83,7 @@ export const FormWithLabels: Story = {
 
 export const DisabledState: Story = {
   render: () => (
-    <div className="space-y-2 w-[300px]">
+    <div className="w-[300px] space-y-2">
       <Label htmlFor="disabled-input">Disabled Field</Label>
       <Input id="disabled-input" type="text" placeholder="Cannot edit" disabled />
     </div>

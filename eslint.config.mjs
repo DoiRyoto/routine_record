@@ -1,5 +1,6 @@
 // For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from "eslint-plugin-storybook";
+import storybook from 'eslint-plugin-storybook';
+import betterTailwindcss from 'eslint-plugin-better-tailwindcss';
 
 import { FlatCompat } from '@eslint/eslintrc';
 import { dirname } from 'path';
@@ -14,7 +15,14 @@ const compat = new FlatCompat({
 
 const eslintConfig = [...compat.extends('next/core-web-vitals', 'next/typescript'), {
   files: ['**/*.{js,jsx,ts,tsx}'],
+  plugins: {
+    'better-tailwindcss': betterTailwindcss,
+  },
   rules: {
+    // Tailwind CSS基本ルール
+    'better-tailwindcss/sort-classes': 'warn',
+    'better-tailwindcss/no-duplicate-classes': 'error',
+
     // TypeScript基本ルール
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/no-explicit-any': 'warn',
@@ -106,6 +114,11 @@ const eslintConfig = [...compat.extends('next/core-web-vitals', 'next/typescript
       node: {
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
       },
+    },
+    'better-tailwindcss': {
+      callees: ['cn', 'cva', 'clsx'],
+      config: 'tailwind.config.ts',
+      entryPoint: 'src/app/globals.css',
     },
   },
 }, {

@@ -176,12 +176,12 @@ export const MultipleProgresses: Story = {
 export const LevelProgress: Story = {
   render: () => (
     <div className="w-[400px] space-y-2">
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <span className="text-sm font-semibold">Level 5</span>
-        <span className="text-xs text-gray/70">350 / 500 XP</span>
+        <span className="text-gray/70 text-xs">350 / 500 XP</span>
       </div>
       <Progress value={70} />
-      <p className="text-xs text-gray/70 text-center">150 XP to next level</p>
+      <p className="text-gray/70 text-center text-xs">150 XP to next level</p>
     </div>
   ),
 };

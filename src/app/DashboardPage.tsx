@@ -71,10 +71,10 @@ export default function DashboardPage({
 
   return (
     <div className="container mx-auto p-6">
-      <div className="flex items-center justify-between mb-8">
+      <div className="mb-8 flex items-center justify-between">
         <h1 className="text-3xl font-bold">習慣記録</h1>
         <Button>
-          <Plus className="w-4 h-4 mr-2" />
+          <Plus className="mr-2 h-4 w-4" />
           新しい習慣
         </Button>
       </div>
@@ -89,7 +89,7 @@ export default function DashboardPage({
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
                 <div>
                   <CardTitle className="text-lg" data-testid="habit-title">{habit.name}</CardTitle>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     {habit.frequencyType === 'weekly' ? '週間' : '月間'}習慣
                   </p>
                 </div>
@@ -98,7 +98,7 @@ export default function DashboardPage({
                   onClick={() => executeHabit(habit.id)}
                   className="shrink-0"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="h-4 w-4" />
                 </Button>
               </CardHeader>
               <CardContent>
@@ -113,7 +113,7 @@ export default function DashboardPage({
                     </span>
                   </div>
                   
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="h-2 w-full rounded-full bg-gray-200">
                     <div
                       className={`h-2 rounded-full transition-all duration-300 ${
                         progress.isAchieved ? 'bg-green-500' : 'bg-blue-500'
@@ -122,7 +122,7 @@ export default function DashboardPage({
                     />
                   </div>
                   
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     目標: {progress.period}{habit.targetCount}回
                   </p>
                 </div>
@@ -133,10 +133,10 @@ export default function DashboardPage({
       </div>
 
       {habits.length === 0 && (
-        <div className="text-center py-12">
+        <div className="py-12 text-center">
           <p className="text-muted-foreground mb-4">まだ習慣が登録されていません</p>
           <Button>
-            <Plus className="w-4 h-4 mr-2" />
+            <Plus className="mr-2 h-4 w-4" />
             最初の習慣を追加
           </Button>
         </div>

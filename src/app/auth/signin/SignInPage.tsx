@@ -31,17 +31,17 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray dark:bg-gray py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="bg-gray flex min-h-screen items-center justify-center px-4 py-12 dark:bg-gray sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray dark:text-gray">
+          <h2 className="text-gray mt-6 text-center text-3xl font-extrabold dark:text-gray">
             サインイン
           </h2>
-          <p className="mt-2 text-center text-sm text-gray dark:text-gray">
+          <p className="text-gray mt-2 text-center text-sm dark:text-gray">
             アカウントをお持ちでない方は{' '}
             <Link
               href="/auth/signup"
-              className="font-medium text-blue hover:text-blue dark:text-blue"
+              className="text-blue font-medium hover:text-blue dark:text-blue"
             >
               こちらから登録
             </Link>
@@ -51,7 +51,7 @@ export default function SignInPage() {
         <Card>
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
-              <div className="rounded-md bg-red-50 dark:bg-red-900/20 p-4">
+              <div className="rounded-md bg-red-50 p-4 dark:bg-red-900/20">
                 <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
               </div>
             )}
@@ -59,7 +59,7 @@ export default function SignInPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray dark:text-gray"
+                className="text-gray block text-sm font-medium dark:text-gray"
               >
                 メールアドレス
               </label>
@@ -71,7 +71,7 @@ export default function SignInPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray dark:border-dark-gray placeholder-gray dark:placeholder-gray text-gray dark:text-gray bg-white dark:bg-dark-gray rounded-md focus:outline-none focus:ring-blue focus:border-blue focus:z-10 sm:text-sm"
+                className="border-gray placeholder-gray text-gray relative mt-1 block w-full appearance-none rounded-md border bg-white px-3 py-2 dark:border-dark-gray dark:placeholder-gray dark:text-gray dark:bg-dark-gray focus:ring-blue focus:border-blue focus:z-10 focus:outline-none sm:text-sm"
                 placeholder="メールアドレスを入力"
               />
             </div>
@@ -79,7 +79,7 @@ export default function SignInPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray dark:text-gray"
+                className="text-gray block text-sm font-medium dark:text-gray"
               >
                 パスワード
               </label>
@@ -91,7 +91,7 @@ export default function SignInPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray dark:border-dark-gray placeholder-gray dark:placeholder-gray text-gray dark:text-gray bg-white dark:bg-dark-gray rounded-md focus:outline-none focus:ring-blue focus:border-blue focus:z-10 sm:text-sm"
+                className="border-gray placeholder-gray text-gray relative mt-1 block w-full appearance-none rounded-md border bg-white px-3 py-2 dark:border-dark-gray dark:placeholder-gray dark:text-gray dark:bg-dark-gray focus:ring-blue focus:border-blue focus:z-10 focus:outline-none sm:text-sm"
                 placeholder="パスワードを入力"
               />
             </div>

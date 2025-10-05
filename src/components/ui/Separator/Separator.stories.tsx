@@ -65,15 +65,15 @@ export const InText: Story = {
 
 export const InCard: Story = {
   render: () => (
-    <div className="w-[350px] border border-gray/20 rounded-xl bg-white p-6 shadow-md">
-      <h3 className="font-bold text-lg mb-2">Card Title</h3>
-      <p className="text-sm text-gray/70 mb-4">Card description goes here</p>
+    <div className="border-gray/20 w-[350px] rounded-xl border bg-white p-6 shadow-md">
+      <h3 className="mb-2 text-lg font-bold">Card Title</h3>
+      <p className="text-gray/70 mb-4 text-sm">Card description goes here</p>
       <Separator className="my-4" />
       <p className="text-sm">Main content of the card.</p>
       <Separator className="my-4" />
       <div className="flex justify-end gap-2">
         <button className="px-4 py-2 text-sm">Cancel</button>
-        <button className="px-4 py-2 text-sm bg-blue text-white rounded-lg">
+        <button className="bg-blue rounded-lg px-4 py-2 text-sm text-white">
           Confirm
         </button>
       </div>
@@ -83,20 +83,20 @@ export const InCard: Story = {
 
 export const VerticalInFlex: Story = {
   render: () => (
-    <div className="flex items-center gap-4 h-[100px]">
+    <div className="flex h-[100px] items-center gap-4">
       <div className="text-center">
-        <p className="font-bold text-2xl">24</p>
-        <p className="text-sm text-gray/70">Routines</p>
+        <p className="text-2xl font-bold">24</p>
+        <p className="text-gray/70 text-sm">Routines</p>
       </div>
       <Separator orientation="vertical" />
       <div className="text-center">
-        <p className="font-bold text-2xl">156</p>
-        <p className="text-sm text-gray/70">Completed</p>
+        <p className="text-2xl font-bold">156</p>
+        <p className="text-gray/70 text-sm">Completed</p>
       </div>
       <Separator orientation="vertical" />
       <div className="text-center">
-        <p className="font-bold text-2xl">7</p>
-        <p className="text-sm text-gray/70">Day Streak</p>
+        <p className="text-2xl font-bold">7</p>
+        <p className="text-gray/70 text-sm">Day Streak</p>
       </div>
     </div>
   ),
@@ -106,14 +106,14 @@ export const Navigation: Story = {
   render: () => (
     <nav className="w-[400px]">
       <ul className="space-y-1">
-        <li className="px-4 py-2 hover:bg-gray/10 rounded cursor-pointer">Home</li>
-        <li className="px-4 py-2 hover:bg-gray/10 rounded cursor-pointer">Dashboard</li>
-        <li className="px-4 py-2 hover:bg-gray/10 rounded cursor-pointer">Routines</li>
+        <li className="hover:bg-gray/10 cursor-pointer rounded px-4 py-2">Home</li>
+        <li className="hover:bg-gray/10 cursor-pointer rounded px-4 py-2">Dashboard</li>
+        <li className="hover:bg-gray/10 cursor-pointer rounded px-4 py-2">Routines</li>
         <Separator className="my-2" />
-        <li className="px-4 py-2 hover:bg-gray/10 rounded cursor-pointer">Settings</li>
-        <li className="px-4 py-2 hover:bg-gray/10 rounded cursor-pointer">Help</li>
+        <li className="hover:bg-gray/10 cursor-pointer rounded px-4 py-2">Settings</li>
+        <li className="hover:bg-gray/10 cursor-pointer rounded px-4 py-2">Help</li>
         <Separator className="my-2" />
-        <li className="px-4 py-2 hover:bg-gray/10 rounded cursor-pointer text-red">
+        <li className="hover:bg-gray/10 text-red cursor-pointer rounded px-4 py-2">
           Sign Out
         </li>
       </ul>

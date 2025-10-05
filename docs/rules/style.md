@@ -275,22 +275,87 @@ Component.displayName = 'Component';
 export { Component, componentVariants };
 ```
 
-## 10. 未定義クラスの検出（ESLint）
+## 10. Tailwind CSSの品質管理（eslint-plugin-better-tailwindcss）
 
-### 参考記事
-未定義のTailwindクラスを自動検出するには、ESLintプラグインを活用できます。
+### プラグインの導入
+このプロジェクトでは`eslint-plugin-better-tailwindcss`を使用してTailwind CSSの品質を自動的に管理しています。
 
-**参考:** [Tailwind CSSの未定義クラスを検出するESLintプラグイン](https://zenn.dev/chot/articles/ddea76b29e60f2)
+**参考:**
+- [eslint-plugin-better-tailwindcss](https://github.com/schoero/eslint-plugin-better-tailwindcss)
+- [Tailwind CSSの未定義クラスを検出するESLintプラグイン](https://zenn.dev/chot/articles/ddea76b29e60f2)
 
-### 基本的な考え方
-- カスタムカラー（`bg-blue`, `text-red`など）を使用する場合、標準のTailwind検証では検出されない
-- 未定義クラスを防ぐために、開発時に適切なLintルールを設定する
-- 既にこのプロジェクトではESLint設定が完備されているため、追加設定は不要
+### 主な機能
+1. **クラスの順序統一**: Tailwindクラスを一貫した順序で自動整列
+2. **重複クラスの検出**: 同じクラスの重複を検出してエラー表示
+3. **未定義クラスの警告**: カスタム設定にないクラスを使用すると警告
 
-### 現在のLint設定
-- `eslint.config.mjs` で厳格なルールを適用済み
-- `npm run lint` で未定義クラスを含む様々な問題を検出可能
-- コミット前に必ず `npm run type-check && npm run lint` を実行すること
+### 設定内容（eslint.config.mjs）
+```javascript
+plugins: {
+  'better-tailwindcss': betterTailwindcss,
+},
+rules: {
+  'better-tailwindcss/sort-classes': 'warn',        // クラスの順序
+  'better-tailwindcss/no-duplicate-classes': 'error', // 重複検出
+},
+settings: {
+  'better-tailwindcss': {
+    callees: ['cn', 'cva', 'clsx'],  // 関数内のクラスも検証
+    config: 'tailwind.config.ts',     // Tailwind設定ファイル
+    entryPoint: 'src/app/globals.css', // CSSエントリポイント
+  },
+}
+```
+
+### 自動修正
+多くの問題は自動修正可能です:
+```bash
+# 自動修正を実行
+npm run lint:fix
+```
+
+### 検出される問題例
+```tsx
+// ❌ 間違い - クラスの順序が不適切
+<div className="mt-4 flex items-center">
+
+// ✅ 正しい - 自動修正後
+<div className="flex items-center mt-4">
+
+// ❌ 間違い - 重複クラス
+<div className="text-sm text-sm">
+
+// ✅ 正しい
+<div className="text-sm">
+```
+
+### cn()、cva()、clsx()内の検証
+このプラグインは以下の関数内のクラスも検証します:
+```tsx
+// cn() での使用
+<div className={cn('flex items-center', className)}>
+
+// cva() でのバリアント定義
+const variants = cva('base-class', {
+  variants: {
+    variant: {
+      primary: 'bg-blue text-white',
+    }
+  }
+})
+```
+
+### 現在のLint実行コマンド
+```bash
+# 問題を検出
+npm run lint
+
+# 自動修正を実行
+npm run lint:fix
+
+# 型チェックとLintの両方を実行
+npm run type-check && npm run lint
+```
 
 ## 11. 品質チェック
 

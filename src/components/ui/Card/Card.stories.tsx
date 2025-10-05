@@ -105,7 +105,7 @@ export const LongContent: Story = {
             The card will automatically adjust its height to fit the content while maintaining
             the design consistency.
           </p>
-          <ul className="list-disc list-inside space-y-1">
+          <ul className="list-inside list-disc space-y-1">
             <li>Feature one</li>
             <li>Feature two</li>
             <li>Feature three</li>
@@ -136,7 +136,7 @@ export const FormCard: Story = {
               id="email"
               type="email"
               placeholder="name@example.com"
-              className="w-full px-3 py-2 border border-gray/30 rounded-lg"
+              className="border-gray/30 w-full rounded-lg border px-3 py-2"
             />
           </div>
           <div className="space-y-2">
@@ -147,7 +147,7 @@ export const FormCard: Story = {
               id="password"
               type="password"
               placeholder="••••••••"
-              className="w-full px-3 py-2 border border-gray/30 rounded-lg"
+              className="border-gray/30 w-full rounded-lg border px-3 py-2"
             />
           </div>
         </form>
@@ -167,7 +167,7 @@ export const StatCard: Story = {
         <CardTitle className="text-3xl">24</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-gray/70">+12% from last month</p>
+        <p className="text-gray/70 text-sm">+12% from last month</p>
       </CardContent>
     </Card>
   ),
@@ -175,8 +175,8 @@ export const StatCard: Story = {
 
 export const MultipleCards: Story = {
   render: () => (
-    <div className="flex gap-4 flex-wrap max-w-[800px]">
-      <Card className="flex-1 min-w-[200px]">
+    <div className="flex max-w-[800px] flex-wrap gap-4">
+      <Card className="min-w-[200px] flex-1">
         <CardHeader>
           <CardTitle>Total Users</CardTitle>
         </CardHeader>
@@ -184,7 +184,7 @@ export const MultipleCards: Story = {
           <p className="text-2xl font-bold">1,234</p>
         </CardContent>
       </Card>
-      <Card className="flex-1 min-w-[200px]">
+      <Card className="min-w-[200px] flex-1">
         <CardHeader>
           <CardTitle>Active Now</CardTitle>
         </CardHeader>
@@ -192,7 +192,7 @@ export const MultipleCards: Story = {
           <p className="text-2xl font-bold">89</p>
         </CardContent>
       </Card>
-      <Card className="flex-1 min-w-[200px]">
+      <Card className="min-w-[200px] flex-1">
         <CardHeader>
           <CardTitle>Completed</CardTitle>
         </CardHeader>
