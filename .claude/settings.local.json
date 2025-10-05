@@ -21,7 +21,8 @@
       "Bash(timeout 30 npx playwright test --headed --project=chromium e2e/dashboard-gamification.spec.ts)",
       "Bash(npx next build:*)",
       "Bash(curl:*)",
-      "Bash(rg:*)"
+      "Bash(rg:*)",
+      "Bash(rm:*)"
     ],
     "defaultMode": "acceptEdits",
     "additionalDirectories": [

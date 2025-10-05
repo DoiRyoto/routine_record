@@ -46,3 +46,53 @@ storybook-static
 # playwright
 /playwright-report
 /test-results
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Cache
+.cache/
+.parcel-cache/
+.eslintcache
+
+# Runtime
+.pid
+.seed
+.coverage
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
+# Editor backups
+*~
+.#*
+\#*#
+.\#*
+
+# Supabase local development
+supabase/.temp/
+supabase/.branches/
+supabase/logs/
+supabase/volumes/
+
+# Drizzle
+drizzle/meta/

@@ -2,10 +2,10 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { createRoutine, getRoutines } from '@/lib/db/queries/routines';
+import { createHabit, getHabits } from '@/lib/db/queries/habits';
 import { getServerErrorMessage } from '@/utils/errorHandler';
 
-// GET: ルーチン一覧取得
+// GET: 習慣一覧取得
 export async function GET(_request: NextRequest) {
   try {
     const cookieStore = await cookies();
@@ -39,18 +39,18 @@ export async function GET(_request: NextRequest) {
       return NextResponse.json({ error: '認証が必要です' }, { status: 401 });
     }
 
-    const routines = await getRoutines(user.id);
+    const userHabits = await getHabits(user.id);
 
     return NextResponse.json({
       success: true,
-      data: routines,
+      data: userHabits,
     });
   } catch {
     return NextResponse.json({ error: getServerErrorMessage() }, { status: 500 });
   }
 }
 
-// POST: ルーチン作成
+// POST: 習慣作成
 export async function POST(request: NextRequest) {
   try {
     const cookieStore = await cookies();
@@ -84,30 +84,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '認証が必要です' }, { status: 401 });
     }
 
-    const routineData = await request.json();
-    const { name, description, category, goalType, targetCount, targetPeriod, recurrenceType } = routineData;
+    const habitData = await request.json();
+    const { name, frequencyType, targetCount } = habitData;
 
     // バリデーション
-    if (!name || !category || !goalType || !recurrenceType) {
+    if (!name || !frequencyType || !targetCount) {
       return NextResponse.json({ error: '必須項目が不足しています' }, { status: 400 });
     }
 
-    // 頻度ベースの場合は targetCount と targetPeriod が必要
-    if (goalType === 'frequency_based' && (!targetCount || !targetPeriod)) {
-      return NextResponse.json({ error: '頻度ベースミッションには目標回数と期間が必要です' }, { status: 400 });
+    if (targetCount < 1) {
+      return NextResponse.json({ error: '目標回数は1以上にしてください' }, { status: 400 });
     }
 
-    const newRoutine = await createRoutine({
-      ...routineData,
+    const newHabit = await createHabit({
       userId: user.id,
-      description: description || null,
-      targetCount: targetCount || null,
+      name,
+      frequencyType,
+      targetCount,
     });
 
     return NextResponse.json({
       success: true,
-      message: 'ルーチンが作成されました',
-      data: newRoutine,
+      message: '習慣が作成されました',
+      data: newHabit,
     });
   } catch {
     return NextResponse.json({ error: getServerErrorMessage() }, { status: 500 });

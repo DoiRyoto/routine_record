@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Noto_Sans_JP, Roboto } from 'next/font/google';
 
 import './globals.css';
-import AppWrapper from '@/components/AppWrapper';
 import { AuthProvider } from '@/context/AuthContext';
 
 const notoSansJP = Noto_Sans_JP({
@@ -49,7 +48,7 @@ export default function RootLayout({
       </head>
       <body className={`${notoSansJP.variable} ${roboto.variable} antialiased`}>
         <AuthProvider>
-          <AppWrapper>{children}</AppWrapper>
+          {children}
         </AuthProvider>
       </body>
     </html>

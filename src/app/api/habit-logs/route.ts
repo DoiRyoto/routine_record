@@ -2,15 +2,11 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
-import {
-  deleteExecutionRecord,
-  getExecutionRecords,
-  updateExecutionRecord,
-} from '@/lib/db/queries/execution-records';
+import { createHabitLog, getHabitLogs } from '@/lib/db/queries/habits';
 import { getServerErrorMessage } from '@/utils/errorHandler';
 
-// PUT: 実行記録更新
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+// GET: 実行記録一覧取得
+export async function GET(request: NextRequest) {
   try {
     const cookieStore = await cookies();
     const supabase = createServerClient(
@@ -40,41 +36,25 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json({ error: '認証に失敗しました' }, { status: 401 });
+      return NextResponse.json({ error: '認証が必要です' }, { status: 401 });
     }
 
-    const resolvedParams = await params;
+    const { searchParams } = new URL(request.url);
+    const habitId = searchParams.get('habitId');
 
-    // 実行記録の存在確認とユーザー権限チェック
-    const userRecords = await getExecutionRecords(user.id);
-    const record = userRecords.find((r) => r.id === resolvedParams.id);
-
-    if (!record) {
-      return NextResponse.json({ error: '実行記録が見つかりません' }, { status: 404 });
-    }
-
-    const updates = await request.json();
-    const updatedRecord = await updateExecutionRecord(resolvedParams.id, {
-      ...updates,
-      executedAt: updates.executedAt ? new Date(updates.executedAt) : undefined,
-      updatedAt: new Date(),
-    });
+    const logs = await getHabitLogs(user.id, habitId || undefined);
 
     return NextResponse.json({
       success: true,
-      message: '実行記録が更新されました',
-      data: updatedRecord,
+      data: logs,
     });
   } catch {
     return NextResponse.json({ error: getServerErrorMessage() }, { status: 500 });
   }
 }
 
-// DELETE: 実行記録削除
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+// POST: 習慣実行記録（+ボタン）
+export async function POST(request: NextRequest) {
   try {
     const cookieStore = await cookies();
     const supabase = createServerClient(
@@ -104,24 +84,21 @@ export async function DELETE(
     } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json({ error: '認証に失敗しました' }, { status: 401 });
+      return NextResponse.json({ error: '認証が必要です' }, { status: 401 });
     }
 
-    const resolvedParams = await params;
+    const { habitId } = await request.json();
 
-    // 実行記録の存在確認とユーザー権限チェック
-    const userRecords = await getExecutionRecords(user.id);
-    const record = userRecords.find((r) => r.id === resolvedParams.id);
-
-    if (!record) {
-      return NextResponse.json({ error: '実行記録が見つかりません' }, { status: 404 });
+    // バリデーション
+    if (!habitId) {
+      return NextResponse.json({ error: '習慣IDが必要です' }, { status: 400 });
     }
 
-    await deleteExecutionRecord(resolvedParams.id);
+    await createHabitLog(habitId);
 
     return NextResponse.json({
       success: true,
-      message: '実行記録が削除されました',
+      message: '実行記録が追加されました',
     });
   } catch {
     return NextResponse.json({ error: getServerErrorMessage() }, { status: 500 });
