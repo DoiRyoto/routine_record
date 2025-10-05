@@ -10,14 +10,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: 'bg-blue text-white shadow-lg hover:shadow-xl hover:bg-dark-blue transform hover:-translate-y-0.5',
-        secondary: 'bg-green text-white shadow-lg hover:shadow-xl hover:bg-dark-green transform hover:-translate-y-0.5',
+        primary: 'bg-blue text-white shadow-lg hover:shadow-xl hover:bg-deep-blue hover:-translate-y-0.5',
+        secondary: 'bg-green text-white shadow-lg hover:shadow-xl hover:bg-deep-green hover:-translate-y-0.5',
         outline: 'border-2 border-blue bg-transparent text-blue hover:bg-blue hover:text-white shadow-md hover:shadow-lg',
         ghost: 'bg-transparent text-gray hover:bg-gray hover:text-white',
-        danger: 'bg-red text-white shadow-lg hover:shadow-xl hover:bg-dark-red transform hover:-translate-y-0.5',
-        success: 'bg-green text-white shadow-lg hover:shadow-xl hover:bg-dark-green transform hover:-translate-y-0.5',
-        warning: 'bg-orange text-white shadow-lg hover:shadow-xl hover:bg-dark-orange transform hover:-translate-y-0.5',
-        info: 'bg-teal text-white shadow-lg hover:shadow-xl hover:bg-dark-teal transform hover:-translate-y-0.5',
+        danger: 'bg-red text-white shadow-lg hover:shadow-xl hover:bg-deep-red hover:-translate-y-0.5',
+        success: 'bg-green text-white shadow-lg hover:shadow-xl hover:bg-deep-green hover:-translate-y-0.5',
+        warning: 'bg-orange text-white shadow-lg hover:shadow-xl hover:bg-deep-orange hover:-translate-y-0.5',
+        info: 'bg-teal text-white shadow-lg hover:shadow-xl hover:bg-deep-teal hover:-translate-y-0.5',
       },
       size: {
         xs: 'h-7 px-2 text-xs rounded-md',
