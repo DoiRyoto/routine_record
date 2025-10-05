@@ -1,9 +1,10 @@
 'use client';
 
+import { Plus } from 'lucide-react';
 import { useState } from 'react';
+
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Plus } from 'lucide-react';
 import type { Habit, HabitLog } from '@/lib/db/schema';
 
 interface DashboardPageProps {
@@ -65,7 +66,6 @@ export default function DashboardPage({
       window.location.reload();
     } catch (error) {
       console.error('Failed to execute habit:', error);
-      alert('習慣の実行記録に失敗しました');
     }
   };
 
@@ -85,10 +85,10 @@ export default function DashboardPage({
           const progressPercentage = Math.min((progress.current / progress.target) * 100, 100);
 
           return (
-            <Card key={habit.id}>
+            <Card key={habit.id} data-testid="habit-card">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
                 <div>
-                  <CardTitle className="text-lg">{habit.name}</CardTitle>
+                  <CardTitle className="text-lg" data-testid="habit-title">{habit.name}</CardTitle>
                   <p className="text-sm text-muted-foreground">
                     {habit.frequencyType === 'weekly' ? '週間' : '月間'}習慣
                   </p>

@@ -8,7 +8,7 @@ import {
 import DashboardPage from './DashboardPage';
 
 export default async function HomePage() {
-  const user = await requireAuth('/');
+  await requireAuth('/');
 
   try {
     // API Routesを使用してデータを並行取得（エラーハンドリングを個別に行う）
