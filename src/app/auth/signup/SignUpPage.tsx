@@ -90,8 +90,8 @@ export default function SignUpPage() {
         <Card>
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
-              <div className="rounded-md bg-red-50 p-4 dark:bg-red-900/20">
-                <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
+              <div className="bg-red-50 rounded-md p-4 dark:bg-red-900/20">
+                <p className="text-red-800 text-sm dark:text-red-200">{error}</p>
               </div>
             )}
 
