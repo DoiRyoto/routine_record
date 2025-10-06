@@ -7,6 +7,7 @@ import { HabitForm } from '@/components/feature/HabitForm';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Progress } from '@/components/ui/Progress';
+import { executeHabitAction } from '@/lib/actions/habit-logs';
 import type { Habit, HabitLog } from '@/lib/db/schema';
 
 interface DashboardPageProps {
@@ -19,11 +20,17 @@ export default function DashboardPage({
   habitLogs,
 }: DashboardPageProps) {
   const [isFormOpen, setIsFormOpen] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
+
+  const [optimisticHabitLogs, addOptimisticHabitLog] = React.useOptimistic(
+    habitLogs,
+    (state, newLog: HabitLog) => [...state, newLog]
+  );
 
   // 今週/今月の進捗を計算する関数
   const getProgress = (habit: Habit) => {
     const now = new Date();
-    const currentLogs = habitLogs.filter(log => {
+    const currentLogs = optimisticHabitLogs.filter(log => {
       const logDate = new Date(log.doneAt);
       if (habit.frequencyType === 'weekly') {
         // 今週の記録を取得（月曜日開始）
@@ -52,21 +59,20 @@ export default function DashboardPage({
 
   // 習慣実行（+ボタン）
   const executeHabit = async (habitId: string) => {
-    try {
-      const response = await fetch('/api/habit-logs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          habitId,
-        }),
-      });
+    setErrorMessage(null);
 
-      if (!response.ok) throw new Error('Failed to execute habit');
+    const optimisticLog: HabitLog = {
+      id: `temp-${Date.now()}`,
+      habitId,
+      doneAt: new Date(),
+    };
 
-      // ページを再読み込みして最新の状態を取得
-      window.location.reload();
-    } catch (error) {
-      console.error('Failed to execute habit:', error);
+    addOptimisticHabitLog(optimisticLog);
+
+    const result = await executeHabitAction(habitId);
+
+    if (!result.success) {
+      setErrorMessage(result.error || '実行記録の追加に失敗しました');
     }
   };
 
@@ -79,6 +85,15 @@ export default function DashboardPage({
           新しい習慣
         </Button>
       </div>
+
+      {errorMessage && (
+        <div
+          className="bg-red-50 text-red-800 mb-6 rounded-md p-4 dark:bg-red-900/10 dark:text-red-200"
+          data-testid="error-message"
+        >
+          {errorMessage}
+        </div>
+      )}
 
       <HabitForm open={isFormOpen} onOpenChange={setIsFormOpen} />
 

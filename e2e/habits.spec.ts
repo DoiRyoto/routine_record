@@ -44,16 +44,21 @@ test.describe('Habits Dashboard', () => {
   test('should handle habit execution (+ボタン)', async ({ page }) => {
     const habitCards = page.locator('[data-testid="habit-card"]');
     const cardCount = await habitCards.count();
-    
+
     if (cardCount > 0) {
-      const executeButton = habitCards.first().locator('button', { hasText: '+' });
-      
+      const firstCard = habitCards.first();
+      const executeButton = firstCard.locator('button', { hasText: '+' });
+
       if (await executeButton.isVisible()) {
-        // +ボタンをクリック
+        const progressTextBefore = await firstCard.locator('text=/\\d+\\/\\d+回/').first().textContent();
+
         await executeButton.click();
-        
-        // ページリロード後の進捗更新を確認
-        await page.waitForLoadState('networkidle');
+
+        await page.waitForTimeout(500);
+
+        const progressTextAfter = await firstCard.locator('text=/\\d+\\/\\d+回/').first().textContent();
+
+        expect(progressTextBefore).not.toBe(progressTextAfter);
       }
     }
   });
